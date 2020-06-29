@@ -13,10 +13,11 @@ func resourceSite() *schema.Resource {
 		Read:   readSite,
 		Delete: deleteSite,
 		Schema: map[string]*schema.Schema{
-			"name": {
+			"short_name": {
 				Type:        schema.TypeString,
 				Description: "Identifying name of the site",
 				Required:    true,
+				ForceNew:    true,
 			},
 			"display_name": {
 				Type:        schema.TypeString,
@@ -34,7 +35,7 @@ func resourceSite() *schema.Resource {
 				Description: "Agent IP anonimization mode - 'EU' or 'off'",
 				Optional:    true,
 				Removed:     "Documented but causes an error when provided",
-				Default:     "off", // TODO Default is off in the docs, but not enforced by api
+				//Default:     "off", // TODO Default is off in the docs, but not enforced by api
 			},
 			"block_duration_seconds": {
 				Type:        schema.TypeInt,
@@ -53,10 +54,10 @@ func resourceSite() *schema.Resource {
 }
 
 func createSite(d *schema.ResourceData, m interface{}) error {
-	sc := m.(sigsci.Client)
-	corp := d.Get("corp").(string)
-	site, err := sc.CreateSite(corp, sigsci.CreateSiteBody{
-		Name:                 d.Get("name").(string),
+	pm := m.(ProviderMetadata)
+	sc := pm.Client
+	site, err := sc.CreateSite(pm.Corp, sigsci.CreateSiteBody{
+		Name:                 d.Get("short_name").(string),
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
@@ -67,14 +68,16 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(corpSiteToId(corp, site.Name))
+	d.SetId(corpSiteToId(pm.Corp, site.Name))
 
 	return readSite(d, m)
 }
 
 func readSite(d *schema.ResourceData, m interface{}) error {
-	sc := m.(sigsci.Client)
-	corp, sitename := idToCorpSite(d.Id())
+	pm := m.(ProviderMetadata)
+	sc := pm.Client
+	corp := pm.Corp
+	sitename := d.Get("short_name").(string)
 	site, err := sc.GetSite(corp, sitename)
 	if err != nil {
 		d.SetId("")
@@ -93,11 +96,14 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 }
 
 func updateSite(d *schema.ResourceData, m interface{}) error {
-	sc := m.(sigsci.Client)
+	pm := m.(ProviderMetadata)
+	sc := pm.Client
 	updateSiteBody := sigsci.UpdateSiteBody{
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
+		BlockHTTPCode:        d.Get("block_http_code").(int),
+		AgentAnonMode:        d.Get("agent_anon_mode").(string),
 	}
 	corp, site := idToCorpSite(d.Id())
 	_, err := sc.UpdateSite(corp, site, updateSiteBody)
@@ -109,8 +115,9 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteSite(d *schema.ResourceData, m interface{}) error {
-	sc := m.(sigsci.Client)
-	err := sc.DeleteSite(idToCorpSite(d.Id()))
+	pm := m.(ProviderMetadata)
+	sc := pm.Client
+	err := sc.DeleteSite(pm.Corp, d.Get("short_name").(string))
 	if err != nil {
 		return err
 	}

@@ -2,6 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/signalsciences/go-sigsci"
 )
 
 // Provider is the Signalsciences terraform provider, returns a terraform.ResourceProvider
@@ -13,19 +14,19 @@ func Provider() *schema.Provider {
 				Required:    true,
 				Description: "Corp short name (id)",
 			},
-			"auth_email": {
+			"email": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The email to be used for authentication",
 				DefaultFunc: schema.EnvDefaultFunc("SIGSCI_EMAIL", nil),
 			},
-			"auth_password": {
+			"password": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				DefaultFunc:  schema.EnvDefaultFunc("SIGSCI_PASSWORD", nil),
 				Description:  "The password used to for authentication specify either the password or the token",
 				Sensitive:    true,
-				AtLeastOneOf: []string{"auth_password", "auth_token"},
+				AtLeastOneOf: []string{"password", "auth_token"},
 			},
 			"auth_token": {
 				Type:         schema.TypeString,
@@ -33,7 +34,7 @@ func Provider() *schema.Provider {
 				DefaultFunc:  schema.EnvDefaultFunc("SIGSCI_TOKEN", nil),
 				Description:  "The token used for authentication specify either the password or the token",
 				Sensitive:    true,
-				AtLeastOneOf: []string{"auth_password", "auth_token"},
+				AtLeastOneOf: []string{"password", "auth_token"},
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -47,14 +48,17 @@ func Provider() *schema.Provider {
 func providerConfigure() schema.ConfigureFunc {
 	return func(d *schema.ResourceData) (interface{}, error) {
 		config := Config{
-			Email:    d.Get("auth_email").(string),
-			Password: d.Get("auth_password").(string),
+			Email:    d.Get("email").(string),
+			Password: d.Get("password").(string),
 			APIToken: d.Get("auth_token").(string),
 		}
 		client, err := config.Client()
 		if err != nil {
 			return nil, err
 		}
-		return client, nil
+		return ProviderMetadata{
+			Corp:   d.Get("corp").(string),
+			Client: client.(sigsci.Client),
+		}, nil
 	}
 }
