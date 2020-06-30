@@ -15,7 +15,7 @@ type Config struct {
 //Client returns a signal science client
 func (c *Config) Client() (interface{}, error) {
 	if c.Email == "" {
-		return nil, fmt.Errorf("Email cannot be empty", c.Email)
+		return nil, fmt.Errorf("Email cannot be empty")
 	}
 	if c.APIToken != "" {
 		return sigsci.NewTokenClient(c.Email, c.APIToken), nil

@@ -8,7 +8,7 @@ provider "sigsci" {
 resource "sigsci_site" "my-site" {
   short_name = "wattt"
   display_name = "testt"
-  block_duration_seconds = 1
+  block_duration_seconds = 1000
   block_http_code = 303
-//  agent_anon_mode = "off"
+  agent_anon_mode = ""
 }

@@ -32,10 +32,9 @@ func resourceSite() *schema.Resource {
 			},
 			"agent_anon_mode": {
 				Type:        schema.TypeString,
-				Description: "Agent IP anonimization mode - 'EU' or 'off'",
+				Description: "Agent IP anonimization mode - \"\" (empty string) or 'EU'",
 				Optional:    true,
-				Removed:     "Documented but causes an error when provided",
-				//Default:     "off", // TODO Default is off in the docs, but not enforced by api
+				Default:     "",
 			},
 			"block_duration_seconds": {
 				Type:        schema.TypeInt,
@@ -47,7 +46,7 @@ func resourceSite() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when when traffic is being blocked",
 				Optional:    true,
-				Default:     406,
+				Default:     407,
 			},
 		},
 	}
@@ -88,9 +87,10 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 	d.Set("agent_level", site.AgentLevel)
 	d.Set("block_duration_seconds", site.BlockDurationSeconds)
 	d.Set("block_http_code", site.BlockHTTPCode)
+	d.Set("agent_anon_mode", site.AgentAnonMode)
 	d.Set("corp", corp)
 	d.Set("display_name", site.DisplayName)
-	d.Set("name", site.Name)
+	d.Set("short_name", site.Name)
 
 	return nil
 }
@@ -98,15 +98,15 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 func updateSite(d *schema.ResourceData, m interface{}) error {
 	pm := m.(ProviderMetadata)
 	sc := pm.Client
-	updateSiteBody := sigsci.UpdateSiteBody{
+	corp := pm.Corp
+	site := d.Get("short_name").(string)
+	_, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
-	}
-	corp, site := idToCorpSite(d.Id())
-	_, err := sc.UpdateSite(corp, site, updateSiteBody)
+	})
 	if err != nil {
 		return err
 	}
