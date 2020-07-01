@@ -1,7 +1,7 @@
 provider "sigsci" {
   email = "jhanrahan+staff+corp2@signalsciences.com"
-  auth_token = "bc7feacb-4d9b-4a4f-93e2-bd098ea0f163"
-//  password = "Hickory290"
+  auth_token = ""
+//  password = ""
   corp = "jhanrahan_test_corp"
 }
 
