@@ -53,7 +53,7 @@ func resourceSite() *schema.Resource {
 }
 
 func createSite(d *schema.ResourceData, m interface{}) error {
-	pm := m.(ProviderMetadata)
+	pm := m.(providerMetadata)
 	sc := pm.Client
 	site, err := sc.CreateSite(pm.Corp, sigsci.CreateSiteBody{
 		Name:                 d.Get("short_name").(string),
@@ -67,13 +67,13 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(corpSiteToId(pm.Corp, site.Name))
+	d.SetId(corpSiteToID(pm.Corp, site.Name))
 
 	return readSite(d, m)
 }
 
 func readSite(d *schema.ResourceData, m interface{}) error {
-	pm := m.(ProviderMetadata)
+	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
 	sitename := d.Get("short_name").(string)
@@ -83,20 +83,41 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf("[ERROR] No site found with name %s in %s", sitename, corp)
 	}
 
-	d.SetId(corpSiteToId(corp, site.Name)) // No inherent id, combination of corp and site should be unique
-	d.Set("agent_level", site.AgentLevel)
-	d.Set("block_duration_seconds", site.BlockDurationSeconds)
-	d.Set("block_http_code", site.BlockHTTPCode)
-	d.Set("agent_anon_mode", site.AgentAnonMode)
-	d.Set("corp", corp)
-	d.Set("display_name", site.DisplayName)
-	d.Set("short_name", site.Name)
+	d.SetId(corpSiteToID(corp, site.Name)) // No inherent id, combination of corp and site should be unique
+	err = d.Set("agent_level", site.AgentLevel)
+	if err != nil {
+		return err
+	}
+	err = d.Set("block_duration_seconds", site.BlockDurationSeconds)
+	if err != nil {
+		return err
+	}
+	err = d.Set("block_http_code", site.BlockHTTPCode)
+	if err != nil {
+		return err
+	}
+	err = d.Set("agent_anon_mode", site.AgentAnonMode)
+	if err != nil {
+		return err
+	}
+	err = d.Set("corp", corp)
+	if err != nil {
+		return err
+	}
+	err = d.Set("display_name", site.DisplayName)
+	if err != nil {
+		return err
+	}
+	err = d.Set("short_name", site.Name)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func updateSite(d *schema.ResourceData, m interface{}) error {
-	pm := m.(ProviderMetadata)
+	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
 	site := d.Get("short_name").(string)
@@ -115,7 +136,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteSite(d *schema.ResourceData, m interface{}) error {
-	pm := m.(ProviderMetadata)
+	pm := m.(providerMetadata)
 	sc := pm.Client
 	err := sc.DeleteSite(pm.Corp, d.Get("short_name").(string))
 	if err != nil {

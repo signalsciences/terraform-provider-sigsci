@@ -58,7 +58,7 @@ func providerConfigure() schema.ConfigureFunc {
 		if err != nil {
 			return nil, err
 		}
-		return ProviderMetadata{
+		return providerMetadata{
 			Corp:   d.Get("corp").(string),
 			Client: client.(sigsci.Client),
 		}, nil
