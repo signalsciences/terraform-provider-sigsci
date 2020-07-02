@@ -1,6 +1,6 @@
 provider "sigsci" {
   email = "jhanrahan+staff+corp2@signalsciences.com"
-  auth_token = ""
+//  auth_token = "" //provide via env variable
 //  password = ""
   corp = "jhanrahan_test_corp"
 }

@@ -2,17 +2,19 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/signalsciences/go-sigsci"
 )
 
 // Provider is the Signalsciences terraform provider, returns a terraform.ResourceProvider
-func Provider() *schema.Provider {
+func Provider() terraform.ResourceProvider {
 	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"corp": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Corp short name (id)",
+				DefaultFunc: schema.EnvDefaultFunc("SIGSCI_CORP", nil),
 			},
 			"email": {
 				Type:        schema.TypeString,
