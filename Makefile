@@ -9,4 +9,7 @@ check:
 all: build check
 
 lint:
-	golint . ./provider
+	golint ./...
+
+testacc: ## Run acceptance tests
+	TF_ACC=1 go test -v ./...
