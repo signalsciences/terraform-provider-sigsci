@@ -100,10 +100,6 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = d.Set("corp", corp)
-	if err != nil {
-		return err
-	}
 	err = d.Set("display_name", site.DisplayName)
 	if err != nil {
 		return err

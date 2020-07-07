@@ -40,7 +40,8 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"sigsci_site": resourceSite(),
+			"sigsci_site":      resourceSite(),
+			"sigsci_site_list": resourceSiteList(),
 		},
 	}
 	provider.ConfigureFunc = providerConfigure()
