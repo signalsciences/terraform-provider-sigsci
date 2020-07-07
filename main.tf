@@ -13,14 +13,20 @@ resource "sigsci_site" "my-site" {
   agent_anon_mode        = ""
 }
 
-resource "sigsci_site_list" "test" {
+resource "sigsci_site_list" "test_list" {
   site_short_name = sigsci_site.my-site.short_name
-  name            = "My new list"
-  type            = "string"
+  name            = "My new list 2"
+  type            = "ip"
   description     = "Some IPs we are putting in a list"
   entries = [
     "4.5.6.7",
     "2.3.4.5",
     "1.2.3.4",
   ]
+}
+
+resource "sigsci_site_signal_tag" "test_tag" {
+  site_short_name = sigsci_site.my-site.short_name
+  name            = "My new list 2"
+  description     = "descriptionnn"
 }

@@ -67,7 +67,7 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(corpSiteToID(pm.Corp, site.Name))
+	d.SetId(site.Name)
 
 	return readSite(d, m)
 }
@@ -83,7 +83,7 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		return fmt.Errorf("[ERROR] No site found with name %s in %s", sitename, corp)
 	}
 
-	d.SetId(corpSiteToID(corp, site.Name)) // No inherent id, combination of corp and site should be unique
+	d.SetId(site.Name)
 	err = d.Set("agent_level", site.AgentLevel)
 	if err != nil {
 		return err

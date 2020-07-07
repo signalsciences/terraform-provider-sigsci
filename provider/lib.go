@@ -3,12 +3,7 @@ package provider
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"strings"
 )
-
-func corpSiteToID(corp, site string) string {
-	return strings.Join([]string{corp, site}, ":")
-}
 
 type providerMetadata struct {
 	Corp   string
