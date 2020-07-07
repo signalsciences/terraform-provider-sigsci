@@ -1,6 +1,6 @@
 provider "sigsci" {
-  email = "jhanrahan+staff+corp2@signalsciences.com"
-  //  auth_token = "" //provide via env variable
+  //  email = ""  //may also provide via env variable
+  //  auth_token = "" //may also provide via env variable
   //  password = ""
   corp = "jhanrahan_test_corp"
 }
@@ -16,7 +16,7 @@ resource "sigsci_site" "my-site" {
 resource "sigsci_site_list" "test" {
   site_short_name = sigsci_site.my-site.short_name
   name            = "My new list"
-  type            = "ip"
+  type            = "string"
   description     = "Some IPs we are putting in a list"
   entries = [
     "4.5.6.7",

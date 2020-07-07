@@ -4,7 +4,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 	"log"
-	"strings"
 )
 
 func resourceSiteList() *schema.Resource {
@@ -21,16 +20,19 @@ func resourceSiteList() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Site short name",
 				Required:    true,
+				ForceNew:    true,
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Description: "Descriptive list name",
 				Required:    true,
+				ForceNew:    true, // Hopefully this can be changed in the api later
 			},
 			"type": {
 				Type:        schema.TypeString,
 				Description: "List types (string, ip, country, wildcard)",
 				Required:    true,
+				ForceNew:    true, // Hopefully this can be changed in the api later
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -69,13 +71,10 @@ func resourceSiteListRead(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 	site := d.Get("site_short_name").(string)
 
-	corpsiteid := strings.SplitN(d.Id(), ":", 3)
-
 	list, err := sc.GetSiteListByID(pm.Corp, site, d.Id())
 	if err != nil {
-		log.Printf("[ERROR] %s. Could not find list with ID %s in corp %s site %s", err.Error(), corpsiteid[2], corpsiteid[0], corpsiteid[1])
 		d.SetId("")
-		return nil
+		return err
 	}
 
 	d.SetId(d.Id())
