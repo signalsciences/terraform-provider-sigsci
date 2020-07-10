@@ -6,8 +6,8 @@ provider "sigsci" {
 }
 
 resource "sigsci_site" "my-site" {
-  short_name             = "test"
-  display_name           = "testt"
+  short_name             = "manual_test"
+  display_name           = "manual terraform test"
   block_duration_seconds = 1000
   block_http_code        = 303
   agent_anon_mode        = ""
@@ -27,6 +27,12 @@ resource "sigsci_site_list" "test_list" {
 
 resource "sigsci_site_signal_tag" "test_tag" {
   site_short_name = sigsci_site.my-site.short_name
-  name            = "My new list 2"
-  description     = "descriptionnn"
+  name            = "My new list"
+  description     = "description"
+}
+
+resource "sigsci_site_redaction" "test_redaction" {
+  site_short_name = sigsci_site.my-site.short_name
+  field           = "redacted_field"
+  redaction_type  = 1
 }
