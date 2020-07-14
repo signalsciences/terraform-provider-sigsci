@@ -23,7 +23,6 @@ func TestAccResourceSiteRedactionCRUD(t *testing.T) {
                       redaction_type     = 0
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect("wat"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "field", "field"),
 					resource.TestCheckResourceAttr(resourceName, "redaction_type", "0"),

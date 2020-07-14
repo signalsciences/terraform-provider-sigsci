@@ -36,3 +36,13 @@ resource "sigsci_site_redaction" "test_redaction" {
   field           = "redacted_field"
   redaction_type  = 1
 }
+
+resource "sigsci_site_alert" "test_site_alert" {
+  site_short_name = sigsci_site.my-site.short_name
+  tag_name        = sigsci_site_signal_tag.test_tag.id
+  long_name       = "test_alert"
+  interval        = 10
+  threshold       = 12
+  enabled         = true
+  action          = "info"
+}
