@@ -40,11 +40,12 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"sigsci_site":            resourceSite(),
-			"sigsci_site_list":       resourceSiteList(),
-			"sigsci_site_signal_tag": resourceSiteSignalTag(),
-			"sigsci_site_redaction":  resourceSiteRedaction(),
-			"sigsci_site_alert":      resourceSiteAlert(),
+			"sigsci_site":                resourceSite(),
+			"sigsci_site_list":           resourceSiteList(),
+			"sigsci_site_signal_tag":     resourceSiteSignalTag(),
+			"sigsci_site_redaction":      resourceSiteRedaction(),
+			"sigsci_site_alert":          resourceSiteAlert(),
+			"sigsci_site_templated_rule": resourceSiteTemplatedRule(),
 		},
 	}
 	provider.ConfigureFunc = providerConfigure()

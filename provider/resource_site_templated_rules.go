@@ -5,7 +5,7 @@ import (
 	"github.com/signalsciences/go-sigsci"
 )
 
-func resource() *schema.Resource {
+func resourceSiteTemplatedRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTemplatedRuleCreate,
 		Update: resourceTemplatedRuleUpdate,
@@ -21,40 +21,121 @@ func resource() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
-			"tag_name": {
+			"name": {
 				Type:        schema.TypeString,
-				Description: "The name of the tag whose occurrences the alert is watching. Must match an existing tag",
+				Description: "Name of templated rule.  This must match an existing templated rule e.g., LOGINATTEMPT, CMDEXE, XSS...",
 				Required:    true,
+				ForceNew:    true,
 			},
-			"long_name": {
-				Type:        schema.TypeString,
+			"detections": {
+				Type:        schema.TypeSet,
 				Description: "description",
-				Optional:    true,
+				Required:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"name": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+						"fields": {
+							Type:     schema.TypeSet,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"value": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+						//"detections": {
+						//	Type:     schema.TypeSet,
+						//	Required: true,
+						//	Elem: &schema.Resource{
+						//		Schema: map[string]*schema.Schema{
+						//			"id": {
+						//				Type:     schema.TypeString,
+						//				Optional: true,
+						//			},
+						//			"name": {
+						//				Type:     schema.TypeString,
+						//				Required: true,
+						//			},
+						//			"enabled": {
+						//				Type:     schema.TypeBool,
+						//				Required: true,
+						//			},
+						//			"fields": {
+						//				Type:     schema.TypeSet,
+						//				Required: true,
+						//				Elem: &schema.Resource{
+						//					Schema: map[string]*schema.Schema{
+						//						"name": {
+						//							Type:     schema.TypeString,
+						//							Required: true,
+						//						},
+						//						"value": {
+						//							Type:     schema.TypeString,
+						//							Required: true,
+						//						},
+						//					},
+						//				},
+						//			},
+						//		},
+						//	},
+						//},
+					},
+				},
 			},
-			"interval": {
-				Type:        schema.TypeInt,
-				Description: "The number of minutes of past traffic to examine. Must be 1, 10 or 60.",
-				Optional:    true,
-			},
-			"threshold": {
-				Type:        schema.TypeInt,
-				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000",
-				Optional:    true,
-			},
-			"block_duration_seconds": {
-				Type:        schema.TypeInt,
-				Description: "The number of seconds this alert is active.",
-				Optional:    true,
-			},
-			"enabled": {
-				Type:        schema.TypeBool,
-				Description: "A flag to toggle this alert.",
-				Optional:    true,
-			},
-			"action": {
-				Type:        schema.TypeString,
-				Description: "A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.",
-				Optional:    true,
+			"alerts": {
+				Type:        schema.TypeSet,
+				Description: "some alert stuff",
+				Required:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"long_name": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"interval": {
+							Type:     schema.TypeInt,
+							Required: true,
+						},
+						"threshold": {
+							Type:     schema.TypeInt,
+							Required: true,
+						},
+						"skip_notifications": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+						"enabled": {
+							Type:     schema.TypeBool,
+							Required: true,
+						},
+						"action": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -63,11 +144,21 @@ func resource() *schema.Resource {
 func resourceTemplatedRuleCreate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
+	site := d.Get("site_short_name").(string)
+	templateID := d.Get("name").(string)
 
-	alert, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, d.Get("site_short_name").(string), sigsci.SiteTemplateRuleBody{
-		DetectionAdds:    nil,
-		DetectionUpdates: nil,
-		DetectionDeletes: nil,
+	existingTemplate, err := sc.GetSiteTemplateRuleByID(pm.Corp, site, templateID)
+	if err != nil {
+		return err
+	}
+
+	newDetections := expandDetections(d.Get("detections").(*schema.Set))
+	detectionAdds, detectionUpdates, detectionDeletes := diffTemplateDetections(existingTemplate.Detections, newDetections)
+
+	template, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, site, templateID, sigsci.SiteTemplateRuleBody{
+		DetectionAdds:    detectionAdds,
+		DetectionUpdates: detectionUpdates,
+		DetectionDeletes: detectionDeletes,
 		AlertAdds:        nil,
 		AlertUpdates:     nil,
 		AlertDeletes:     nil,
@@ -75,7 +166,7 @@ func resourceTemplatedRuleCreate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(alert.ID)
+	d.SetId(template.Name)
 	return resourceTemplatedRuleRead(d, m)
 }
 
@@ -83,41 +174,28 @@ func resourceTemplatedRuleRead(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 
-	alert, err := sc.GetCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id())
+	template, err := sc.GetSiteTemplateRuleByID(pm.Corp, d.Get("site_short_name").(string), d.Id())
 	if err != nil {
 		return err
 	}
 
-	d.SetId(alert.ID)
+	d.SetId(template.Name)
 	err = d.Set("site_short_name", d.Get("site_short_name").(string))
 	if err != nil {
 		return err
 	}
-	err = d.Set("tag_name", alert.TagName)
+	err = d.Set("name", template.Name)
 	if err != nil {
 		return err
 	}
-	err = d.Set("long_name", alert.LongName)
+	err = d.Set("detections", flattenDetections(template.Detections))
 	if err != nil {
 		return err
 	}
-	err = d.Set("interval", alert.Interval)
+	err = d.Set("alerts", flattenAlerts(template.Alerts))
 	if err != nil {
 		return err
 	}
-	err = d.Set("threshold", alert.Threshold)
-	if err != nil {
-		return err
-	}
-	err = d.Set("enabled", alert.Enabled)
-	if err != nil {
-		return err
-	}
-	err = d.Set("action", alert.Action)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -145,7 +223,10 @@ func resourceTemplatedRuleDelete(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 
-	err := sc.DeleteCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id())
+	_, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.SiteTemplateRuleBody{
+		DetectionDeletes: nil,
+		AlertDeletes:     nil,
+	})
 	if err != nil {
 		return err
 	}
