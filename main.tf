@@ -51,7 +51,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   site_short_name = sigsci_site.my-site.short_name
   name            = "LOGINATTEMPT"
   detections {
-    name    = "wat"
+    //    name    = "wat"
     enabled = "true"
     fields {
       name  = "wat"
@@ -65,6 +65,15 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
     threshold          = 10
     skip_notifications = true
     enabled            = true
+    action             = "info"
+  }
+
+  alerts {
+    long_name          = "fwaasd"
+    interval           = 60
+    threshold          = 1
+    skip_notifications = false
+    enabled            = false
     action             = "info"
   }
 }

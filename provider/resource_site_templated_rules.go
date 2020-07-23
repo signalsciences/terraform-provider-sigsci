@@ -35,11 +35,11 @@ func resourceSiteTemplatedRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Computed: true,
 						},
 						"name": {
 							Type:     schema.TypeString,
-							Required: true,
+							Computed: true,
 						},
 						"enabled": {
 							Type:     schema.TypeBool,
@@ -61,54 +61,18 @@ func resourceSiteTemplatedRule() *schema.Resource {
 								},
 							},
 						},
-						//"detections": {
-						//	Type:     schema.TypeSet,
-						//	Required: true,
-						//	Elem: &schema.Resource{
-						//		Schema: map[string]*schema.Schema{
-						//			"id": {
-						//				Type:     schema.TypeString,
-						//				Optional: true,
-						//			},
-						//			"name": {
-						//				Type:     schema.TypeString,
-						//				Required: true,
-						//			},
-						//			"enabled": {
-						//				Type:     schema.TypeBool,
-						//				Required: true,
-						//			},
-						//			"fields": {
-						//				Type:     schema.TypeSet,
-						//				Required: true,
-						//				Elem: &schema.Resource{
-						//					Schema: map[string]*schema.Schema{
-						//						"name": {
-						//							Type:     schema.TypeString,
-						//							Required: true,
-						//						},
-						//						"value": {
-						//							Type:     schema.TypeString,
-						//							Required: true,
-						//						},
-						//					},
-						//				},
-						//			},
-						//		},
-						//	},
-						//},
 					},
 				},
 			},
 			"alerts": {
 				Type:        schema.TypeSet,
-				Description: "some alert stuff",
+				Description: "Alerts",
 				Required:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Computed: true,
 						},
 						"long_name": {
 							Type:     schema.TypeString,
@@ -147,21 +111,12 @@ func resourceTemplatedRuleCreate(d *schema.ResourceData, m interface{}) error {
 	site := d.Get("site_short_name").(string)
 	templateID := d.Get("name").(string)
 
-	existingTemplate, err := sc.GetSiteTemplateRuleByID(pm.Corp, site, templateID)
-	if err != nil {
-		return err
-	}
-
-	newDetections := expandDetections(d.Get("detections").(*schema.Set))
-	detectionAdds, detectionUpdates, detectionDeletes := diffTemplateDetections(existingTemplate.Detections, newDetections)
+	detectionAdds, _, _ := diffTemplateDetections([]sigsci.Detection{}, expandDetections(d.Get("detections").(*schema.Set)))
+	alertAdds, _, _ := diffTemplateAlerts([]sigsci.Alert{}, expandAlerts(d.Get("alerts").(*schema.Set)))
 
 	template, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, site, templateID, sigsci.SiteTemplateRuleBody{
-		DetectionAdds:    detectionAdds,
-		DetectionUpdates: detectionUpdates,
-		DetectionDeletes: detectionDeletes,
-		AlertAdds:        nil,
-		AlertUpdates:     nil,
-		AlertDeletes:     nil,
+		DetectionAdds: detectionAdds,
+		AlertAdds:     alertAdds,
 	})
 	if err != nil {
 		return err
@@ -202,30 +157,54 @@ func resourceTemplatedRuleRead(d *schema.ResourceData, m interface{}) error {
 func resourceTemplatedRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
+	site := d.Get("site_short_name").(string)
 
-	alert, err := sc.UpdateCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CustomAlertBody{
-		TagName:   d.Get("tag_name").(string),
-		LongName:  d.Get("long_name").(string),
-		Interval:  d.Get("interval").(int),
-		Threshold: d.Get("threshold").(int),
-		Enabled:   d.Get("enabled").(bool),
-		Action:    d.Get("action").(string),
+	existingTemplate, err := sc.GetSiteTemplateRuleByID(pm.Corp, site, d.Id())
+	if err != nil {
+		return err
+	}
+
+	detectionAdds, detectionUpdates, detectionDeletes := diffTemplateDetections(existingTemplate.Detections, expandDetections(d.Get("detections").(*schema.Set)))
+	alertAdds, alertUpdates, alertDeletes := diffTemplateAlerts(existingTemplate.Alerts, expandAlerts(d.Get("alerts").(*schema.Set)))
+	siteTemplate, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, site, d.Id(), sigsci.SiteTemplateRuleBody{
+		DetectionAdds:    detectionAdds,
+		DetectionUpdates: detectionUpdates,
+		DetectionDeletes: detectionDeletes,
+		AlertAdds:        alertAdds,
+		AlertUpdates:     alertUpdates,
+		AlertDeletes:     alertDeletes,
 	})
 	if err != nil {
 		return err
 	}
 
-	d.SetId(alert.ID)
+	d.SetId(siteTemplate.Name)
 	return resourceTemplatedRuleRead(d, m)
 }
 
 func resourceTemplatedRuleDelete(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
+	site := d.Get("site_short_name").(string)
 
-	_, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.SiteTemplateRuleBody{
-		DetectionDeletes: nil,
-		AlertDeletes:     nil,
+	existingTemplate, err := sc.GetSiteTemplateRuleByID(pm.Corp, site, d.Id())
+	if err != nil {
+		return err
+	}
+	//
+	//alertDeletes := []sigsci.AlertUpdateBody{}
+	//for _, a := range existingTemplate.Alerts {
+	//	alertDeletes = append(alertDeletes, a.AlertUpdateBody)
+	//}
+	//
+	//detectionDeletes := []sigsci.DetectionUpdateBody{}
+	//for _, d := range existingTemplate.Detections {
+	//	detectionDeletes = append(detectionDeletes, d.DetectionUpdateBody)
+	//}
+
+	_, err = sc.UpdateSiteTemplateRuleByID(pm.Corp, site, d.Id(), sigsci.SiteTemplateRuleBody{
+		DetectionDeletes: existingTemplate.Detections,
+		AlertDeletes:     existingTemplate.Alerts,
 	})
 	if err != nil {
 		return err

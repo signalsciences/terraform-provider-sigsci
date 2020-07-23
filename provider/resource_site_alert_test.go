@@ -9,7 +9,6 @@ import (
 //TODO implement sweepers for everyone
 func TestAccResourceSiteAlertCRUD(t *testing.T) {
 	resourceName := "sigsci_site_alert.test_site_alert"
-	testSite := "test"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

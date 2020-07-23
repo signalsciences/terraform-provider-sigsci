@@ -9,7 +9,6 @@ import (
 //TODO implement sweepers for everyone
 func TestAccResourceSiteRedactionCRUD(t *testing.T) {
 	resourceName := "sigsci_site_redaction.test_redaction"
-	testSite := "test"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

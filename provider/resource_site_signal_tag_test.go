@@ -9,7 +9,6 @@ import (
 //TODO implement sweepers for everyone
 func TestAccResourceSiteSignalTagCRUD(t *testing.T) {
 	resourceName := "sigsci_site_signal_tag.test_tag"
-	testSite := "test"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

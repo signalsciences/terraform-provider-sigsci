@@ -10,7 +10,6 @@ import (
 //TODO implement sweepers for everyone
 func TestAccResourceSiteListCRUD(t *testing.T) {
 	resourceName := "sigsci_site_list.test_list"
-	testSite := "test"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },

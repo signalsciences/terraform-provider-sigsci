@@ -76,6 +76,24 @@ func expandDetections(entries *schema.Set) []sigsci.Detection {
 	return detections
 }
 
+func expandAlerts(entries *schema.Set) []sigsci.Alert {
+	var alerts []sigsci.Alert
+	for _, e := range entries.List() {
+		cast := e.(map[string]interface{})
+		alerts = append(alerts, sigsci.Alert{
+			AlertUpdateBody: sigsci.AlertUpdateBody{
+				LongName:          cast["long_name"].(string),
+				Interval:          cast["interval"].(int),
+				Threshold:         cast["threshold"].(int),
+				SkipNotifications: cast["skip_notifications"].(bool),
+				Enabled:           cast["enabled"].(bool),
+				Action:            cast["action"].(string),
+			},
+		})
+	}
+	return alerts
+}
+
 func flattenAlerts(alerts []sigsci.Alert) []interface{} {
 	var alertsSet = make([]interface{}, len(alerts))
 	for i, alert := range alerts {
@@ -120,12 +138,73 @@ func getListAdditionsDeletions(existlist, newlist []string) (additions []string,
 	return add, del
 }
 
-func diffTemplateDetections(orig, new []sigsci.Detection) ([]sigsci.DetectionUpdateBody, []sigsci.DetectionUpdateBody, []sigsci.DetectionUpdateBody) {
+func diffTemplateAlerts(orig, new []sigsci.Alert) ([]sigsci.Alert, []sigsci.Alert, []sigsci.Alert) {
+	return calcAlertAdds(orig, new), calcAlertUpdates(orig, new), calcAlertDeletes(orig, new)
+}
+
+func calcAlertAdds(old, new []sigsci.Alert) []sigsci.Alert {
+	var alertAdds []sigsci.Alert
+	for _, newA := range new {
+		exists := false
+		for _, oldA := range old {
+			if oldA.ID == newA.ID {
+				exists = true
+			}
+		}
+
+		if !exists {
+			alertAdds = append(alertAdds, newA)
+		}
+	}
+	return alertAdds
+}
+
+func alertEquals(a, b sigsci.Alert) bool {
+	return a.Enabled == b.Enabled &&
+		a.Action == b.Action &&
+		a.SkipNotifications == b.SkipNotifications &&
+		a.Interval == b.Interval &&
+		a.Threshold == b.Threshold &&
+		a.LongName == b.LongName
+}
+
+func calcAlertUpdates(old, new []sigsci.Alert) []sigsci.Alert {
+	var alertUpdates []sigsci.Alert
+	for _, oldA := range old {
+		for _, newA := range new {
+			if oldA.ID == newA.ID {
+				if !alertEquals(oldA, newA) {
+					alertUpdates = append(alertUpdates, newA)
+				}
+			}
+		}
+	}
+	return alertUpdates
+}
+
+func calcAlertDeletes(old, new []sigsci.Alert) []sigsci.Alert {
+	var alertDels []sigsci.Alert
+	for _, oldA := range old {
+		exists := false
+		for _, newA := range new {
+			if newA.ID == oldA.ID {
+				exists = true
+			}
+		}
+
+		if !exists {
+			alertDels = append(alertDels, oldA)
+		}
+	}
+	return alertDels
+}
+
+func diffTemplateDetections(orig, new []sigsci.Detection) ([]sigsci.Detection, []sigsci.Detection, []sigsci.Detection) {
 	return calcDetectionAdds(orig, new), calcDetectionUpdates(orig, new), calcDetectionDeletes(orig, new)
 }
 
-func calcDetectionAdds(old, new []sigsci.Detection) []sigsci.DetectionUpdateBody {
-	var detectionAdds []sigsci.DetectionUpdateBody
+func calcDetectionAdds(old, new []sigsci.Detection) []sigsci.Detection {
+	var detectionAdds []sigsci.Detection
 	for _, newD := range new {
 		exists := false
 		for _, oldD := range old {
@@ -134,14 +213,14 @@ func calcDetectionAdds(old, new []sigsci.Detection) []sigsci.DetectionUpdateBody
 			}
 		}
 		if !exists {
-			detectionAdds = append(detectionAdds, newD.DetectionUpdateBody)
+			detectionAdds = append(detectionAdds, newD)
 		}
 	}
 	return detectionAdds
 }
 
-func calcDetectionDeletes(old, new []sigsci.Detection) []sigsci.DetectionUpdateBody {
-	var detectionDeletes []sigsci.DetectionUpdateBody
+func calcDetectionDeletes(old, new []sigsci.Detection) []sigsci.Detection {
+	var detectionDeletes []sigsci.Detection
 	for _, oldD := range old {
 		exists := false
 		for _, newD := range new {
@@ -150,19 +229,19 @@ func calcDetectionDeletes(old, new []sigsci.Detection) []sigsci.DetectionUpdateB
 			}
 		}
 		if !exists {
-			detectionDeletes = append(detectionDeletes, oldD.DetectionUpdateBody)
+			detectionDeletes = append(detectionDeletes, oldD)
 		}
 	}
 	return detectionDeletes
 }
 
-func calcDetectionUpdates(old, new []sigsci.Detection) []sigsci.DetectionUpdateBody {
-	var detectionUpdates []sigsci.DetectionUpdateBody
+func calcDetectionUpdates(old, new []sigsci.Detection) []sigsci.Detection {
+	var detectionUpdates []sigsci.Detection
 	for _, oldD := range old {
 		for _, newD := range new {
 			if oldD.Name == newD.Name {
 				if oldD.Enabled != newD.Enabled || !detectionFieldsEqual(newD.Fields, oldD.Fields) {
-					detectionUpdates = append(detectionUpdates, newD.DetectionUpdateBody)
+					detectionUpdates = append(detectionUpdates, newD)
 				}
 			}
 		}

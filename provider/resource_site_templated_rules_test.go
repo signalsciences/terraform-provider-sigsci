@@ -8,8 +8,7 @@ import (
 
 //TODO implement sweepers for everyone
 func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
-	resourceName := "sigsci_site_templated_rule.test_site_templated_rule"
-	testSite := "test"
+	resourceName := "sigsci_site_templated_rule.test_template_rule"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -21,11 +20,17 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
                       site_short_name = "%s"
                       name            = "LOGINATTEMPT"
                       detections {
-                        name    = "detection1"
                         enabled = "true"
                         fields {
                           name  = "path"
                           value = "/auth/*"
+                        }
+                      }
+                      detections {
+                        enabled = "true"
+                        fields {
+                          name  = "path"
+                          value = "/login/*"
                         }
                       }
                       alerts {
@@ -38,8 +43,10 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
                       }
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect("wat"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "LOGINATTEMPT"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.#", "1"),
 				),
 			},
 			{
@@ -48,15 +55,14 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
                       site_short_name = "%s"
                       name            = "LOGINATTEMPT"
                       detections {
-                        name    = "detection1"
-                        enabled = "true"
+                        enabled = "false"
                         fields {
                           name  = "path"
                           value = "/auth/*"
                         }
                       }
                       alerts {
-                        long_name          = "alert1"
+                        long_name          = "alert2"
                         interval           = 60
                         threshold          = 10
                         skip_notifications = true
@@ -65,6 +71,7 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
                       }
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect("wat"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "LOGINATTEMPT"),
 				),

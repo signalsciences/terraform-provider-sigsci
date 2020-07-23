@@ -41,6 +41,44 @@ func TestDiffTemplateDetectionsAddDel(t *testing.T) {
 	}
 }
 
+func TestDiffTemplateAlertsUpdate(t *testing.T) {
+	old := getDefaultAlert()
+	new := getDefaultAlert()
+
+	new.LongName = "New Long Name"
+	add, update, del := diffTemplateAlerts([]sigsci.Alert{old}, []sigsci.Alert{new})
+
+	if len(add) > 0 || len(del) > 0 {
+		t.Fail()
+	}
+	if len(update) != 1 {
+		t.Fail()
+	}
+	if update[0].LongName != "New Long Name" {
+		t.Fail()
+	}
+}
+
+func TestDiffTemplateAlertsAddDel(t *testing.T) {
+	old := getDefaultAlert()
+	new := getDefaultAlert()
+
+	new.ID = "98765"
+	new.LongName = "2"
+	add, update, del := diffTemplateAlerts([]sigsci.Alert{old}, []sigsci.Alert{new})
+
+	if len(add) != 1 || len(del) != 1 || len(update) != 0 {
+		t.Fail()
+		return
+	}
+	if add[0].LongName != "2" {
+		t.Fail()
+	}
+	if del[0].LongName != getDefaultAlert().LongName {
+		t.Fail()
+	}
+}
+
 func getDefaultDetection() sigsci.Detection {
 	return sigsci.Detection{
 		DetectionUpdateBody: sigsci.DetectionUpdateBody{
@@ -54,5 +92,19 @@ func getDefaultDetection() sigsci.Detection {
 		},
 		Created:   time.Now(),
 		CreatedBy: "lib_test.go",
+	}
+}
+
+func getDefaultAlert() sigsci.Alert {
+	return sigsci.Alert{
+		AlertUpdateBody: sigsci.AlertUpdateBody{
+			LongName:          "longname",
+			Interval:          60,
+			Threshold:         10,
+			SkipNotifications: false,
+			Enabled:           true,
+			Action:            "info",
+		},
+		ID: "654321",
 	}
 }
