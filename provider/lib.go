@@ -1,9 +1,11 @@
 package provider
 
 import (
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 	"sort"
+	"strconv"
 )
 
 type providerMetadata struct {
@@ -33,6 +35,9 @@ func flattenDetections(detections []sigsci.Detection) []interface{} {
 	for i, detection := range detections {
 		fieldSet := make([]interface{}, len(detection.Fields))
 		for j, field := range detection.Fields {
+			if _, ok := field.Value.(float64); ok {
+				field.Value = fmt.Sprintf("%.0f", field.Value.(float64))
+			}
 			fieldMap := map[string]interface{}{
 				"name":  field.Name,
 				"value": field.Value,
@@ -58,6 +63,16 @@ func expandDetections(entries *schema.Set) []sigsci.Detection {
 		var fields []sigsci.ConfiguredDetectionField
 		for _, v := range fieldsI.List() {
 			castV := v.(map[string]interface{})
+			if _, ok := castV["value"].(float64); ok {
+				castV["value"] = int(castV["value"].(float64))
+			}
+
+			//switch castV["value"].(type) {
+			//case float64:
+			//	castV["value"] = int(castV["value"].(float64))
+			//case float32:
+			//	castV["value"] = int(castV["value"].(float32))
+			//}
 			fields = append(fields, sigsci.ConfiguredDetectionField{
 				Name:  castV["name"].(string),
 				Value: castV["value"],
@@ -78,8 +93,21 @@ func expandDetections(entries *schema.Set) []sigsci.Detection {
 
 func expandAlerts(entries *schema.Set) []sigsci.Alert {
 	var alerts []sigsci.Alert
+
 	for _, e := range entries.List() {
 		cast := e.(map[string]interface{})
+
+		//t := (*string)(nil)
+		var t string
+		if s, ok := cast["type"].(string); ok {
+			t = s
+		}
+
+		var tn string
+		if s, ok := cast["tag_name"].(string); ok {
+			tn = s
+		}
+
 		alerts = append(alerts, sigsci.Alert{
 			AlertUpdateBody: sigsci.AlertUpdateBody{
 				LongName:          cast["long_name"].(string),
@@ -89,6 +117,8 @@ func expandAlerts(entries *schema.Set) []sigsci.Alert {
 				Enabled:           cast["enabled"].(bool),
 				Action:            cast["action"].(string),
 			},
+			Type:    t,
+			TagName: tn,
 		})
 	}
 	return alerts
@@ -199,11 +229,11 @@ func calcAlertDeletes(old, new []sigsci.Alert) []sigsci.Alert {
 	return alertDels
 }
 
-func diffTemplateDetections(orig, new []sigsci.Detection) ([]sigsci.Detection, []sigsci.Detection, []sigsci.Detection) {
-	return calcDetectionAdds(orig, new), calcDetectionUpdates(orig, new), calcDetectionDeletes(orig, new)
+func diffTemplateDetections(template string, orig, new []sigsci.Detection) ([]sigsci.Detection, []sigsci.Detection, []sigsci.Detection) {
+	return calcDetectionAdds(template, orig, new), calcDetectionUpdates(template, orig, new), calcDetectionDeletes(orig, new)
 }
 
-func calcDetectionAdds(old, new []sigsci.Detection) []sigsci.Detection {
+func calcDetectionAdds(templateID string, old, new []sigsci.Detection) []sigsci.Detection {
 	var detectionAdds []sigsci.Detection
 	for _, newD := range new {
 		exists := false
@@ -213,6 +243,13 @@ func calcDetectionAdds(old, new []sigsci.Detection) []sigsci.Detection {
 			}
 		}
 		if !exists {
+			newD.Name = templateID
+			// Convert strings to numbers
+			for i, f := range newD.Fields {
+				if v, err := strconv.Atoi(f.Value.(string)); err == nil {
+					newD.Fields[i].Value = v
+				}
+			}
 			detectionAdds = append(detectionAdds, newD)
 		}
 	}
@@ -235,12 +272,13 @@ func calcDetectionDeletes(old, new []sigsci.Detection) []sigsci.Detection {
 	return detectionDeletes
 }
 
-func calcDetectionUpdates(old, new []sigsci.Detection) []sigsci.Detection {
+func calcDetectionUpdates(templateID string, old, new []sigsci.Detection) []sigsci.Detection {
 	var detectionUpdates []sigsci.Detection
 	for _, oldD := range old {
 		for _, newD := range new {
 			if oldD.Name == newD.Name {
 				if oldD.Enabled != newD.Enabled || !detectionFieldsEqual(newD.Fields, oldD.Fields) {
+					newD.Name = templateID
 					detectionUpdates = append(detectionUpdates, newD)
 				}
 			}
@@ -268,4 +306,13 @@ func detectionFieldsEqual(old, new []sigsci.ConfiguredDetectionField) bool {
 		}
 	}
 	return true
+}
+
+func intArrContains(slice []int, val int) bool {
+	for _, s := range slice {
+		if s == val {
+			return true
+		}
+	}
+	return false
 }

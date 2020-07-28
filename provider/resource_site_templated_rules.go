@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"errors"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -67,7 +68,7 @@ func resourceSiteTemplatedRule() *schema.Resource {
 			"alerts": {
 				Type:        schema.TypeSet,
 				Description: "Alerts",
-				Required:    true,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -81,6 +82,12 @@ func resourceSiteTemplatedRule() *schema.Resource {
 						"interval": {
 							Type:     schema.TypeInt,
 							Required: true,
+							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+								if intArrContains([]int{1, 10, 60}, val.(int)) {
+									return nil, nil
+								}
+								return nil, []error{errors.New("alerts.interval must be 1, 10, or 60")}
+							},
 						},
 						"threshold": {
 							Type:     schema.TypeInt,
@@ -111,7 +118,7 @@ func resourceTemplatedRuleCreate(d *schema.ResourceData, m interface{}) error {
 	site := d.Get("site_short_name").(string)
 	templateID := d.Get("name").(string)
 
-	detectionAdds, _, _ := diffTemplateDetections([]sigsci.Detection{}, expandDetections(d.Get("detections").(*schema.Set)))
+	detectionAdds, _, _ := diffTemplateDetections(templateID, []sigsci.Detection{}, expandDetections(d.Get("detections").(*schema.Set)))
 	alertAdds, _, _ := diffTemplateAlerts([]sigsci.Alert{}, expandAlerts(d.Get("alerts").(*schema.Set)))
 
 	template, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, site, templateID, sigsci.SiteTemplateRuleBody{
@@ -164,7 +171,7 @@ func resourceTemplatedRuleUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	detectionAdds, detectionUpdates, detectionDeletes := diffTemplateDetections(existingTemplate.Detections, expandDetections(d.Get("detections").(*schema.Set)))
+	detectionAdds, detectionUpdates, detectionDeletes := diffTemplateDetections(d.Id(), existingTemplate.Detections, expandDetections(d.Get("detections").(*schema.Set)))
 	alertAdds, alertUpdates, alertDeletes := diffTemplateAlerts(existingTemplate.Alerts, expandAlerts(d.Get("alerts").(*schema.Set)))
 	siteTemplate, err := sc.UpdateSiteTemplateRuleByID(pm.Corp, site, d.Id(), sigsci.SiteTemplateRuleBody{
 		DetectionAdds:    detectionAdds,
@@ -191,16 +198,6 @@ func resourceTemplatedRuleDelete(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	//
-	//alertDeletes := []sigsci.AlertUpdateBody{}
-	//for _, a := range existingTemplate.Alerts {
-	//	alertDeletes = append(alertDeletes, a.AlertUpdateBody)
-	//}
-	//
-	//detectionDeletes := []sigsci.DetectionUpdateBody{}
-	//for _, d := range existingTemplate.Detections {
-	//	detectionDeletes = append(detectionDeletes, d.DetectionUpdateBody)
-	//}
 
 	_, err = sc.UpdateSiteTemplateRuleByID(pm.Corp, site, d.Id(), sigsci.SiteTemplateRuleBody{
 		DetectionDeletes: existingTemplate.Detections,

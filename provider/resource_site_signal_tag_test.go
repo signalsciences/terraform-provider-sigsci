@@ -8,6 +8,7 @@ import (
 
 //TODO implement sweepers for everyone
 func TestAccResourceSiteSignalTagCRUD(t *testing.T) {
+	t.Parallel()
 	resourceName := "sigsci_site_signal_tag.test_tag"
 
 	resource.Test(t, resource.TestCase{
@@ -22,7 +23,6 @@ func TestAccResourceSiteSignalTagCRUD(t *testing.T) {
                       description     = "test description"
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect("wat"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "My new tag"),
 					resource.TestCheckResourceAttr(resourceName, "description", "test description"),

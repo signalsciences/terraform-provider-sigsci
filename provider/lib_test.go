@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/signalsciences/go-sigsci"
 	"testing"
 	"time"
@@ -11,7 +13,7 @@ func TestDiffTemplateDetectionsUpdate(t *testing.T) {
 	new := getDefaultDetection()
 
 	new.Fields[0].Value = "blah"
-	add, update, del := diffTemplateDetections([]sigsci.Detection{old}, []sigsci.Detection{new})
+	add, update, del := diffTemplateDetections("CMDEXE", []sigsci.Detection{old}, []sigsci.Detection{new})
 	if len(add) > 0 || len(del) > 0 {
 		t.Fail()
 	}
@@ -28,7 +30,7 @@ func TestDiffTemplateDetectionsAddDel(t *testing.T) {
 	new := getDefaultDetection()
 
 	new.Name = "CMDEXE"
-	add, update, del := diffTemplateDetections([]sigsci.Detection{old}, []sigsci.Detection{new})
+	add, update, del := diffTemplateDetections("CMDEXE", []sigsci.Detection{old}, []sigsci.Detection{new})
 	if len(add) != 1 || len(del) != 1 || len(update) != 0 {
 		t.Fail()
 		return
@@ -80,6 +82,7 @@ func TestDiffTemplateAlertsAddDel(t *testing.T) {
 }
 
 func getDefaultDetection() sigsci.Detection {
+	now := time.Now()
 	return sigsci.Detection{
 		DetectionUpdateBody: sigsci.DetectionUpdateBody{
 			ID:      "123",
@@ -90,7 +93,7 @@ func getDefaultDetection() sigsci.Detection {
 				{Name: "path", Value: "/login"},
 			},
 		},
-		Created:   time.Now(),
+		Created:   &now,
 		CreatedBy: "lib_test.go",
 	}
 }
@@ -106,5 +109,15 @@ func getDefaultAlert() sigsci.Alert {
 			Action:            "info",
 		},
 		ID: "654321",
+	}
+}
+
+func testInspect() resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		pm := testAccProvider.Meta().(providerMetadata)
+		m := s.Modules[0].Resources
+		_ = m
+		_ = pm.Corp == pm.Corp
+		return nil
 	}
 }

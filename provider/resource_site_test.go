@@ -2,16 +2,38 @@ package provider
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/signalsciences/go-sigsci"
 	"testing"
 )
 
-var testSite = "test" //acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+func init() {
+	resource.AddTestSweepers("site_templated_rules_sweeper", &resource.Sweeper{
+		Name: "site_templated_rules_sweeper",
+		F: func(region string) error {
+			metadata := testAccProvider.Meta().(providerMetadata)
+			sc := metadata.Client
+			_ = sc.DeleteSite(metadata.Corp, testSite)
+			_, err := sc.CreateSite(metadata.Corp, sigsci.CreateSiteBody{
+				Name:                 testSite,
+				DisplayName:          testSite,
+				AgentLevel:           "log",
+				AgentAnonMode:        "",
+				BlockHTTPCode:        400,
+				BlockDurationSeconds: 60,
+			})
+			if err != nil {
+				return err
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccResourceSiteBasic(t *testing.T) {
+	t.Parallel()
 	resourceName := "sigsci_site.test"
-	testSite = acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	testSite := randStringRunes(5)
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

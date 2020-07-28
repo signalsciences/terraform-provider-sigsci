@@ -51,10 +51,8 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   site_short_name = sigsci_site.my-site.short_name
   name            = "LOGINATTEMPT"
   detections {
-    //    name    = "wat"
     enabled = "true"
     fields {
-      name  = "wat"
       value = "awefwefa"
     }
   }

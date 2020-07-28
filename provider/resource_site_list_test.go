@@ -3,12 +3,12 @@ package provider
 import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"testing"
 )
 
 //TODO implement sweepers for everyone
 func TestAccResourceSiteListCRUD(t *testing.T) {
+	t.Parallel()
 	resourceName := "sigsci_site_list.test_list"
 
 	resource.Test(t, resource.TestCase{
@@ -53,7 +53,6 @@ func TestAccResourceSiteListCRUD(t *testing.T) {
                         ]
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect("wat"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "test list"),
 					resource.TestCheckResourceAttr(resourceName, "type", "ip"),
@@ -67,12 +66,4 @@ func TestAccResourceSiteListCRUD(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testInspect(name string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		pm := testAccProvider.Meta().(providerMetadata)
-		_ = pm.Corp == "waty"
-		return nil
-	}
 }

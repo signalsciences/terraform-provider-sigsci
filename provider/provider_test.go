@@ -3,6 +3,7 @@ package provider
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"math/rand"
 	"os"
 	"testing"
 )
@@ -39,3 +40,15 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("SIGSCI_PASSWORD or SIGSCI_TOKEN must be set for acceptance tests")
 	}
 }
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyz0123456789")
+
+func randStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
+
+var testSite = "test" // createTestSiteName()
