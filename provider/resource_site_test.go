@@ -3,6 +3,7 @@ package provider
 import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/signalsciences/go-sigsci"
 	"testing"
 )
@@ -35,8 +36,9 @@ func TestAccResourceSiteBasic(t *testing.T) {
 	resourceName := "sigsci_site.test"
 	testSite := randStringRunes(5)
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
@@ -72,6 +74,29 @@ func TestAccResourceSiteBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "agent_anon_mode", "EU"),
 				),
 			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateCheck:  testAccImportStateCheckFunction(1), //TODO this is insufficient
+			},
 		},
 	})
+}
+
+func testACCCheckSiteDestroy(s *terraform.State) error {
+	pm := testAccProvider.Meta().(providerMetadata)
+	sc := pm.Client
+
+	resourceType := "sigsci_site"
+	for _, resource := range s.RootModule().Resources {
+		if resource.Type != resourceType {
+			continue
+		}
+		readResp, err := sc.GetSite(pm.Corp, resource.Primary.ID)
+		if err == nil {
+			return fmt.Errorf("%s %#v still exists", resourceType, readResp)
+		}
+	}
+	return nil
 }

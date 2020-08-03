@@ -12,6 +12,13 @@ func resourceSite() *schema.Resource {
 		Update: updateSite,
 		Read:   readSite,
 		Delete: deleteSite,
+		Importer: &schema.ResourceImporter{
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				d.Set("short_name", d.Id())
+				d.SetId(d.Id())
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"short_name": {
 				Type:        schema.TypeString,

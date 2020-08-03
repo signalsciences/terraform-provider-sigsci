@@ -185,7 +185,6 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 			        }
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "LOGINFAILURE"),
 

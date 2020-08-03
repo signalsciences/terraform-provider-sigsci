@@ -6,6 +6,7 @@ import (
 	"github.com/signalsciences/go-sigsci"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 type providerMetadata struct {
@@ -315,4 +316,94 @@ func intArrContains(slice []int, val int) bool {
 		}
 	}
 	return false
+}
+
+func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
+	var conditions []sigsci.Condition
+	for _, genericElement := range conditionsResource.List() {
+		castElement := genericElement.(map[string]interface{})
+		if _, ok := castElement["conditions"]; !ok {
+			c := sigsci.Condition{
+				Type:          castElement["type"].(string),
+				Field:         castElement["field"].(string),
+				Operator:      castElement["operator"].(string),
+				GroupOperator: castElement["group_operator"].(string),
+				Value:         castElement["value"].(string),
+			}
+			conditions = append(conditions, c)
+			return conditions
+		}
+		c := sigsci.Condition{
+			Type:          castElement["type"].(string),
+			Field:         castElement["field"].(string),
+			Operator:      castElement["operator"].(string),
+			Value:         castElement["value"].(string),
+			GroupOperator: castElement["group_operator"].(string),
+			Conditions:    expandRuleConditions(castElement["conditions"].(*schema.Set)),
+		}
+		conditions = append(conditions, c)
+	}
+	return conditions
+}
+
+func flattenRuleConditions(conditions []sigsci.Condition) []interface{} {
+	var conditionsMap = make([]interface{}, len(conditions), len(conditions))
+	for i, condition := range conditions {
+		conditionMap := map[string]interface{}{
+			"type":           condition.Type,
+			"field":          condition.Field,
+			"operator":       condition.Operator,
+			"value":          condition.Value,
+			"group_operator": condition.GroupOperator,
+		}
+		if len(condition.Conditions) != 0 {
+			conditionMap["conditions"] = flattenRuleConditions(condition.Conditions)
+		}
+		conditionsMap[i] = conditionMap
+	}
+	return conditionsMap
+}
+
+func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
+	var actions []sigsci.Action
+	for _, genericElement := range actionsResource.List() {
+		castElement := genericElement.(map[string]interface{})
+		a := sigsci.Action{
+			Type: castElement["type"].(string),
+		}
+		actions = append(actions, a)
+	}
+	return actions
+}
+
+func flattenRuleActions(actions []sigsci.Action) []interface{} {
+	var actionsMap = make([]interface{}, len(actions), len(actions))
+	for i, action := range actions {
+		actionMap := map[string]interface{}{
+			"type": action.Type,
+		}
+		actionsMap[i] = actionMap
+	}
+
+	return actionsMap
+}
+
+//func resourceCorpImport(corpId string) (corp string, id string, err error) {
+//	parts := strings.SplitN(corpId, ":", 2)
+//
+//	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+//		return "", "", fmt.Errorf("unexpected format of ID (%s), expected corp:id", corpId)
+//	}
+//
+//	return parts[0], parts[1], nil
+//}
+
+func resourceSiteImport(corpSiteId string) (site string, id string, err error) {
+	parts := strings.SplitN(corpSiteId, ":", 3)
+
+	if len(parts) != 2 || parts[0] == "" || parts[1] == "" || parts[2] == "" {
+		return "", "", fmt.Errorf("unexpected format of ID (%s), expected site:id", corpSiteId)
+	}
+
+	return parts[0], parts[1], nil
 }

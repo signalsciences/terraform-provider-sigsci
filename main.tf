@@ -53,6 +53,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   detections {
     enabled = "true"
     fields {
+      name  = "path"
       value = "awefwefa"
     }
   }
@@ -74,4 +75,49 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
     enabled            = false
     action             = "info"
   }
+}
+
+resource "sigsci_site_rule" "test" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "signal"
+  group_operator  = "any"
+  enabled         = true
+  reason          = "Example site rule update"
+  signal          = "SQLI"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "ip"
+    operator = "equals"
+    value    = "1.2.3.4"
+  }
+  conditions {
+    type     = "single"
+    field    = "ip"
+    operator = "equals"
+    value    = "1.2.3.5"
+    conditions {
+      type           = "multival"
+      field          = "ip"
+      operator       = "equals"
+      group_operator = "all"
+      value          = "1.2.3.8"
+    }
+  }
+
+  actions {
+    type = "excludeSignal"
+  }
+}
+
+resource "sigsci_corp_list" "test" {
+  name        = "My corp list"
+  type        = "ip"
+  description = "Some IPs we are putting in a list"
+  entries = [
+    "4.5.6.7",
+    "2.3.4.5",
+    "1.2.3.4",
+  ]
 }
