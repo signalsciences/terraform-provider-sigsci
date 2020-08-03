@@ -11,9 +11,18 @@ func resourceSiteAlert() *schema.Resource {
 		Update: resourceSiteAlertUpdate,
 		Read:   resourceSiteAlertRead,
 		Delete: resourceSiteAlertDelete,
-		//Importer: &schema.ResourceImporter{ //TODO try importing, make sure it works
-		//	State: schema.ImportStatePassthrough, // this only sets the id. Probably a better way
-		//},
+		Importer: &schema.ResourceImporter{
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				site, id, err := resourceSiteImport(d.Id())
+				if err != nil {
+					return nil, err
+				}
+
+				d.Set("site_short_name", site)
+				d.SetId(id)
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"site_short_name": {
 				Type:        schema.TypeString,

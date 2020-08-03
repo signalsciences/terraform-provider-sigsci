@@ -41,6 +41,13 @@ func TestAccResourceSiteSignalTagCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "description", "test description 2"),
 				),
 			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
 		},
 	})
 }

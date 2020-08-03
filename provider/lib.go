@@ -401,7 +401,7 @@ func flattenRuleActions(actions []sigsci.Action) []interface{} {
 func resourceSiteImport(corpSiteId string) (site string, id string, err error) {
 	parts := strings.SplitN(corpSiteId, ":", 3)
 
-	if len(parts) != 2 || parts[0] == "" || parts[1] == "" || parts[2] == "" {
+	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
 		return "", "", fmt.Errorf("unexpected format of ID (%s), expected site:id", corpSiteId)
 	}
 

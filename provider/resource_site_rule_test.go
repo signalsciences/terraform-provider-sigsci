@@ -67,12 +67,13 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.value", "1.2.3.5"),
 				),
 			},
-			//{
-			//	ResourceName:      resourceName,
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//	ImportStateCheck:  testAccImportStateCheckFunction(1),
-			//},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
 		},
 	})
 }

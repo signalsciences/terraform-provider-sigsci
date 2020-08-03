@@ -14,7 +14,16 @@ func resourceSiteRule() *schema.Resource {
 		Read:   resourceSiteRuleRead,
 		Delete: resourceSiteRuleDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough, // this only sets the id. Probably a better way
+			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				site, id, err := resourceSiteImport(d.Id())
+
+				if err != nil {
+					return nil, err
+				}
+				d.Set("site_short_name", site)
+				d.SetId(id)
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		Schema: map[string]*schema.Schema{
 			"site_short_name": {

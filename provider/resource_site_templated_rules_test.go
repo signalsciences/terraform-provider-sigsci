@@ -205,6 +205,13 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "alerts.#", "0"),
 				),
 			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
 		},
 		CheckDestroy: func(state *terraform.State) error {
 			return nil

@@ -40,6 +40,13 @@ func TestAccResourceSiteRedactionCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "redaction_type", "1"),
 				),
 			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
 		},
 	})
 }

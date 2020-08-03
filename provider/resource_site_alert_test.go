@@ -56,6 +56,13 @@ func TestAccResourceSiteAlertCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "action", "flagged"),
 				),
 			},
+			{
+				ResourceName:        resourceName,
+				ImportState:         true,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+				ImportStateVerify:   true,
+			},
 		},
 	})
 }
