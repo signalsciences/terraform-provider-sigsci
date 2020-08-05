@@ -34,7 +34,7 @@ func resourceSiteSignalTag() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The display name of the signal tag",
 				Required:    true,
-				ForceNew:    true, // Hopefully this can be changed in the api later
+				ForceNew:    true, // TODO Hopefully this can be changed in the api later
 			},
 			"description": {
 				Type:        schema.TypeString,

@@ -1,8 +1,8 @@
 provider "sigsci" {
-  //  email = ""  //may also provide via env variable
-  //  auth_token = "" //may also provide via env variable
-  //  password = ""
-  corp = "jhanrahan_test_corp"
+  corp = "jhanrahan_test_corp" // Required. may also provide via env variable SIGSCI_CORP
+  //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
+  //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
+  //  password = "" //may also provide via env variable SIGSCI_PASSWORD
 }
 
 resource "sigsci_site" "my-site" {
