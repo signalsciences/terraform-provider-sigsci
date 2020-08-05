@@ -92,7 +92,7 @@ func resourceSiteTemplatedRule() *schema.Resource {
 							Type:     schema.TypeInt,
 							Required: true,
 							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								if intArrContains([]int{1, 10, 60}, val.(int)) {
+								if existsInInt(val.(int), 1, 10, 60) {
 									return nil, nil
 								}
 								return nil, []error{errors.New("alerts.interval must be 1, 10, or 60")}

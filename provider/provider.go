@@ -48,6 +48,7 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_site_templated_rule": resourceSiteTemplatedRule(),
 			"sigsci_site_rule":           resourceSiteRule(),
 			"sigsci_corp_list":           resourceCorpList(),
+			"sigsci_corp_rule":           resourceCorpRule(),
 		},
 	}
 	provider.ConfigureFunc = providerConfigure()

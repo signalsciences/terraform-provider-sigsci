@@ -309,9 +309,18 @@ func detectionFieldsEqual(old, new []sigsci.ConfiguredDetectionField) bool {
 	return true
 }
 
-func intArrContains(slice []int, val int) bool {
-	for _, s := range slice {
-		if s == val {
+func existsInInt(needle int, haystack ...int) bool {
+	for _, i := range haystack {
+		if i == needle {
+			return true
+		}
+	}
+	return false
+}
+
+func existsInString(needle string, haystack ...string) bool {
+	for _, s := range haystack {
+		if s == needle {
 			return true
 		}
 	}
@@ -388,21 +397,11 @@ func flattenRuleActions(actions []sigsci.Action) []interface{} {
 	return actionsMap
 }
 
-//func resourceCorpImport(corpId string) (corp string, id string, err error) {
-//	parts := strings.SplitN(corpId, ":", 2)
-//
-//	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
-//		return "", "", fmt.Errorf("unexpected format of ID (%s), expected corp:id", corpId)
-//	}
-//
-//	return parts[0], parts[1], nil
-//}
-
-func resourceSiteImport(corpSiteId string) (site string, id string, err error) {
-	parts := strings.SplitN(corpSiteId, ":", 3)
+func resourceSiteImport(siteId string) (site string, id string, err error) {
+	parts := strings.SplitN(siteId, ":", 2)
 
 	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
-		return "", "", fmt.Errorf("unexpected format of ID (%s), expected site:id", corpSiteId)
+		return "", "", fmt.Errorf("unexpected format of ID (%s), expected site:id", siteId)
 	}
 
 	return parts[0], parts[1], nil
