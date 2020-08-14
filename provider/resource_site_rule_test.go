@@ -44,7 +44,6 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
 						}
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					testCheckSiteRuleExists(resourceName),
 					testCheckSiteRulesAreEqual(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "type", "signal"),

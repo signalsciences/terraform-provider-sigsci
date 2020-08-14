@@ -47,6 +47,8 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_site_alert":          resourceSiteAlert(),
 			"sigsci_site_templated_rule": resourceSiteTemplatedRule(),
 			"sigsci_site_rule":           resourceSiteRule(),
+			"sigsci_site_blacklist":      resourceSiteBlacklist(),
+			"sigsci_site_whitelist":      resourceSiteWhitelist(),
 			"sigsci_corp_list":           resourceCorpList(),
 			"sigsci_corp_rule":           resourceCorpRule(),
 			"sigsci_corp_signal_tag":     resourceCorpSignalTag(),
