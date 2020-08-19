@@ -406,3 +406,16 @@ func resourceSiteImport(siteId string) (site string, id string, err error) {
 
 	return parts[0], parts[1], nil
 }
+
+var siteImporter = schema.ResourceImporter{
+	State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+		site, id, err := resourceSiteImport(d.Id())
+
+		if err != nil {
+			return nil, err
+		}
+		d.Set("site_short_name", site)
+		d.SetId(id)
+		return []*schema.ResourceData{d}, nil
+	},
+}
