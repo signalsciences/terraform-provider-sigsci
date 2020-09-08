@@ -154,7 +154,8 @@ resource "sigsci_site_signal_tag" "test_tag" {
 }
 ```
 ##### Redactions
-Warning: if using redactions, you **must** terraform apply with the option parallelism=1
+| Warning: if using redactions, you **must** terraform apply with the option parallelism=1. [See the FAQ](https://github.com/signalsciences/terraform-provider-sigsci/FAQ.md) |
+| --- |
 ```hcl-terraform
 resource "sigsci_site_redaction" "test_redaction" {
   site_short_name = sigsci_site.my-site.short_name
@@ -228,7 +229,8 @@ resource "sigsci_site_whitelist" "test" {
 ```
 
 ##### Header Links
-Warning: if using header links, you **must** terraform apply with the option parallelism=1 
+|Warning: if using header links, you **must** terraform apply with the option parallelism=1. [See the FAQ](https://github.com/signalsciences/terraform-provider-sigsci/FAQ.md)|
+| --- |
 ```hcl-terraform
 resource "sigsci_site_header_link" "test_header_link" {
   site_short_name = sigsci_site.my-site.short_name

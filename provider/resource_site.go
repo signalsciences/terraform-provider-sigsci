@@ -39,7 +39,7 @@ func resourceSite() *schema.Resource {
 			},
 			"agent_anon_mode": {
 				Type:        schema.TypeString,
-				Description: "Agent IP anonimization mode - \"\" (empty string) or 'EU'",
+				Description: "Agent IP anonymization mode - \"\" (empty string) or 'EU'",
 				Optional:    true,
 				Default:     "",
 			},

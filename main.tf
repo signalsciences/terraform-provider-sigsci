@@ -5,6 +5,16 @@ provider "sigsci" {
   //  password = "" //may also provide via env variable SIGSCI_PASSWORD
 }
 
+resource "sigsci_site" "my-site" {
+  short_name             = "manual_test"
+  display_name           = "manual terraform test"
+  block_duration_seconds = 86400 // TODO check this...
+  block_http_code        = 406   // default 406, field not really respected
+  agent_anon_mode        = ""
+  agent_level            = "block"
+}
+
+
 
 resource "sigsci_corp_list" "test" {
   name        = "My corp list"
@@ -50,8 +60,6 @@ resource "sigsci_corp_signal_tag" "test" {
   description = "An example of a custom signal tag"
 }
 
-
-
 resource "sigsci_site_list" "test_list" {
   site_short_name = sigsci_site.my-site.short_name
   name            = "My new list 2"
@@ -71,8 +79,11 @@ resource "sigsci_site_signal_tag" "test_tag" {
 }
 
 
-
-
+resource "sigsci_site_signal_tag" "test" {
+  site_short_name = sigsci_site.my-site.short_name
+  name            = "test"
+  description     = "test 2"
+}
 
 resource "sigsci_site_alert" "test_site_alert" {
   site_short_name = sigsci_site.my-site.short_name
@@ -168,17 +179,6 @@ resource "sigsci_site_whitelist" "test" {
   note            = "sample whitelistt"
 }
 
-resource "sigsci_site_whitelist" "test2" {
-  site_short_name = sigsci_site.my-site.short_name
-  source          = "1.2.3.5"
-  note            = "sample whitelist"
-}
-
-resource "sigsci_site_whitelist" "test3" {
-  site_short_name = sigsci_site.my-site.short_name
-  source          = "1.2.3.3"
-  note            = "sample whitelist"
-}
 
 resource "sigsci_site_redaction" "test_redaction" {
   site_short_name = sigsci_site.my-site.short_name
@@ -186,23 +186,4 @@ resource "sigsci_site_redaction" "test_redaction" {
   redaction_type  = 2
 }
 
-resource "sigsci_site_redaction" "test_redaction2" {
-  site_short_name = sigsci_site.my-site.short_name
-  field           = "redacted_field"
-  redaction_type  = 1
-}
 
-resource "sigsci_site_redaction" "test_redaction3" {
-  site_short_name = sigsci_site.my-site.short_name
-  field           = "redacted_field"
-  redaction_type  = 0
-}
-
-resource "sigsci_site" "my-site" {
-  short_name             = "manual_test"
-  display_name           = "manual terraform test"
-  block_duration_seconds = 86400 // TODO check this...
-  block_http_code        = 406   // default 406, field not really respected
-  agent_anon_mode        = ""
-  agent_level            = "block"
-}
