@@ -99,7 +99,6 @@ func resourceCorpRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
-							// ConflictsWith: []string{"conditions.0.operator"},
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
