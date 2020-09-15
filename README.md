@@ -29,87 +29,63 @@ provider "sigsci" {
 }
 ```
 ## Corp level resources
-##### Site
+[Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site.md)
+
+[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_list.md)
+
+[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_signal_tag.md)
+
+[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_rule.md)
+
+## Site level resources
+
+[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_list.md)
+
+[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_rule.md)
+
+[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_signal_tag.md)
+
+[Redactions](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_redaction.md)
+
+[Alerts](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_alert.md)
+
+[Templated Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_templated_rule.md)
+
+[Whitelist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_whitelist.md)
+
+[Blacklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_blacklist.md)
+
+[Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_header_link.md)
+
+More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
+
+## Sample
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
   display_name           = "manual terraform test"
-  block_duration_seconds = 1000
-  block_http_code        = 303
+  block_duration_seconds = 86400
+  block_http_code        = 406
   agent_anon_mode        = ""
+  agent_level            = "block"
 }
-```
-##### List
-```hcl-terraform
-resource "sigsci_corp_list" "test_list" {
-  name        = "My corp list"
-  type        = "ip"
-  description = "Some IPs"
-  entries = [
-    "4.5.6.7",
-    "2.3.4.5",
-    "1.2.3.4",
-  ]
-}
-```
 
-##### Rules
-```hcl-terraform
-resource "sigsci_corp_rule" "test" {
-  site_short_names = [sigsci_site.my-site.short_name]
-  type             = "signal"
-  corp_scope       = "specificSites"
-  enabled          = true
-  group_operator   = "any"
-  signal           = "SQLI"
-  reason           = "Example corp rule"
-  expiration       = ""
-
-  conditions {
-    type     = "single"
-    field    = "ip"
-    operator = "equals"
-    value    = "1.2.3.4"
-  }
-  conditions {
-    type     = "single"
-    field    = "ip"
-    operator = "equals"
-    value    = "1.2.3.5"
-  }
-  actions {
-    type = "excludeSignal"
-  }
-}
-```
-
-##### Tags
-```hcl-terraform
-resource "sigsci_corp_signal_tag" "test" {
-  short_name  = "example-signal-tag"
-  description = "An example of a custom signal tag"
-}
-```
-
-
-## Site level resources
-##### Lists
-```hcl-terraform
-resource "sigsci_site_list" "test_list" {
+resource "sigsci_site_signal_tag" "test_tag" {
   site_short_name = sigsci_site.my-site.short_name
-  name            = "My new list 2"
-  type            = "ip"
-  description     = "Some IPs we are putting in a list"
-  entries = [
-    "4.5.6.7",
-    "2.3.4.5",
-    "1.2.3.4",
-  ]
+  name            = "My new signal tag"
+  description     = "description"
 }
-```
 
-##### Rules
-```hcl-terraform
+resource "sigsci_site_alert" "test_site_alert" {
+  site_short_name = sigsci_site.my-site.short_name
+  tag_name        = sigsci_site_signal_tag.test_tag.id
+  long_name       = "test_alert"
+  interval        = 10
+  threshold       = 12
+  enabled         = true
+  action          = "info"
+}
+
 resource "sigsci_site_rule" "test" {
   site_short_name = sigsci_site.my-site.short_name
   type            = "signal"
@@ -143,105 +119,19 @@ resource "sigsci_site_rule" "test" {
     type = "excludeSignal"
   }
 }
-```
 
-##### Tags
-```hcl-terraform
-resource "sigsci_site_signal_tag" "test_tag" {
-  site_short_name = sigsci_site.my-site.short_name
-  name            = "My new signal tag"
-  description     = "description"
+resource "sigsci_corp_list" "test_list" {
+  name        = "My corp list"
+  type        = "ip"
+  description = "Some IPs"
+  entries = [
+    "4.5.6.7",
+    "2.3.4.5",
+    "1.2.3.4",
+  ]
 }
+
 ```
-##### Redactions
-| Warning: if using redactions, you **must** terraform apply with the option parallelism=1. [See the FAQ](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/FAQ.md) |
-| --- |
-```hcl-terraform
-resource "sigsci_site_redaction" "test_redaction" {
-  site_short_name = sigsci_site.my-site.short_name
-  field           = "redacted_field"
-  redaction_type  = 1
-}
-```
-
-##### Alerts
-```hcl-terraform
-resource "sigsci_site_alert" "test_site_alert" {
-  site_short_name = sigsci_site.my-site.short_name
-  tag_name        = sigsci_site_signal_tag.test_tag.id
-  long_name       = "test_alert"
-  interval        = 10
-  threshold       = 12
-  enabled         = true
-  action          = "info"
-}
-```
-
-##### Templated Rules
-```hcl-terraform
-resource "sigsci_site_templated_rule" "test_template_rule" {
-  site_short_name = sigsci_site.my-site.short_name
-  name            = "LOGINATTEMPT"
-  detections {
-    enabled = "true"
-    fields {
-      name  = "path"
-      value = "/auth/*"
-    }
-  }
-
-  alerts {
-    long_name          = "alert 1"
-    interval           = 60
-    threshold          = 10
-    skip_notifications = true
-    enabled            = true
-    action             = "info"
-  }
-
-  alerts {
-    long_name          = "alert 2"
-    interval           = 60
-    threshold          = 1
-    skip_notifications = false
-    enabled            = false
-    action             = "info"
-  }
-}
-```
-
-##### BlackList
-```hcl-terraform
-resource "sigsci_site_blacklist" "test" {
-  site_short_name = sigsci_site.my-site.short_name
-  source          = "1.2.3.4"
-  note            = "sample blacklist"
-}
-```
-
-##### Whitelist
-```hcl-terraform
-resource "sigsci_site_whitelist" "test" {
-  site_short_name = sigsci_site.my-site.short_name
-  source          = "1.2.3.4"
-  note            = "sample whitelist"
-}
-```
-
-##### Header Links
-|Warning: if using header links, you **must** terraform apply with the option parallelism=1. [See the FAQ](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/FAQ.md)|
-| --- |
-```hcl-terraform
-resource "sigsci_site_header_link" "test_header_link" {
-  site_short_name = sigsci_site.my-site.short_name
-  name            = "test_header_link"
-  type            = "request"
-  link_name       = "signal sciences"
-  link            = "https://www.signalsciences.net"
-}
-```
-
-More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
 
 ## Importing
 

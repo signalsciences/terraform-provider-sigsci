@@ -5,16 +5,16 @@ provider "sigsci" {
   //  password = "" //may also provide via env variable SIGSCI_PASSWORD
 }
 
+############# Corp Level Resources #############
+
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
   display_name           = "manual terraform test"
-  block_duration_seconds = 86400 // TODO check this...
-  block_http_code        = 406   // default 406, field not really respected
+  block_duration_seconds = 86400
+  block_http_code        = 406
   agent_anon_mode        = ""
   agent_level            = "block"
 }
-
-
 
 resource "sigsci_corp_list" "test" {
   name        = "My corp list"
@@ -26,7 +26,6 @@ resource "sigsci_corp_list" "test" {
     "1.2.3.4",
   ]
 }
-
 
 resource "sigsci_corp_rule" "test" {
   site_short_names = [sigsci_site.my-site.short_name]
@@ -59,6 +58,8 @@ resource "sigsci_corp_signal_tag" "test" {
   short_name  = "example-signal-tag"
   description = "An example of a custom signal tag"
 }
+
+############# Site Level Resources #############
 
 resource "sigsci_site_list" "test_list" {
   site_short_name = sigsci_site.my-site.short_name
@@ -169,21 +170,19 @@ resource "sigsci_site_header_link" "test_header_link" {
   site_short_name = sigsci_site.my-site.short_name
   name            = "test_header_link"
   type            = "request"
-  link_name       = "signal sciences"
+  link_name       = "signal sciences 89"
   link            = "https://www.signalsciences.net"
 }
 
 resource "sigsci_site_whitelist" "test" {
   site_short_name = sigsci_site.my-site.short_name
-  source          = "1.2.3.1"
+  source          = "1.2.2.1"
   note            = "sample whitelistt"
 }
 
-
 resource "sigsci_site_redaction" "test_redaction" {
   site_short_name = sigsci_site.my-site.short_name
-  field           = "redacted_f"
-  redaction_type  = 2
+  field           = "redacted"
+  redaction_type  = 0
 }
-
 
