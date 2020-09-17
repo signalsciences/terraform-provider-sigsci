@@ -59,7 +59,7 @@ provider "sigsci" {
 
 More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
 
-## Sample
+## Example
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
