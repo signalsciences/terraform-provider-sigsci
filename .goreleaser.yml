@@ -53,8 +53,8 @@ release:
 # If you want to manually examine the release before its live, uncomment this line:
 # draft: true
   github:
-    owner: github-actions-sigsci
-    name: signalsciences/terraform-provider-sigsci
+    owner: signalsciences
+    name: terraform-provider-sigsci
   name_template: "{{.ProjectName}}-v{{.Version}}"
 changelog:
   skip: true
