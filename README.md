@@ -59,6 +59,23 @@ provider "sigsci" {
 
 More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
 
+
+## Importing
+
+All resources should be importable. Importing will vary depending on if you are importing a corp level resource, or a site level resource
+##### Corp Resources
+```hcl-terraform
+terraform import resource.name id // General form
+terraform import sigsci_site.my-site test_site // Example
+```
+
+##### Site Resources
+```hcl-terraform
+terraform import resource.name site_short_name:id //General form
+terraform import sigsci_site_list.manual-list test_site:site.manual-list //Example
+```
+
+
 ## Example
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
@@ -131,19 +148,4 @@ resource "sigsci_corp_list" "test_list" {
   ]
 }
 
-```
-
-## Importing
-
-Importing will vary depending on if you are importing a corp level resource or a site level resource
-##### Corp Resources
-```hcl-terraform
-terraform import resource.name id // General form
-terraform import sigsci_site.my-site test_site // Example
-```
-
-##### Site Resources
-```hcl-terraform
-terraform import resource.name site_short_name:id //General form
-terraform import sigsci_site_list.manual-list test_site:site.manual-list //Example
 ```

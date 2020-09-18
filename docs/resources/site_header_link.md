@@ -5,11 +5,12 @@ resource "sigsci_site_header_link" "test" {
   site_short_name = sigsci_site.my-site.short_name
   name            = "test_header_link"
   type            = "request"
-  link_name       = "signal sciences 89"
+  link_name       = "signal sciences"
   link            = "https://www.signalsciences.net"
 }
 ```
-Warning: You must terraform apply with the option parallelism=1 when using this resource or risk data inconsistencies! [See the FAQ.](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/guides/FAQ.md)
+|Warning: You must terraform apply with the option parallelism=1 when using this resource or risk data inconsistencies! [See the FAQ.](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/guides/FAQ.md)|
+|---|
 
 ### Argument Reference
  - `site_short_name` - (Required) Identifying name of the site
