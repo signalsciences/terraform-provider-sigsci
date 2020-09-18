@@ -77,6 +77,7 @@ terraform import sigsci_site_list.manual-list test_site:site.manual-list //Examp
 
 
 ## Example
+[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/main.tf) has an example of every resource 
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
