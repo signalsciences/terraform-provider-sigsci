@@ -7,9 +7,9 @@ This terraform provider is currently in beta
 * [Go](https://golang.org/doc/install) 1.14
 
 ## Building the provider
-Build with make and the resulting binary will be terraform-provider-sigsci.
+You may find prebuilt binaries in our [Releases](https://github.com/signalsciences/terraform-provider-sigsci/releases). 
 
-First make the correct directory, cd to it, and checkout the repo.  make build will then build the provider and output it to terraform-provider-sigsci
+If you wish to build from source, first make the correct directory, cd to it, and checkout the repo.  Running `make build` will then build the provider and output it to terraform-provider-sigsci
 ```shell script
 mkdir -p $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
 cd $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
