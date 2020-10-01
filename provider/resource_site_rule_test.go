@@ -20,30 +20,30 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
-					resource "sigsci_site_rule" "test"{
-						site_short_name="%s"
-						type= "signal"
-						group_operator="any"
-						enabled= true
-						reason= "Example site rule update"
-						signal= "SQLI"
-						expiration= ""
-						conditions {
-							type="single"
-							field="ip"
-							operator="equals"
-							value="1.2.3.4"
-						}
-						conditions {
-							type="single"
-							field="ip"
-							operator="equals"
-							value="1.2.3.5"
-						}
-						actions {
-							type="excludeSignal"
-						}
-				}`, testSite),
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "signal"
+                        group_operator="any"
+                        enabled= true
+                        reason= "Example site rule update"
+                        signal= "SQLI"
+                        expiration= ""
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.4"
+                        }
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.5"
+                        }
+                        actions {
+                            type="excludeSignal"
+                        }
+                }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testCheckSiteRuleExists(resourceName),
 					testCheckSiteRulesAreEqual(resourceName),
@@ -92,29 +92,29 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
                       name            = "My new tag"
                       description     = "test description"
                     }
-					resource "sigsci_site_rule" "test" {
-						site_short_name="%s"
-						type= "rateLimit"
-						group_operator="any"
-						enabled= true
-						reason= "Example site rule update"
-						signal= sigsci_site_signal_tag.test_tag.id
-						expiration= ""
-						conditions {
-							type="single"
-							field="ip"
-							operator="equals"
-							value="1.2.3.4"
-						}
-						actions {
-							type="logRequest"
-						}
+                    resource "sigsci_site_rule" "test" {
+                        site_short_name="%s"
+                        type= "rateLimit"
+                        group_operator="any"
+                        enabled= true
+                        reason= "Example site rule update"
+                        signal= sigsci_site_signal_tag.test_tag.id
+                        expiration= ""
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.4"
+                        }
+                        actions {
+                            type="logRequest"
+                        }
                         rate_limit = {
                             threshold=10
                             interval=10
                             duration=600
                         }
-				}`, testSite, testSite),
+                }`, testSite, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					//testCheckSiteRuleExists(resourceName),
 					//testCheckSiteRulesAreEqual(resourceName),
@@ -151,79 +151,79 @@ func TestACCResourceSiteRuleConditionSignal(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`
                     resource "sigsci_site_rule" "test" {
-						site_short_name = "%s" 
-						type            = "request"
-						group_operator  = "all"
-						enabled         = true
-						reason          = "Example site rule update"
-						expiration      = ""
-
-						conditions {
-							type     = "multival"
-							field    = "signal"
-							group_operator = "all"
-                            operator = "exists"
-							conditions {
-								field    = "signalType"
-								operator = "equals"
-								type     = "single"
-								value    = "RESPONSESPLIT"
-							}
-						}
+                        site_short_name = "%s" 
+                        type            = "request"
+                        group_operator  = "all"
+                        enabled         = true
+                        reason          = "Example site rule update"
+                        expiration      = ""
 
                         conditions {
-							type     = "group"
-							group_operator = "any"
-							conditions {
-								field    = "useragent"
-								operator = "like"
-								type     = "single"
-								value    = "python-requests*"
-							}
+                            type     = "multival"
+                            field    = "signal"
+                            group_operator = "all"
+                            operator = "exists"
+                            conditions {
+                                field    = "signalType"
+                                operator = "equals"
+                                type     = "single"
+                                value    = "RESPONSESPLIT"
+                            }
+                        }
 
-							conditions {
-								type     = "multival"
-								field    = "requestHeader"
-								operator = "doesNotExist"
-								group_operator = "all"
-								conditions {
-									field    = "name"
-									operator = "equals"
-									type     = "single"
-									value    = "cookie"
-								}
-							}
+                        conditions {
+                            type     = "group"
+                            group_operator = "any"
+                            conditions {
+                                field    = "useragent"
+                                operator = "like"
+                                type     = "single"
+                                value    = "python-requests*"
+                            }
 
-							conditions {
-								type     = "multival"
-								field    = "signal"
-								operator = "exists"
-								group_operator = "any"
-								conditions {
-									field    = "signalType"
-									operator = "equals"
-									type     = "single"
-									value    = "TORNODE"
-								}
-							    conditions {
-									field    = "signalType"
-									operator = "equals"
-									type     = "single"
-									value    = "SIGSCI-IP"
-								}
-							    conditions {
-									field    = "signalType"
-									operator = "equals"
-									type     = "single"
-									value    = "SCANNER"
-								}
-							}
-						}
+                            conditions {
+                                type     = "multival"
+                                field    = "requestHeader"
+                                operator = "doesNotExist"
+                                group_operator = "all"
+                                conditions {
+                                    field    = "name"
+                                    operator = "equals"
+                                    type     = "single"
+                                    value    = "cookie"
+                                }
+                            }
 
-						actions {
-							type = "block"
-						}
-				}`, testSite),
+                            conditions {
+                                type     = "multival"
+                                field    = "signal"
+                                operator = "exists"
+                                group_operator = "any"
+                                conditions {
+                                    field    = "signalType"
+                                    operator = "equals"
+                                    type     = "single"
+                                    value    = "TORNODE"
+                                }
+                                conditions {
+                                    field    = "signalType"
+                                    operator = "equals"
+                                    type     = "single"
+                                    value    = "SIGSCI-IP"
+                                }
+                                conditions {
+                                    field    = "signalType"
+                                    operator = "equals"
+                                    type     = "single"
+                                    value    = "SCANNER"
+                                }
+                            }
+                        }
+
+                        actions {
+                            type = "block"
+                        }
+                }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "2"),
