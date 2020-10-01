@@ -140,6 +140,109 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 	})
 }
 
+func TestACCResourceSiteRuleConditionSignal(t *testing.T) {
+
+	resourceName := "sigsci_site_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_rule" "test" {
+						site_short_name = "%s" 
+						type            = "request"
+						group_operator  = "all"
+						enabled         = true
+						reason          = "Example site rule update"
+						expiration      = ""
+
+						conditions {
+							type     = "multival"
+							field    = "signal"
+							group_operator = "all"
+                            operator = "exists"
+							conditions {
+								field    = "signalType"
+								operator = "equals"
+								type     = "single"
+								value    = "RESPONSESPLIT"
+							}
+						}
+
+                        conditions {
+							type     = "group"
+							group_operator = "any"
+							conditions {
+								field    = "useragent"
+								operator = "like"
+								type     = "single"
+								value    = "python-requests*"
+							}
+
+							conditions {
+								type     = "multival"
+								field    = "requestHeader"
+								operator = "doesNotExist"
+								group_operator = "all"
+								conditions {
+									field    = "name"
+									operator = "equals"
+									type     = "single"
+									value    = "cookie"
+								}
+							}
+
+							conditions {
+								type     = "multival"
+								field    = "signal"
+								operator = "exists"
+								group_operator = "any"
+								conditions {
+									field    = "signalType"
+									operator = "equals"
+									type     = "single"
+									value    = "TORNODE"
+								}
+							    conditions {
+									field    = "signalType"
+									operator = "equals"
+									type     = "single"
+									value    = "SIGSCI-IP"
+								}
+							    conditions {
+									field    = "signalType"
+									operator = "equals"
+									type     = "single"
+									value    = "SCANNER"
+								}
+							}
+						}
+
+						actions {
+							type = "block"
+						}
+				}`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect(),
+					resource.TestCheckResourceAttr(resourceName, "conditions.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2455721190.conditions.3887678098.conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.1840769124.conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2455721190.conditions.2522856064.conditions.#", "3"),
+				),
+			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+	})
+}
+
 func testCheckSiteRuleExists(name string) resource.TestCheckFunc {
 	var testFunc resource.TestCheckFunc = func(s *terraform.State) error {
 		rsrc, ok := s.RootModule().Resources[name]
