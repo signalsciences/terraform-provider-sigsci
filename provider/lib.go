@@ -340,7 +340,7 @@ func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 				Value:         castElement["value"].(string),
 			}
 			conditions = append(conditions, c)
-			return conditions
+			continue
 		}
 		c := sigsci.Condition{
 			Type:          castElement["type"].(string),
