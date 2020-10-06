@@ -377,8 +377,15 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 	var actions []sigsci.Action
 	for _, genericElement := range actionsResource.List() {
 		castElement := genericElement.(map[string]interface{})
+		var signal string
+
+		if castElement["signal"] != nil {
+			signal = castElement["signal"].(string)
+		}
+
 		a := sigsci.Action{
-			Type: castElement["type"].(string),
+			Type:   castElement["type"].(string),
+			Signal: signal,
 		}
 		actions = append(actions, a)
 	}
@@ -431,7 +438,8 @@ func flattenRuleActions(actions []sigsci.Action) []interface{} {
 	var actionsMap = make([]interface{}, len(actions), len(actions))
 	for i, action := range actions {
 		actionMap := map[string]interface{}{
-			"type": action.Type,
+			"type":   action.Type,
+			"signal": action.Signal,
 		}
 		actionsMap[i] = actionMap
 	}

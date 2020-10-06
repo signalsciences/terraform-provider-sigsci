@@ -186,3 +186,78 @@ resource "sigsci_site_redaction" "test_redaction" {
   redaction_type  = 0
 }
 
+
+resource "sigsci_site_rule" "testt" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "request"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example site rule update"
+  expiration      = ""
+
+  conditions {
+    type           = "multival"
+    field          = "signal"
+    group_operator = "all"
+    operator       = "exists"
+    conditions {
+      field    = "signalType"
+      operator = "equals"
+      type     = "single"
+      value    = "RESPONSESPLIT"
+    }
+  }
+
+  conditions {
+    type           = "group"
+    group_operator = "any"
+    conditions {
+      field    = "useragent"
+      operator = "like"
+      type     = "single"
+      value    = "python-requests*"
+    }
+
+    conditions {
+      type           = "multival"
+      field          = "requestHeader"
+      operator       = "doesNotExist"
+      group_operator = "all"
+      conditions {
+        field    = "name"
+        operator = "equals"
+        type     = "single"
+        value    = "cookie"
+      }
+    }
+
+    conditions {
+      type           = "multival"
+      field          = "signal"
+      operator       = "exists"
+      group_operator = "any"
+      conditions {
+        field    = "signalType"
+        operator = "equals"
+        type     = "single"
+        value    = "TORNODE"
+      }
+      conditions {
+        field    = "signalType"
+        operator = "equals"
+        type     = "single"
+        value    = "SIGSCI-IP"
+      }
+      conditions {
+        field    = "signalType"
+        operator = "equals"
+        type     = "single"
+        value    = "SCANNER"
+      }
+    }
+  }
+
+  actions {
+    type = "block"
+  }
+}

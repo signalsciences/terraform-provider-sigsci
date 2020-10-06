@@ -44,8 +44,9 @@ func TestResourceCorpRule_basic(t *testing.T) {
 					}
 			}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1859487095.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.895671942.type", "excludeSignal"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "2"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.conditions.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.field", "ip"),
