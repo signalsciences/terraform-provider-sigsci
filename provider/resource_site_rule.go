@@ -56,6 +56,11 @@ func resourceSiteRule() *schema.Resource {
 							Description: "(block, allow, exclude)",
 							Required:    true,
 						},
+						"signal": {
+							Type:        schema.TypeString,
+							Description: "signal id to tag",
+							Optional:    true,
+						},
 					},
 				},
 			},
@@ -305,7 +310,7 @@ func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
 
 	_, err := sc.UpdateSiteRuleByID(corp, site, d.Id(), updateSiteRuleBody)
 	if err != nil {
-		return fmt.Errorf("%s. Could not update redaction with Id %s in corp %s site %s", err.Error(), d.Id(), corp, site)
+		return err
 	}
 	rule, err := sc.GetSiteRuleByID(corp, site, d.Id())
 	if err == nil && !reflect.DeepEqual(updateSiteRuleBody, rule.CreateSiteRuleBody) {

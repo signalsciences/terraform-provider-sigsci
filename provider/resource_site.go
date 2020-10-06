@@ -35,7 +35,7 @@ func resourceSite() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Agent action level - 'block', 'log' or 'off'",
 				Optional:    true,
-				Default:     "log", // TODO not in docs, but enforced by api
+				Default:     "log",
 			},
 			"agent_anon_mode": {
 				Type:        schema.TypeString,
@@ -52,8 +52,8 @@ func resourceSite() *schema.Resource {
 			"block_http_code": {
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when when traffic is being blocked",
-				Optional:    true,
-				Default:     406,
+				Computed:    true,
+				//Default:     406,
 			},
 		},
 	}
@@ -75,6 +75,12 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(site.Name)
+
+	// For whatever reason, you cannot create without default values, but you may update them later
+	// If these are not the default values, update
+	if d.Get("block_duration_seconds").(int) != 86400 || d.Get("agent_anon_mode").(string) != "" {
+		return updateSite(d, m)
+	}
 
 	return readSite(d, m)
 }

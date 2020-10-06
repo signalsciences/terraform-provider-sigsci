@@ -51,20 +51,56 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1859487095.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.895671942.type", "excludeSignal"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "2"),
-					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.conditions.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.field", "ip"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.group_operator", ""),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.operator", "equals"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.type", "single"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.value", "1.2.3.4"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.conditions.#", "0"),
-					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.field", "ip"),
-					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.group_operator", ""),
-					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.operator", "equals"),
-					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.type", "single"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.field", "ip"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.group_operator", ""),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.operator", "equals"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.type", "single"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.value", "1.2.3.5"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2383694574.conditions.#", "0"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "signal"
+                        group_operator="any"
+                        enabled= false
+                        reason= "Example site rule update 2"
+                        signal= "SQLI"
+                        expiration= ""
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.9"
+                        }
+                        actions {
+                            type="excludeSignal"
+                        }
+                        
+                }`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "type", "signal"),
+					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
+					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update 2"),
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.895671942.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.conditions.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.field", "ip"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.group_operator", ""),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.operator", "equals"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.type", "single"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.value", "1.2.3.9"),
 				),
 			},
 			{
@@ -107,6 +143,7 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
                             value="1.2.3.4"
                         }
                         actions {
+                            signal=sigsci_site_signal_tag.test_tag.id
                             type="logRequest"
                         }
                         rate_limit = {
@@ -122,7 +159,8 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1301899462.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2266040667.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2266040667.signal", "site.my-new-tag"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "10"),
 					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
@@ -225,11 +263,64 @@ func TestACCResourceSiteRuleConditionSignal(t *testing.T) {
                         }
                 }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "2"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2455721190.conditions.3887678098.conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.1840769124.conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2455721190.conditions.2522856064.conditions.#", "3"),
+				),
+			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+	})
+}
+
+func TestACCResourceSiteRuleTagSignal(t *testing.T) {
+	t.Parallel()
+	resourceName := "sigsci_site_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_signal_tag" "test_tag" {
+                      site_short_name = "%s" 
+                      name            = "newtag"
+                      description     = "test description"
+                    }
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "request"
+                        group_operator="all"
+                        enabled= true
+                        reason= "Example site rule update"
+                        expiration= ""
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.4"
+                        }
+                        actions {
+                            type = "block"
+                        }
+                        actions {
+                            type="addSignal"
+                            signal=sigsci_site_signal_tag.test_tag.id
+                        }
+                }`, testSite, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "actions.1990726244.type", "block"),
+					resource.TestCheckResourceAttr(resourceName, "actions.3968222288.signal", "site.newtag"),
+					resource.TestCheckResourceAttr(resourceName, "actions.3968222288.type", "addSignal"),
 				),
 			},
 			{

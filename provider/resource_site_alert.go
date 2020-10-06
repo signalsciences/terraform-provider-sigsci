@@ -39,11 +39,6 @@ func resourceSiteAlert() *schema.Resource {
 				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000",
 				Optional:    true,
 			},
-			"block_duration_seconds": {
-				Type:        schema.TypeInt,
-				Description: "The number of seconds this alert is active.",
-				Optional:    true,
-			},
 			"enabled": {
 				Type:        schema.TypeBool,
 				Description: "A flag to toggle this alert.",

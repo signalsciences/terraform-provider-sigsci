@@ -60,6 +60,11 @@ func resourceCorpRule() *schema.Resource {
 							Description: "(block, allow, exclude)",
 							Required:    true,
 						},
+						"signal": {
+							Type:        schema.TypeString,
+							Description: "(block, allow, exclude)",
+							Optional:    true,
+						},
 					},
 				},
 			},
@@ -125,6 +130,40 @@ func resourceCorpRule() *schema.Resource {
 										Type:        schema.TypeString,
 										Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
 										Optional:    true,
+									},
+									"conditions": {
+										Type:        schema.TypeSet,
+										Description: "Conditions",
+										Optional:    true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"type": {
+													Type:        schema.TypeString,
+													Description: "(group, single)",
+													Required:    true,
+												},
+												"field": {
+													Type:        schema.TypeString,
+													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+													Optional:    true,
+												},
+												"operator": {
+													Type:        schema.TypeString,
+													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+													Optional:    true,
+												},
+												"group_operator": {
+													Type:        schema.TypeString,
+													Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+													Optional:    true,
+												},
+												"value": {
+													Type:        schema.TypeString,
+													Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+													Optional:    true,
+												},
+											},
+										},
 									},
 								},
 							},
