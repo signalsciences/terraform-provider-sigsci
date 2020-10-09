@@ -48,6 +48,11 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   - `enabled` - (Required) A flag to toggle this alert.
   - `action` - (Required) A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours.
 
+### Attributes Reference
+In addition to all arguments, the following fields are also available
+ - `id` - the identifier of the resource
+ - `name` - Name of templated rule
+
 ### Import
 You can import corp lists with the generic site import formula
 

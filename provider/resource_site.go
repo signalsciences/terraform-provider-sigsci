@@ -51,7 +51,7 @@ func resourceSite() *schema.Resource {
 			},
 			"block_http_code": {
 				Type:        schema.TypeInt,
-				Description: "HTTP response code to send when when traffic is being blocked",
+				Description: "HTTP response code to send when traffic is being blocked",
 				Computed:    true,
 				//Default:     406,
 			},

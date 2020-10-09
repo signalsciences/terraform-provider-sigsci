@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-func resourceSiteBlacklist() *schema.Resource {
+func resourceSiteBlocklist() *schema.Resource {
 	return &schema.Resource{
-		Create:   resourceSiteBlacklistCreate,
-		Update:   resourceSiteBlacklistUpdate,
-		Read:     resourceSiteBlacklistRead,
-		Delete:   resourceSiteBlacklistDelete,
+		Create:   resourceSiteBlocklistCreate,
+		Update:   resourceSiteBlocklistUpdate,
+		Read:     resourceSiteBlocklistRead,
+		Delete:   resourceSiteBlocklistDelete,
 		Importer: &siteImporter,
 		Schema: map[string]*schema.Schema{
 			"site_short_name": {
@@ -23,7 +23,7 @@ func resourceSiteBlacklist() *schema.Resource {
 			},
 			"source": {
 				Type:        schema.TypeString,
-				Description: "Source IP Address to Blacklist",
+				Description: "Source IP Address to Blocklist",
 				Required:    true,
 			},
 			"note": {
@@ -40,7 +40,7 @@ func resourceSiteBlacklist() *schema.Resource {
 	}
 }
 
-func resourceSiteBlacklistCreate(d *schema.ResourceData, m interface{}) error {
+func resourceSiteBlocklistCreate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
@@ -61,64 +61,64 @@ func resourceSiteBlacklistCreate(d *schema.ResourceData, m interface{}) error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("%s. Could not create Blacklist", err.Error())
+		return fmt.Errorf("%s. Could not create Blocklist", err.Error())
 	}
 	d.SetId(createResp.ID)
-	return resourceSiteBlacklistRead(d, m)
+	return resourceSiteBlocklistRead(d, m)
 }
 
-func resourceSiteBlacklistRead(d *schema.ResourceData, m interface{}) error {
+func resourceSiteBlocklistRead(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
 	site := d.Get("site_short_name").(string)
 
-	Blacklists, err := sc.ListBlacklistIPs(corp, site)
+	Blocklists, err := sc.ListBlacklistIPs(corp, site)
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find Blacklists for site %s in corp %s", err.Error(), site, corp)
+		return fmt.Errorf("%s. Could not find Blocklists for site %s in corp %s", err.Error(), site, corp)
 	}
-	var Blacklist *sigsci.ListIP
-	for _, w := range Blacklists {
+	var Blocklist *sigsci.ListIP
+	for _, w := range Blocklists {
 		if w.ID == d.Id() {
-			Blacklist = &w
+			Blocklist = &w
 		}
 	}
 
-	if Blacklist == nil {
+	if Blocklist == nil {
 		d.SetId("")
-		return fmt.Errorf("could not find Blacklist with id %s", d.Id())
+		return fmt.Errorf("could not find Blocklist with id %s", d.Id())
 	}
 
-	err = d.Set("source", Blacklist.Source)
+	err = d.Set("source", Blocklist.Source)
 	if err != nil {
 		return err
 	}
-	err = d.Set("note", Blacklist.Note)
+	err = d.Set("note", Blocklist.Note)
 	if err != nil {
 		return err
 	}
-	if !Blacklist.Expires.IsZero() {
-		err = d.Set("expires", Blacklist.Expires.Format(time.RFC3339))
+	if !Blocklist.Expires.IsZero() {
+		err = d.Set("expires", Blocklist.Expires.Format(time.RFC3339))
 		if err != nil {
 			return err
 		}
 	}
-	d.SetId(Blacklist.ID)
+	d.SetId(Blocklist.ID)
 	return nil
 }
 
 // There is no update api, we must delete and recreate every update :(
 // This function should never be called but should work anyways
-func resourceSiteBlacklistUpdate(d *schema.ResourceData, m interface{}) error {
-	err := resourceSiteBlacklistDelete(d, m)
+func resourceSiteBlocklistUpdate(d *schema.ResourceData, m interface{}) error {
+	err := resourceSiteBlocklistDelete(d, m)
 	if err != nil {
 		return err
 	}
-	return resourceSiteBlacklistCreate(d, m)
+	return resourceSiteBlocklistCreate(d, m)
 }
 
-func resourceSiteBlacklistDelete(d *schema.ResourceData, m interface{}) error {
+func resourceSiteBlocklistDelete(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
@@ -130,5 +130,5 @@ func resourceSiteBlacklistDelete(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
-	return fmt.Errorf("could not delete Blacklist with ID %s for site %s in corp %s", d.Id(), site, corp)
+	return fmt.Errorf("could not delete Blocklist with ID %s for site %s in corp %s", d.Id(), site, corp)
 }

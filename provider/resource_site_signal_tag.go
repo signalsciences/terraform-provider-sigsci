@@ -31,6 +31,21 @@ func resourceSiteSignalTag() *schema.Resource {
 				Description: "description",
 				Optional:    true,
 			},
+			"configurable": {
+				Type:        schema.TypeBool,
+				Description: "configurable",
+				Computed:    true,
+			},
+			"informational": {
+				Type:        schema.TypeBool,
+				Description: "informational",
+				Computed:    true,
+			},
+			"needs_response": {
+				Type:        schema.TypeBool,
+				Description: "need response",
+				Computed:    true,
+			},
 		},
 	}
 }
@@ -69,6 +84,18 @@ func resourceSiteSignalTagRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	err = d.Set("description", tag.Description)
+	if err != nil {
+		return err
+	}
+	err = d.Set("configurable", tag.Configurable)
+	if err != nil {
+		return err
+	}
+	err = d.Set("informational", tag.Informational)
+	if err != nil {
+		return err
+	}
+	err = d.Set("needs_response", tag.NeedsResponse)
 	if err != nil {
 		return err
 	}

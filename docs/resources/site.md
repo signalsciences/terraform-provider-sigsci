@@ -21,6 +21,11 @@ resource "sigsci_site" "my-site" {
  
  ### Import
 You can import corp lists with the generic corp import formula
+
+### Attributes Reference
+In addition to all arguments, the following fields are also available
+ - `id` - the identifier of the resource
+ - `http_block_code` - HTTP response code to send when traffic is being blocked
  
 Example:
 ```shell script
