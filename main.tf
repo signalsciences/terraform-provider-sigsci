@@ -160,10 +160,10 @@ resource "sigsci_site_rule" "test" {
   }
 }
 
-resource "sigsci_site_blacklist" "test" {
+resource "sigsci_site_blocklist" "test" {
   site_short_name = sigsci_site.my-site.short_name
   source          = "1.2.3.4"
-  note            = "sample blacklist"
+  note            = "sample blocklist"
 }
 
 resource "sigsci_site_header_link" "test_header_link" {
@@ -174,10 +174,10 @@ resource "sigsci_site_header_link" "test_header_link" {
   link            = "https://www.signalsciences.net"
 }
 
-resource "sigsci_site_whitelist" "test" {
+resource "sigsci_site_allowlist" "test" {
   site_short_name = sigsci_site.my-site.short_name
   source          = "1.2.2.1"
-  note            = "sample whitelistt"
+  note            = "sample allowlistt"
 }
 
 resource "sigsci_site_redaction" "test_redaction" {

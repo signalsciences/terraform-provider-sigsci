@@ -26,6 +26,9 @@ func TestAccResourceSiteSignalTagCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "My new tag"),
 					resource.TestCheckResourceAttr(resourceName, "description", "test description"),
+					resource.TestCheckResourceAttrSet(resourceName, "configurable"),
+					resource.TestCheckResourceAttrSet(resourceName, "informational"),
+					resource.TestCheckResourceAttrSet(resourceName, "needs_response"),
 				),
 			},
 			{

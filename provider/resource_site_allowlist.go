@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-func resourceSiteWhitelist() *schema.Resource {
+func resourceSiteAllowlist() *schema.Resource {
 	return &schema.Resource{
-		Create:   resourceSiteWhitelistCreate,
-		Update:   resourceSiteWhitelistUpdate,
-		Read:     resourceSiteWhitelistRead,
-		Delete:   resourceSiteWhitelistDelete,
+		Create:   resourceSiteAllowlistCreate,
+		Update:   resourceSiteAllowlistUpdate,
+		Read:     resourceSiteAllowlistRead,
+		Delete:   resourceSiteAllowlistDelete,
 		Importer: &siteImporter,
 		Schema: map[string]*schema.Schema{
 			"site_short_name": {
@@ -23,7 +23,7 @@ func resourceSiteWhitelist() *schema.Resource {
 			},
 			"source": {
 				Type:        schema.TypeString,
-				Description: "Source IP Address to whitelist",
+				Description: "Source IP Address to allowlist",
 				Required:    true,
 			},
 			"note": {
@@ -40,7 +40,7 @@ func resourceSiteWhitelist() *schema.Resource {
 	}
 }
 
-func resourceSiteWhitelistCreate(d *schema.ResourceData, m interface{}) error {
+func resourceSiteAllowlistCreate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
@@ -61,64 +61,64 @@ func resourceSiteWhitelistCreate(d *schema.ResourceData, m interface{}) error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("%s. Could not create whitelist", err.Error())
+		return fmt.Errorf("%s. Could not create allowlist", err.Error())
 	}
 	d.SetId(createResp.ID)
-	return resourceSiteWhitelistRead(d, m)
+	return resourceSiteAllowlistRead(d, m)
 }
 
-func resourceSiteWhitelistRead(d *schema.ResourceData, m interface{}) error {
+func resourceSiteAllowlistRead(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
 	site := d.Get("site_short_name").(string)
 
-	whitelists, err := sc.ListWhitelistIPs(corp, site)
+	allowlists, err := sc.ListWhitelistIPs(corp, site)
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find whitelists for site %s in corp %s", err.Error(), site, corp)
+		return fmt.Errorf("%s. Could not find allowlists for site %s in corp %s", err.Error(), site, corp)
 	}
-	var whitelist *sigsci.ListIP
-	for _, w := range whitelists {
+	var allowlist *sigsci.ListIP
+	for _, w := range allowlists {
 		if w.ID == d.Id() {
-			whitelist = &w
+			allowlist = &w
 		}
 	}
 
-	if whitelist == nil {
+	if allowlist == nil {
 		d.SetId("")
-		return fmt.Errorf("could not find whitelist with id %s", d.Id())
+		return fmt.Errorf("could not find allowlist with id %s", d.Id())
 	}
 
-	err = d.Set("source", whitelist.Source)
+	err = d.Set("source", allowlist.Source)
 	if err != nil {
 		return err
 	}
-	err = d.Set("note", whitelist.Note)
+	err = d.Set("note", allowlist.Note)
 	if err != nil {
 		return err
 	}
-	if !whitelist.Expires.IsZero() {
-		err = d.Set("expires", whitelist.Expires.Format(time.RFC3339))
+	if !allowlist.Expires.IsZero() {
+		err = d.Set("expires", allowlist.Expires.Format(time.RFC3339))
 		if err != nil {
 			return err
 		}
 	}
-	d.SetId(whitelist.ID)
+	d.SetId(allowlist.ID)
 	return nil
 }
 
 // There is no update api, we must delete and recreate every update :(
 // This function should never be called but should work anyways
-func resourceSiteWhitelistUpdate(d *schema.ResourceData, m interface{}) error {
-	err := resourceSiteWhitelistDelete(d, m)
+func resourceSiteAllowlistUpdate(d *schema.ResourceData, m interface{}) error {
+	err := resourceSiteAllowlistDelete(d, m)
 	if err != nil {
 		return err
 	}
-	return resourceSiteWhitelistCreate(d, m)
+	return resourceSiteAllowlistCreate(d, m)
 }
 
-func resourceSiteWhitelistDelete(d *schema.ResourceData, m interface{}) error {
+func resourceSiteAllowlistDelete(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
@@ -130,5 +130,5 @@ func resourceSiteWhitelistDelete(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
-	return fmt.Errorf("could not delete whitelist with ID %s for site %s in corp %s", d.Id(), site, corp)
+	return fmt.Errorf("could not delete allowlist with ID %s for site %s in corp %s", d.Id(), site, corp)
 }

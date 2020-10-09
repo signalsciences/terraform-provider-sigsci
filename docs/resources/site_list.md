@@ -21,6 +21,10 @@ resource "sigsci_site_list" "test" {
 - `description` - Optional list description
 - `entries` - (Required) List entries
 
+### Attributes Reference
+In addition to all arguments, the following fields are also available
+ - `id` - the identifier of the resource
+
 ### Import
 You can import corp lists with the generic site import formula
 

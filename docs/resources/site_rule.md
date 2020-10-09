@@ -54,6 +54,10 @@ resource "sigsci_site_rule" "test" {
    - `conditions` -  Conditions on which this condition should trigger. Can recursively add this 3 deep.
  - `actions` - Action to take when triggered
    - `type` - (block, allow, excludeSignal) 
+
+### Attributes Reference
+In addition to all arguments, the following fields are also available
+ - `id` - the identifier of the resource
  
  ### Import
  You can import corp rules with the generic site import formula

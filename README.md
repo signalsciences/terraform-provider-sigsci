@@ -51,9 +51,9 @@ provider "sigsci" {
 
 [Templated Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_templated_rule.md)
 
-[Whitelist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_whitelist.md)
+[Allowlist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_allowlist.md)
 
-[Blacklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_blacklist.md)
+[Blocklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_blocklist.md)
 
 [Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_header_link.md)
 

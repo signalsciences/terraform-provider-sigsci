@@ -212,19 +212,19 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
 
 ##### BlackList
 ```hcl-terraform
-resource "sigsci_site_blacklist" "test" {
+resource "sigsci_site_blocklist" "test" {
   site_short_name = sigsci_site.my-site.short_name
   source          = "1.2.3.4"
-  note            = "sample blacklist"
+  note            = "sample blocklist"
 }
 ```
 
-##### Whitelist
+##### Allowlist
 ```hcl-terraform
-resource "sigsci_site_whitelist" "test" {
+resource "sigsci_site_allowlist" "test" {
   site_short_name = sigsci_site.my-site.short_name
   source          = "1.2.3.4"
-  note            = "sample whitelist"
+  note            = "sample allowlist"
 }
 ```
 

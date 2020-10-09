@@ -15,6 +15,10 @@ resource "sigsci_site_redaction" "test" {
 - `field` - (Required) Field name
 - `redaction_type` - (Required) Type of redaction (0: Request Parameter, 1: Request Header, 2: Response Header)
 
+### Attributes Reference
+In addition to all arguments, the following fields are also available
+ - `id` - the identifier of the resource
+
 ### Import
 You can import corp lists with the generic site import formula
 

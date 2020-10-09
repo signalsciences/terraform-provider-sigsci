@@ -7,25 +7,25 @@ import (
 	"testing"
 )
 
-func TestACCResourceSiteWhitelist_basic(t *testing.T) {
+func TestACCResourceSiteBlocklist_basic(t *testing.T) {
 	t.Parallel()
-	resourceName := "sigsci_site_whitelist.test"
+	resourceName := "sigsci_site_blocklist.test"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testACCCheckSiteWhitelistDestroy,
+		CheckDestroy: testACCCheckSiteBlocklistDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
-					resource "sigsci_site_whitelist" "test"{
+					resource "sigsci_site_blocklist" "test"{
 						site_short_name = "%s"
 						source          = "1.2.3.4"
-						note            = "sample whitelist"
+						note            = "sample blocklist"
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "source", "1.2.3.4"),
-					resource.TestCheckResourceAttr(resourceName, "note", "sample whitelist"),
+					resource.TestCheckResourceAttr(resourceName, "note", "sample blocklist"),
 				),
 			},
 			{
@@ -39,23 +39,23 @@ func TestACCResourceSiteWhitelist_basic(t *testing.T) {
 	})
 }
 
-func testACCCheckSiteWhitelistDestroy(s *terraform.State) error {
+func testACCCheckSiteBlocklistDestroy(s *terraform.State) error {
 	pm := testAccProvider.Meta().(providerMetadata)
 	sc := pm.Client
 
-	resourceType := "sigsci_site_whitelist"
+	resourceType := "sigsci_site_blocklist"
 	for _, resource := range s.RootModule().Resources {
 		if resource.Type != resourceType {
 			continue
 		}
-		whitelistIPs, err := sc.ListWhitelistIPs(pm.Corp, resource.Primary.Attributes["site_short_name"])
+		blocklistIPs, err := sc.ListBlacklistIPs(pm.Corp, resource.Primary.Attributes["site_short_name"])
 		if err != nil {
-			return fmt.Errorf("%s couldn't check whitelist ips", resourceType)
+			return fmt.Errorf("%s couldn't check Blocklist ips", resourceType)
 		}
 
-		for _, w := range whitelistIPs {
+		for _, w := range blocklistIPs {
 			if w.ID == resource.Primary.ID {
-				return fmt.Errorf("%s %#v still exists", resourceType, whitelistIPs)
+				return fmt.Errorf("%s %#v still exists", resourceType, blocklistIPs)
 			}
 		}
 

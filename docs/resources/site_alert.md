@@ -22,6 +22,10 @@ resource "sigsci_site_alert" "test" {
  
  ### Import
 You can import corp lists with the generic site import formula
+
+### Attributes Reference
+In addition to all arguments, the following fields are also available
+ - `id` - the identifier of the resource
  
 Example:
 ```shell script
