@@ -1,6 +1,5 @@
 # Sigsci Terraform Provider
 
-This terraform provider is currently in beta
 
 ## Requirements
 * [Terraform](https://www.terraform.io/downloads.html) 0.12.x
