@@ -1,7 +1,5 @@
 # Sigsci Terraform Provider
 
-This terraform provider is currently in beta
-
 ## Requirements
 * [Terraform](https://www.terraform.io/downloads.html) 0.12.x
 * [Go](https://golang.org/doc/install) 1.14
