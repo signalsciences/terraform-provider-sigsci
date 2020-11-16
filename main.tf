@@ -1,8 +1,13 @@
-provider "sigsci" {
-  //  corp = "" // Required. may also provide via env variable SIGSCI_CORP
-  //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
-  //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-  //  password = "" //may also provide via env variable SIGSCI_PASSWORD
+terraform {
+  required_providers {
+    sigsci = {
+      source = "signalsciences/sigsci"
+      //  corp = "" // Required. may also provide via env variable SIGSCI_CORP
+      //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
+      //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
+      //  password = "" //may also provide via env variable SIGSCI_PASSWORD
+    }
+  }
 }
 
 ############# Corp Level Resources #############
@@ -11,7 +16,6 @@ resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
   display_name           = "manual terraform test"
   block_duration_seconds = 86400
-  block_http_code        = 406
   agent_anon_mode        = ""
   agent_level            = "block"
 }
