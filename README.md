@@ -1,7 +1,7 @@
 # Sigsci Terraform Provider
 
 ## Requirements
-* [Terraform](https://www.terraform.io/downloads.html) 0.12.x
+* [Terraform](https://www.terraform.io/downloads.html) 0.12.x, 0.13.x
 * [Go](https://golang.org/doc/install) 1.14
 
 ## Building the provider
@@ -19,12 +19,27 @@ make build
 You must provide corp, email, and either form of authentication.  This can be added in the provider block or with environment variables (recommended).
 
 ```hcl-terraform
+// Terraform 0.12.x
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
   //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
   //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
 }
+
+// Terraform 0.13.x
+terraform {
+  required_providers {
+    sigsci = {
+      source = "signalsciences/sigsci"
+      //  corp = "" // Required. may also provide via env variable SIGSCI_CORP
+      //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
+      //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
+      //  password = "" //may also provide via env variable SIGSCI_PASSWORD
+    }
+  }
+}
+
 ```
 ## Corp level resources
 [Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site.md)
