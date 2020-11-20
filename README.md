@@ -8,7 +8,7 @@
 If you are using terraform >0.13.x, our release can be automatically downloaded from their registry using the block described in "Using the provider"
  
 
-If you are using terraform 0.12.x, you must either build or copy our executable to your plugin directory. ex `terraform.d/plugins/darwin_amd64`
+If you are using terraform 0.12.x, you must either build or copy the appropriate executable to your plugin directory. ex `terraform.d/plugins/darwin_amd64`
 
 You may find prebuilt binaries in our [Releases](https://github.com/signalsciences/terraform-provider-sigsci/releases).
 
@@ -35,6 +35,7 @@ terraform {
   }
 }
 
+# Required configuration block (for all versions of terraform)
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
