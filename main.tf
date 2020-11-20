@@ -2,12 +2,16 @@ terraform {
   required_providers {
     sigsci = {
       source = "signalsciences/sigsci"
-      //  corp = "" // Required. may also provide via env variable SIGSCI_CORP
-      //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
-      //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-      //  password = "" //may also provide via env variable SIGSCI_PASSWORD
+      version = "0.3.0"
     }
   }
+}
+
+provider "sigsci" {
+  //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
+  //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
+  //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
+  //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
 }
 
 ############# Corp Level Resources #############
