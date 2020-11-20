@@ -5,7 +5,12 @@
 * [Go](https://golang.org/doc/install) 1.14
 
 ## Building the provider
-You may find prebuilt binaries in our [Releases](https://github.com/signalsciences/terraform-provider-sigsci/releases). 
+If you are using terraform >0.13.x, our release can be automatically downloaded from their registry using the block described in "Using the provider"
+ 
+
+If you are using terraform 0.12.x, you must either build or copy our executable to your plugin directory. ex `terraform.d/plugins/darwin_amd64`
+
+You may find prebuilt binaries in our [Releases](https://github.com/signalsciences/terraform-provider-sigsci/releases).
 
 If you wish to build from source, first make the correct directory, cd to it, and checkout the repo.  Running `make build` will then build the provider and output it to terraform-provider-sigsci
 ```shell script
@@ -19,27 +24,21 @@ make build
 You must provide corp, email, and either form of authentication.  This can be added in the provider block or with environment variables (recommended).
 
 ```hcl-terraform
-// Terraform 0.12.x
+# Terraform 0.13.x
+terraform {
+  required_providers {
+    sigsci = {
+      source = "signalsciences/sigsci"
+    }
+  }
+}
+
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
   //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
   //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
 }
-
-// Terraform 0.13.x
-terraform {
-  required_providers {
-    sigsci = {
-      source = "signalsciences/sigsci"
-      //  corp = "" // Required. may also provide via env variable SIGSCI_CORP
-      //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
-      //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-      //  password = "" //may also provide via env variable SIGSCI_PASSWORD
-    }
-  }
-}
-
 ```
 ## Corp level resources
 [Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site.md)
