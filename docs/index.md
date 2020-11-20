@@ -20,6 +20,15 @@ make build
 You must provide corp, email, and either form of authentication.  This can be added in the provider block or with environment variables (recommended).
 
 ```hcl-terraform
+# Terraform 0.13.x
+terraform {
+  required_providers {
+    sigsci = {
+      source = "signalsciences/sigsci"
+    }
+  }
+}
+
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
@@ -30,25 +39,13 @@ provider "sigsci" {
 ## Corp level resources
 ##### Site
 ```hcl-terraform
-// Terraform 0.12.x
-provider "sigsci" {
-  //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
-  //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
-  //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-  //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
-}
 
-// Terraform 0.13.x
-terraform {
-  required_providers {
-    sigsci = {
-      source = "signalsciences/sigsci"
-      //  corp = "" // Required. may also provide via env variable SIGSCI_CORP
-      //  email = ""  // Required. may also provide via env variable SIGSCI_EMAIL
-      //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-      //  password = "" //may also provide via env variable SIGSCI_PASSWORD
-    }
-  }
+resource "sigsci_site" "my-site" {
+  short_name             = "manual_test"
+  display_name           = "manual terraform test"
+  block_duration_seconds = 1000
+  block_http_code        = 303
+  agent_anon_mode        = ""
 }
 ```
 ##### List
