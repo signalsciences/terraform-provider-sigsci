@@ -63,6 +63,12 @@ resource "sigsci_corp_signal_tag" "test" {
   description = "An example of a custom signal tag"
 }
 
+resource "sigsci_corp_integration" "test_corp_integration" {
+  type   = "slack"
+  url    = "https://wat.slack.com"
+  events = ["newSite", "enableSSO"]
+}
+
 ############# Site Level Resources #############
 
 resource "sigsci_site_list" "test_list" {
@@ -264,4 +270,11 @@ resource "sigsci_site_rule" "testt" {
   actions {
     type = "block"
   }
+}
+
+resource "sigsci_site_integration" "test_integration" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "slack"
+  url             = "https://wat.slack.com"
+  events          = ["listCreated"]
 }
