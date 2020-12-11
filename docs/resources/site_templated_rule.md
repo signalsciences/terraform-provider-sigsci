@@ -58,5 +58,5 @@ You can import corp lists with the generic site import formula
 
 Example:
 ```shell script
-terraform import sigsci_site_signal_tag.test site_short_name:id
+terraform import sigsci_site_templated_rule.test site_short_name:id
 ```
