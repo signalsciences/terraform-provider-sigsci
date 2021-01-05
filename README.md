@@ -79,7 +79,7 @@ More information on each resource and field can be found on the [Signal Sciences
 
 ## Importing
 
-All resources should be importable. Importing will vary depending on if you are importing a corp level resource, or a site level resource
+All resources are importable. Importing will vary depending on if you are importing a corp level resource, or a site level resource
 ##### Corp Resources
 ```hcl-terraform
 terraform import resource.name id // General form
