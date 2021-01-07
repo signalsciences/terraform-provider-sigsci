@@ -1,7 +1,7 @@
 ## In case of errors...
 Known errors all revolve around not including parallelism=1 when updating header links or redactions.  If you accidentally did this here are the known scenarios and how to get out.
 
-##### My resource didn't actually update
+##### My resource didn't get created or updated
 ```
 Running subsequent terraform applys should fix the issue.
 ```
