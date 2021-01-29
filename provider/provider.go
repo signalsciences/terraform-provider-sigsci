@@ -51,11 +51,11 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_site_allowlist":      resourceSiteAllowlist(),
 			//"sigsci_site_monitor":        resourceSiteMonitor(),
 			"sigsci_site_header_link": resourceSiteHeaderLink(),
-			//"sigsci_site_integration":    resourceSiteIntegration(),
-			"sigsci_corp_list":       resourceCorpList(),
-			"sigsci_corp_rule":       resourceCorpRule(),
-			"sigsci_corp_signal_tag": resourceCorpSignalTag(),
-			//"sigsci_corp_integration":    resourceCorpIntegration(),
+			"sigsci_site_integration": resourceSiteIntegration(),
+			"sigsci_corp_list":        resourceCorpList(),
+			"sigsci_corp_rule":        resourceCorpRule(),
+			"sigsci_corp_signal_tag":  resourceCorpSignalTag(),
+			"sigsci_corp_integration": resourceCorpIntegration(),
 		},
 	}
 	provider.ConfigureFunc = providerConfigure()
