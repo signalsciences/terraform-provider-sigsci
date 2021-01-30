@@ -54,6 +54,8 @@ provider "sigsci" {
 
 [Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_rule.md)
 
+[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_integration.md)
+
 ## Site level resources
 
 [Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_list.md)
@@ -73,6 +75,8 @@ provider "sigsci" {
 [Blocklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_blocklist.md)
 
 [Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_header_link.md)
+
+[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_integration.md)
 
 More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
 
