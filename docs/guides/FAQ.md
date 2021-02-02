@@ -1,5 +1,5 @@
 ## In case of errors...
-Known errors all revolve around not including parallelism=1 when updating header links or redactions.  If you accidentally did this here are the known scenarios and how to get out.
+Known errors all revolve around not including parallelism=1 when updating header links, redactions, integrations, or templated_rules.  If you accidentally did this here are the known scenarios and how to get out.
 
 ##### My resource didn't actually update
 ```

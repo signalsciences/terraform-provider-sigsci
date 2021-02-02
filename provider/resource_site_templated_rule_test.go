@@ -253,7 +253,7 @@ func TestAccResourceTemplatedRulesSSM(t *testing.T) {
 						skip_notifications = false
 						enabled            = true
 						action             = "blockImmediate"
-                        block_duration_seconds = 54321
+						block_duration_seconds = 54321
                       }
 
 					}`, testSite),
