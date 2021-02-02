@@ -43,7 +43,6 @@ func TestAccResourceSiteIntegrationCRUD(t *testing.T) {
                        ]
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "type", "generic"),
 					resource.TestCheckResourceAttr(resourceName, "url", "https://hooks.slack.com/services/blah/blah2"),
@@ -62,7 +61,6 @@ func TestAccResourceSiteIntegrationCRUD(t *testing.T) {
 			           ]
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "type", "slack"),
 					resource.TestCheckResourceAttr(resourceName, "url", "https://hooks.slack.com/services/blah/blah3"),

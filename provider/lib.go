@@ -98,28 +98,33 @@ func expandAlerts(entries *schema.Set) []sigsci.Alert {
 	for _, e := range entries.List() {
 		cast := e.(map[string]interface{})
 
-		//t := (*string)(nil)
-		var t string
+		var typ string
 		if s, ok := cast["type"].(string); ok {
-			t = s
+			typ = s
 		}
 
-		var tn string
+		var tagName string
 		if s, ok := cast["tag_name"].(string); ok {
-			tn = s
+			tagName = s
+		}
+
+		var blockDurationSeconds int
+		if b, ok := cast["block_duration_seconds"].(int); ok {
+			blockDurationSeconds = b
 		}
 
 		alerts = append(alerts, sigsci.Alert{
 			AlertUpdateBody: sigsci.AlertUpdateBody{
-				LongName:          cast["long_name"].(string),
-				Interval:          cast["interval"].(int),
-				Threshold:         cast["threshold"].(int),
-				SkipNotifications: cast["skip_notifications"].(bool),
-				Enabled:           cast["enabled"].(bool),
-				Action:            cast["action"].(string),
+				LongName:             cast["long_name"].(string),
+				Interval:             cast["interval"].(int),
+				Threshold:            cast["threshold"].(int),
+				SkipNotifications:    cast["skip_notifications"].(bool),
+				Enabled:              cast["enabled"].(bool),
+				Action:               cast["action"].(string),
+				BlockDurationSeconds: blockDurationSeconds,
 			},
-			Type:    t,
-			TagName: tn,
+			Type:    typ,
+			TagName: tagName,
 		})
 	}
 	return alerts
@@ -129,13 +134,14 @@ func flattenAlerts(alerts []sigsci.Alert) []interface{} {
 	var alertsSet = make([]interface{}, len(alerts))
 	for i, alert := range alerts {
 		alertsSet[i] = map[string]interface{}{
-			"id":                 alert.ID,
-			"long_name":          alert.LongName,
-			"interval":           alert.Interval,
-			"threshold":          alert.Threshold,
-			"skip_notifications": alert.SkipNotifications,
-			"enabled":            alert.Enabled,
-			"action":             alert.Action,
+			"id":                     alert.ID,
+			"long_name":              alert.LongName,
+			"interval":               alert.Interval,
+			"threshold":              alert.Threshold,
+			"skip_notifications":     alert.SkipNotifications,
+			"enabled":                alert.Enabled,
+			"action":                 alert.Action,
+			"block_duration_seconds": alert.BlockDurationSeconds,
 		}
 	}
 	return alertsSet
@@ -196,7 +202,8 @@ func alertEquals(a, b sigsci.Alert) bool {
 		a.SkipNotifications == b.SkipNotifications &&
 		a.Interval == b.Interval &&
 		a.Threshold == b.Threshold &&
-		a.LongName == b.LongName
+		a.LongName == b.LongName &&
+		a.BlockDurationSeconds == b.BlockDurationSeconds
 }
 
 func calcAlertUpdates(old, new []sigsci.Alert) []sigsci.Alert {
@@ -246,6 +253,9 @@ func calcDetectionAdds(templateID string, old, new []sigsci.Detection) []sigsci.
 		if !exists {
 			newD.Name = templateID
 			// Convert strings to numbers
+			if newD.Fields == nil {
+				newD.Fields = []sigsci.ConfiguredDetectionField{}
+			}
 			for i, f := range newD.Fields {
 				if v, err := strconv.Atoi(f.Value.(string)); err == nil {
 					newD.Fields[i].Value = v
