@@ -49,8 +49,8 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   - `skip_notifications` - (Required) A flag to disable external notifications - slack, webhooks, emails, etc.
   - `enabled` - (Required) A flag to toggle this alert.
   - `action` - (Required) A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours.
-  - `block_duration_seconds` - (Required) Duration to block for
-  - `interval` - The number of minutes of past traffic to examine. Must be 1, 10 or 60.
+  - `block_duration_seconds` - (Required) Duration to block for in seconds
+  - `interval` - The number of minutes of past traffic to examine. Must be 0, 1, 10 or 60.
   - `threshold` - The number of occurrences of the tag in the interval needed to trigger the alert.
 
 ### Attributes Reference

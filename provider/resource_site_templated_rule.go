@@ -87,7 +87,7 @@ func resourceSiteTemplatedRule() *schema.Resource {
 								if existsInInt(val.(int), 0, 1, 10, 60) {
 									return nil, nil
 								}
-								return nil, []error{errors.New("alerts.interval must be 1, 10, or 60")}
+								return nil, []error{errors.New("alerts.interval must be 0, 1, 10, or 60")}
 							},
 						},
 						"threshold": {
