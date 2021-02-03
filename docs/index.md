@@ -206,6 +206,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
     skip_notifications = true
     enabled            = true
     action             = "info"
+    block_duration_seconds = sigsci_site.my-site.block_duration_seconds
   }
 
   alerts {
@@ -215,6 +216,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
     skip_notifications = false
     enabled            = false
     action             = "info"
+    block_duration_seconds = sigsci_site.my-site.block_duration_seconds
   }
 }
 ```

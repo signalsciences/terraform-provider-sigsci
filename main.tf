@@ -19,10 +19,11 @@ provider "sigsci" {
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
   display_name           = "manual terraform test"
-  block_duration_seconds = 86400
+  block_duration_seconds = 86411
   agent_anon_mode        = ""
   agent_level            = "block"
 }
+
 
 resource "sigsci_corp_list" "test" {
   name        = "My corp list"
@@ -112,31 +113,39 @@ resource "sigsci_site_alert" "test_site_alert" {
 
 resource "sigsci_site_templated_rule" "test_template_rule" {
   site_short_name = sigsci_site.my-site.short_name
-  name            = "LOGINATTEMPT"
+  name            = "AWS-SSRF"
   detections {
     enabled = "true"
-    fields {
-      name  = "path"
-      value = "awefwefa"
-    }
   }
 
   alerts {
-    long_name          = "awefawef"
-    interval           = 60
-    threshold          = 10
-    skip_notifications = true
-    enabled            = true
-    action             = "info"
+    long_name              = ""
+    interval               = 0
+    threshold              = 0
+    skip_notifications     = false
+    enabled                = true
+    action                 = "blockImmediate"
+    block_duration_seconds = 54321
   }
 
   alerts {
-    long_name          = "fwaasd"
-    interval           = 60
-    threshold          = 1
-    skip_notifications = false
-    enabled            = false
-    action             = "info"
+    long_name              = "AWS-SSRF-10-in-1"
+    interval               = 10
+    threshold              = 10
+    skip_notifications     = false
+    enabled                = true
+    action                 = "info"
+    block_duration_seconds = 54321
+  }
+
+  alerts {
+    long_name              = "AWS-SSRF-11-in-60"
+    interval               = 60
+    threshold              = 11
+    skip_notifications     = false
+    enabled                = true
+    action                 = "template"
+    block_duration_seconds = 54321
   }
 }
 

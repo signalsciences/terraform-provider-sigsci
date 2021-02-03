@@ -9,7 +9,6 @@ import (
 
 //TODO implement sweepers for everyone
 func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
-	t.Parallel()
 	resourceName := "sigsci_site_templated_rule.test_template_rule"
 
 	resource.Test(t, resource.TestCase{
@@ -46,7 +45,9 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
                         skip_notifications = true
                         enabled            = true
                         action             = "info"
+                        block_duration_seconds = 54321
                       }
+
                       alerts {
                         long_name          = "alert2"
                         interval           = 60
@@ -54,6 +55,7 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
                         skip_notifications = false
                         enabled            = false 
                         action             = "info"
+                        block_duration_seconds = 0
                       }
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -76,21 +78,23 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "detections.2076537939.fields.2831008451.value", "/login/*"),
 
 					resource.TestCheckResourceAttr(resourceName, "alerts.#", "2"),
-					resource.TestCheckResourceAttrSet(resourceName, "alerts.824284280.id"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.824284280.long_name", "alert1"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.824284280.interval", "10"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.824284280.threshold", "10"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.824284280.skip_notifications", "true"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.824284280.enabled", "true"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.824284280.action", "info"),
+					resource.TestCheckResourceAttrSet(resourceName, "alerts.3578226761.id"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.long_name", "alert1"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.threshold", "10"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.skip_notifications", "true"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.action", "info"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3578226761.block_duration_seconds", "54321"),
 
-					resource.TestCheckResourceAttrSet(resourceName, "alerts.1907559371.id"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1907559371.long_name", "alert2"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1907559371.interval", "60"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1907559371.threshold", "11"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1907559371.skip_notifications", "false"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1907559371.enabled", "false"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1907559371.action", "info"),
+					resource.TestCheckResourceAttrSet(resourceName, "alerts.3034807924.id"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.long_name", "alert2"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.interval", "60"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.threshold", "11"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.skip_notifications", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.action", "info"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3034807924.block_duration_seconds", "0"),
 				),
 			},
 			{
@@ -116,6 +120,7 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 			          skip_notifications = false 
 			          enabled            = false 
 			          action             = "template"
+                      block_duration_seconds = 54321
 			        }
                     alerts {
 			          long_name          = "alert3"
@@ -124,6 +129,7 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 			          skip_notifications = false
 			          enabled            = true
 			          action             = "template"
+                      block_duration_seconds = 54321
 			        }
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -140,22 +146,25 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "detections.1573782214.fields.4057994516.name", "second"),
 					resource.TestCheckResourceAttr(resourceName, "detections.1573782214.fields.4057994516.value", "/backdoor/*"),
 
-					resource.TestCheckResourceAttrSet(resourceName, "alerts.4052116893.id"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.4052116893.long_name", "alert1"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.4052116893.interval", "1"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.4052116893.threshold", "14"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.4052116893.skip_notifications", "false"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.4052116893.enabled", "false"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.4052116893.action", "template"),
+					resource.TestCheckResourceAttrSet(resourceName, "alerts.4126686736.id"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.long_name", "alert1"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.interval", "1"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.threshold", "14"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.skip_notifications", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.enabled", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.action", "template"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.action", "template"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.4126686736.block_duration_seconds", "54321"),
 
 					resource.TestCheckResourceAttr(resourceName, "alerts.#", "2"),
-					resource.TestCheckResourceAttrSet(resourceName, "alerts.1132798798.id"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1132798798.long_name", "alert3"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1132798798.interval", "60"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1132798798.threshold", "12"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1132798798.skip_notifications", "false"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1132798798.enabled", "true"),
-					resource.TestCheckResourceAttr(resourceName, "alerts.1132798798.action", "template"),
+					resource.TestCheckResourceAttrSet(resourceName, "alerts.3498615432.id"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.long_name", "alert3"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.interval", "60"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.threshold", "12"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.skip_notifications", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.action", "template"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3498615432.block_duration_seconds", "54321"),
 				),
 			},
 			{
@@ -211,6 +220,64 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 				ImportState:         true,
 				ImportStateVerify:   true,
 				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+		CheckDestroy: func(state *terraform.State) error {
+			return nil
+		},
+	})
+}
+
+func TestAccResourceTemplatedRulesSSM(t *testing.T) {
+	resourceName := "sigsci_site_templated_rule.aws_ssm"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_templated_rule" "aws_ssm" {
+                      site_short_name = "%s"
+                      name            = "AWS-SSRF"
+                      detections {
+					    enabled = "true"
+					  }
+
+					  alerts {
+					    long_name          = ""
+					    interval           = 0
+						threshold          = 0
+						skip_notifications = false
+						enabled            = true
+						action             = "blockImmediate"
+						block_duration_seconds = 54321
+                      }
+
+					}`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect(),
+					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
+					resource.TestCheckResourceAttr(resourceName, "name", "AWS-SSRF"),
+
+					resource.TestCheckResourceAttr(resourceName, "detections.#", "1"),
+					resource.TestCheckResourceAttrSet(resourceName, "detections.2705029964.id"),
+					resource.TestCheckResourceAttr(resourceName, "detections.2705029964.name", "AWS-SSRF"),
+					resource.TestCheckResourceAttr(resourceName, "detections.2705029964.enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "detections.2705029964.fields.#", "0"),
+
+					resource.TestCheckResourceAttr(resourceName, "alerts.#", "1"),
+					resource.TestCheckResourceAttrSet(resourceName, "alerts.3025084325.id"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.long_name", ""),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.interval", "0"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.threshold", "0"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.skip_notifications", "false"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.action", "blockImmediate"),
+					resource.TestCheckResourceAttr(resourceName, "alerts.3025084325.block_duration_seconds", "54321"),
+				),
 			},
 		},
 		CheckDestroy: func(state *terraform.State) error {

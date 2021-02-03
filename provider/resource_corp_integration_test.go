@@ -41,7 +41,6 @@ func TestAccResourceCorpIntegrationCRUD(t *testing.T) {
 			           ]
 				}`),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "type", "slack"),
 					resource.TestCheckResourceAttr(resourceName, "url", "https://hooks.slack.com/services/blah/blah"),
 					resource.TestCheckResourceAttr(resourceName, "events.#", "2"),

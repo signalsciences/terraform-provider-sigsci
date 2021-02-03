@@ -46,7 +46,7 @@ func resourceSiteTemplatedRule() *schema.Resource {
 						},
 						"fields": {
 							Type:     schema.TypeSet,
-							Required: true,
+							Optional: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
@@ -79,17 +79,20 @@ func resourceSiteTemplatedRule() *schema.Resource {
 						},
 						"interval": {
 							Type:     schema.TypeInt,
-							Required: true,
+							Optional: true,
 							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-								if existsInInt(val.(int), 1, 10, 60) {
+								if val == nil {
 									return nil, nil
 								}
-								return nil, []error{errors.New("alerts.interval must be 1, 10, or 60")}
+								if existsInInt(val.(int), 0, 1, 10, 60) {
+									return nil, nil
+								}
+								return nil, []error{errors.New("alerts.interval must be 0, 1, 10, or 60")}
 							},
 						},
 						"threshold": {
 							Type:     schema.TypeInt,
-							Required: true,
+							Optional: true,
 						},
 						"skip_notifications": {
 							Type:     schema.TypeBool,
@@ -101,6 +104,10 @@ func resourceSiteTemplatedRule() *schema.Resource {
 						},
 						"action": {
 							Type:     schema.TypeString,
+							Required: true,
+						},
+						"block_duration_seconds": {
+							Type:     schema.TypeInt,
 							Required: true,
 						},
 					},
