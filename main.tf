@@ -179,7 +179,7 @@ resource "sigsci_site_rule" "test" {
   }
 
   actions {
-    type = "excludeSignal"
+    type = "allow"
   }
 }
 

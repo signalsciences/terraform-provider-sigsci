@@ -119,6 +119,7 @@ func testInspect() resource.TestCheckFunc {
 		m := s.Modules[0].Resources
 		_ = m
 		_ = pm.Corp == pm.Corp
+
 		return nil
 	}
 }
