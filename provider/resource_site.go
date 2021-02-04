@@ -55,6 +55,27 @@ func resourceSite() *schema.Resource {
 				Computed:    true,
 				//Default:     406,
 			},
+			"primary_agent_key": {
+				Type:        schema.TypeMap,
+				Description: "The sites primary Agent key",
+				Computed:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"secret_key": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"access_key": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -121,6 +142,17 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	primaryAgentKey, err := sc.GetSitePrimaryAgentKey(corp, sitename)
+	if err != nil {
+		return err
+	}
+
+	err = d.Set("primary_agent_key", map[string]interface{}{
+		"name":       primaryAgentKey.Name,
+		"secret_key": primaryAgentKey.SecretKey,
+		"access_key": primaryAgentKey.AccessKey,
+	})
 
 	return nil
 }

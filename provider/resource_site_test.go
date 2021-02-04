@@ -52,6 +52,9 @@ func TestAccResourceSiteBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "display_name", "test 2"),
 					resource.TestCheckResourceAttr(resourceName, "agent_anon_mode", "EU"),
 					resource.TestCheckResourceAttr(resourceName, "block_duration_seconds", "86401"),
+					resource.TestCheckResourceAttrSet(resourceName, "primary_agent_key.name"),
+					resource.TestCheckResourceAttrSet(resourceName, "primary_agent_key.access_key"),
+					resource.TestCheckResourceAttrSet(resourceName, "primary_agent_key.secret_key"),
 				),
 			},
 			{

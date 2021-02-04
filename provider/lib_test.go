@@ -112,6 +112,7 @@ func getDefaultAlert() sigsci.Alert {
 	}
 }
 
+// function used for debugging. set breakpoint at 'return nil' to inspect terraform state
 func testInspect() resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		pm := testAccProvider.Meta().(providerMetadata)

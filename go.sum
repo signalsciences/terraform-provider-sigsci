@@ -168,14 +168,8 @@ github.com/posener/complete v1.2.1/go.mod h1:6gapUrK/U1TAN7ciCoNRIdVC5sbdBTUh1DK
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/sergi/go-diff v1.0.0 h1:Kpca3qRNrduNnOQeazBd0ysaKrUJiIuISHxogkT9RPQ=
 github.com/sergi/go-diff v1.0.0/go.mod h1:0CfEIISq7TuYL3j771MWULgwwjU+GofnZX9QAmXWZgo=
-github.com/signalsciences/go-sigsci v0.1.1-0.20201006182813-f95ff43997bc h1:6791XANMlLdHrd+vgGA2d4d/sFJYBGc8pg+2FSb0iRE=
-github.com/signalsciences/go-sigsci v0.1.1-0.20201006182813-f95ff43997bc/go.mod h1:QzNMfETjwm4NFuFS4K1UoLO4wWdopUv3AFyvO092Fak=
-github.com/signalsciences/go-sigsci v0.1.1-0.20210202205249-211bb49b99aa h1:fVRFGpACoF5n7IxBrWndPve/9Z+edWvPR0ZoHnKkyy4=
-github.com/signalsciences/go-sigsci v0.1.1-0.20210202205249-211bb49b99aa/go.mod h1:QzNMfETjwm4NFuFS4K1UoLO4wWdopUv3AFyvO092Fak=
-github.com/signalsciences/go-sigsci v0.1.1-0.20210202213036-1263870c5267 h1:CR917UQMbneV9QPIFj5x+5UrKiOVob55Pm3ap/ribDw=
-github.com/signalsciences/go-sigsci v0.1.1-0.20210202213036-1263870c5267/go.mod h1:QzNMfETjwm4NFuFS4K1UoLO4wWdopUv3AFyvO092Fak=
-github.com/signalsciences/go-sigsci v0.1.1 h1:lrmIVQU9zo1j11g6LCz8ehLRNuYftPZzSKlLNnbCM1A=
-github.com/signalsciences/go-sigsci v0.1.1/go.mod h1:QzNMfETjwm4NFuFS4K1UoLO4wWdopUv3AFyvO092Fak=
+github.com/signalsciences/go-sigsci v0.1.2 h1:EG7I/wq1xznI1xzOXXmoqei35GUzaeolILEARn1d0IY=
+github.com/signalsciences/go-sigsci v0.1.2/go.mod h1:QzNMfETjwm4NFuFS4K1UoLO4wWdopUv3AFyvO092Fak=
 github.com/spf13/afero v1.2.2 h1:5jhuqJyZCZf2JRofRvN/nIFgIWNzPa3/Vz8mYylgbWc=
 github.com/spf13/afero v1.2.2/go.mod h1:9ZxEEn6pIJ8Rxe320qSDBk6AsU0r9pR7Q4OcevTdifk=
 github.com/spf13/pflag v1.0.2/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=
