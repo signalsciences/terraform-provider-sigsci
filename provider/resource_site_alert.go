@@ -49,6 +49,11 @@ func resourceSiteAlert() *schema.Resource {
 				Description: "A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.",
 				Optional:    true,
 			},
+			"skip_notifications": {
+				Type:        schema.TypeString,
+				Description: "A flag skips notifications",
+				Optional:    true,
+			},
 		},
 	}
 }
@@ -80,6 +85,8 @@ func resourceSiteAlertRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	alert.SkipNotifications
 
 	d.SetId(alert.ID)
 	err = d.Set("site_short_name", d.Get("site_short_name").(string))
