@@ -120,7 +120,7 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 			          skip_notifications = false 
 			          enabled            = false 
 			          action             = "template"
-                      block_duration_seconds = 54321
+			          block_duration_seconds = 54321
 			        }
                     alerts {
 			          long_name          = "alert3"
@@ -129,7 +129,7 @@ func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 			          skip_notifications = false
 			          enabled            = true
 			          action             = "template"
-                      block_duration_seconds = 54321
+			          block_duration_seconds = 54321
 			        }
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -258,7 +258,6 @@ func TestAccResourceTemplatedRulesSSM(t *testing.T) {
 
 					}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "name", "AWS-SSRF"),
 

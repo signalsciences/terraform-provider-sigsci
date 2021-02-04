@@ -127,7 +127,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   alerts {
     long_name              = "AWS-SSRF-10-in-1"
     interval               = 10
-    threshold              = 10
+    threshold              = 1
     skip_notifications     = false
     enabled                = true
     action                 = "info"

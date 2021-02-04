@@ -26,6 +26,10 @@ You can import corp lists with the generic corp import formula
 In addition to all arguments, the following fields are also available
  - `id` - the identifier of the resource
  - `http_block_code` - HTTP response code to send when traffic is being blocked
+ - `primary_agent_key` - Primary agent key containing secret and access keys 
+   - `name`
+   - `secret_key`
+   - `access_key`
  
 Example:
 ```shell script
