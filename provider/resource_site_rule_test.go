@@ -334,6 +334,149 @@ func TestACCResourceSiteRuleTagSignal(t *testing.T) {
 	})
 }
 
+func TestACCResourceSiteRuleActions(t *testing.T) {
+	t.Parallel()
+	resourceName := "sigsci_site_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "request"
+                        group_operator="all"
+                        enabled=true
+                        reason= "Example site rule update"
+                        expiration=""
+                        conditions {
+                            type="single"
+                            field="path"
+                            operator="contains"
+                            value="/login"
+                        }
+                        actions {
+                            type = "allow"
+                        }
+
+                }`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					// No need to check, we're really testing the next step
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.233073437.type", "allow"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type="request"
+                        group_operator="all"
+                        enabled=true
+                        reason="Example site rule update"
+                        expiration=""
+                        conditions {
+                            type="single"
+                            field="path"
+                            operator="contains"
+                            value="/login"
+                        }
+                        actions {
+                            type = "block"
+                        }
+
+                }`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect(),
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.1990726244.type", "block"),
+				),
+			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+	})
+}
+
+func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
+	t.Parallel()
+	resourceName := "sigsci_site_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "signal"
+                        group_operator="all"
+                        enabled=true
+                        reason= "Example site rule update"
+                        expiration=""
+                        signal="CMDEXE"
+                        conditions {
+                            type="single"
+                            field="path"
+                            operator="contains"
+                            value="/login"
+                        }
+                        actions {
+                            type = "excludeSignal"
+                            signal = "CMDEXE"
+                        }
+
+                }`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.3950535159.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.3950535159.signal", "CMDEXE"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type="request"
+                        group_operator="all"
+                        enabled=true
+                        reason="Example site rule update"
+                        expiration=""
+                        conditions {
+                            type="single"
+                            field="path"
+                            operator="contains"
+                            value="/login"
+                        }
+                        actions {
+                            type = "allow"
+                        }
+
+                }`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.233073437.type", "allow"),
+				),
+			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+	})
+}
+
 func testCheckSiteRuleExists(name string) resource.TestCheckFunc {
 	var testFunc resource.TestCheckFunc = func(s *terraform.State) error {
 		rsrc, ok := s.RootModule().Resources[name]
