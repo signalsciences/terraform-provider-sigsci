@@ -45,7 +45,7 @@ provider "sigsci" {
   //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
 }
 ```
-## Corp level resources
+## Corp resources
 [Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site.md)
 
 [Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_list.md)
@@ -56,7 +56,7 @@ provider "sigsci" {
 
 [Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_integration.md)
 
-## Site level resources
+## Site resources
 
 [Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_list.md)
 
