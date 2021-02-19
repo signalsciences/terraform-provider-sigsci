@@ -62,7 +62,7 @@ func resourceCorpRule() *schema.Resource {
 						},
 						"signal": {
 							Type:        schema.TypeString,
-							Description: "(block, allow, exclude)",
+							Description: "signal id",
 							Optional:    true,
 						},
 					},
@@ -174,7 +174,7 @@ func resourceCorpRule() *schema.Resource {
 			"signal": {
 				Type:        schema.TypeString,
 				Description: "The signal id of the signal being excluded",
-				Required:    true,
+				Optional:    true,
 			},
 			"reason": {
 				Type:        schema.TypeString,
