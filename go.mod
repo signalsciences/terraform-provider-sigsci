@@ -7,3 +7,6 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk v1.14.0
 	github.com/signalsciences/go-sigsci v0.1.2
 )
+
+//replace github.com/signalsciences/go-sigsci v0.1.2 => ../go-sigsci
+

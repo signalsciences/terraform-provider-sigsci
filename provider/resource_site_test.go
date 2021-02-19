@@ -64,12 +64,15 @@ func TestAccResourceSiteBasic(t *testing.T) {
                         display_name = "test"
                         agent_anon_mode = ""
                         block_duration_seconds = 86400
+                        block_http_code = 411
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "display_name", "test"),
 					resource.TestCheckResourceAttr(resourceName, "agent_anon_mode", ""),
 					resource.TestCheckResourceAttr(resourceName, "block_duration_seconds", "86400"),
+					resource.TestCheckResourceAttr(resourceName, "block_http_code", "411"),
 				),
 			},
 			{

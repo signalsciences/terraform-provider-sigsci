@@ -50,7 +50,7 @@ func resourceSiteAlert() *schema.Resource {
 				Optional:    true,
 			},
 			"skip_notifications": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeBool,
 				Description: "A flag skips notifications",
 				Optional:    true,
 			},
@@ -63,12 +63,13 @@ func resourceSiteAlertCreate(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 
 	alert, err := sc.CreateCustomAlert(pm.Corp, d.Get("site_short_name").(string), sigsci.CustomAlertBody{
-		TagName:   d.Get("tag_name").(string),
-		LongName:  d.Get("long_name").(string),
-		Interval:  d.Get("interval").(int),
-		Threshold: d.Get("threshold").(int),
-		Enabled:   d.Get("enabled").(bool),
-		Action:    d.Get("action").(string),
+		TagName:           d.Get("tag_name").(string),
+		LongName:          d.Get("long_name").(string),
+		Interval:          d.Get("interval").(int),
+		Threshold:         d.Get("threshold").(int),
+		Enabled:           d.Get("enabled").(bool),
+		Action:            d.Get("action").(string),
+		SkipNotifications: d.Get("skip_notifications").(bool),
 	})
 	if err != nil {
 		return err
@@ -85,8 +86,6 @@ func resourceSiteAlertRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-
-	alert.SkipNotifications
 
 	d.SetId(alert.ID)
 	err = d.Set("site_short_name", d.Get("site_short_name").(string))
@@ -117,6 +116,10 @@ func resourceSiteAlertRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("skip_notifications", alert.SkipNotifications)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -125,13 +128,14 @@ func resourceSiteAlertUpdate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 
-	alert, err := sc.UpdateCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CustomAlertBody{
-		TagName:   d.Get("tag_name").(string),
-		LongName:  d.Get("long_name").(string),
-		Interval:  d.Get("interval").(int),
-		Threshold: d.Get("threshold").(int),
-		Enabled:   d.Get("enabled").(bool),
-		Action:    d.Get("action").(string),
+	alert, err := sc.ReplaceCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CustomAlert{
+		TagName:           d.Get("tag_name").(string),
+		LongName:          d.Get("long_name").(string),
+		Interval:          d.Get("interval").(int),
+		Threshold:         d.Get("threshold").(int),
+		Enabled:           d.Get("enabled").(bool),
+		Action:            d.Get("action").(string),
+		SkipNotifications: d.Get("skip_notifications").(bool),
 	})
 	if err != nil {
 		d.SetId("")

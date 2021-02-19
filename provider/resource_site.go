@@ -37,23 +37,23 @@ func resourceSite() *schema.Resource {
 				Optional:    true,
 				Default:     "log",
 			},
-			"agent_anon_mode": {
+			"agent_anon_mode": { // Has issues on create -- will always be default, will update just fine to the correct value
 				Type:        schema.TypeString,
 				Description: "Agent IP anonymization mode - \"\" (empty string) or 'EU'",
 				Optional:    true,
 				Default:     "",
 			},
-			"block_duration_seconds": {
+			"block_duration_seconds": { // Has issues on create -- will always be default, will update just fine to the correct value
 				Type:        schema.TypeInt,
 				Description: "Duration to block an IP in seconds",
 				Optional:    true,
 				Default:     86400,
 			},
-			"block_http_code": {
+			"block_http_code": { // CANNOT UPDATE THIS FIELD,
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when traffic is being blocked",
-				Computed:    true,
-				//Default:     406,
+				Optional:    true,
+				Default:     406,
 			},
 			"primary_agent_key": {
 				Type:        schema.TypeMap,
@@ -99,7 +99,8 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 
 	// For whatever reason, you cannot create without default values, but you may update them later
 	// If these are not the default values, update
-	if d.Get("block_duration_seconds").(int) != 86400 || d.Get("agent_anon_mode").(string) != "" {
+	if d.Get("block_duration_seconds").(int) != 86400 ||
+		d.Get("agent_anon_mode").(string) != "" {
 		return updateSite(d, m)
 	}
 
@@ -162,7 +163,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 	corp := pm.Corp
 	site := d.Get("short_name").(string)
-	_, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
+	siteu, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
@@ -172,6 +173,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(siteu)
 
 	return readSite(d, m)
 }

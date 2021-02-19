@@ -24,7 +24,7 @@ func TestAccResourceSiteAlertCRUD(t *testing.T) {
                       threshold          = 12
                       enabled            = true
                       action             = "info"
-                      skip_notifications = true
+                      skip_notifications = false 
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
@@ -34,7 +34,7 @@ func TestAccResourceSiteAlertCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "threshold", "12"),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
 					resource.TestCheckResourceAttr(resourceName, "action", "info"),
-					resource.TestCheckResourceAttr(resourceName, "skip_notifications", "true"),
+					resource.TestCheckResourceAttr(resourceName, "skip_notifications", "false"),
 				),
 			},
 			{
@@ -47,7 +47,7 @@ func TestAccResourceSiteAlertCRUD(t *testing.T) {
                       threshold          = 13
                       enabled            = false
                       action             = "flagged"
-                      skip_notifications = false 
+                      skip_notifications = true 
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
@@ -57,7 +57,7 @@ func TestAccResourceSiteAlertCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "threshold", "13"),
 					resource.TestCheckResourceAttr(resourceName, "enabled", "false"),
 					resource.TestCheckResourceAttr(resourceName, "action", "flagged"),
-					resource.TestCheckResourceAttr(resourceName, "skip_notifications", "false"),
+					resource.TestCheckResourceAttr(resourceName, "skip_notifications", "true"),
 				),
 			},
 			{
