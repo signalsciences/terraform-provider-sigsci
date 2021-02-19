@@ -33,16 +33,17 @@ resource "sigsci_site_rule" "test" {
 
   actions {
     type = "excludeSignal"
+    signal = "corp.signal_id" 
   }
 }
 ```
 
 ### Argument Reference
  - `site_short_names` - (Required) Sites with the rule available. Rules with a global corpScope will return '[]'.
- - `type`  Type of rule (request, signal exclusion, multival)
+ - `type`  Type of rule (request, signal, multival)
  - `enabled` -   enabled or disabled
  - `group_operator` -   Conditions that must be matched when evaluating the request (all, any)
- - `signal`  -   The signal id of the signal being excluded
+ - `signal`  -   The signal id of the signal being excluded or tagged. Only used for type=signal
  - `reason`  -   Description of the rule
  - `expiration` -   Date the rule will automatically be disabled. If rule is always enabled, will return empty string (RFC3339 date time)
  - `conditions` -   Conditions on which the rule should trigger. May be recursively nest up to 3 times.
@@ -54,6 +55,7 @@ resource "sigsci_site_rule" "test" {
    - `conditions` -  Conditions on which this condition should trigger. Can recursively add this 3 deep.
  - `actions` - Action to take when triggered
    - `type` - (block, allow, excludeSignal) 
+   - `signal` - id of signal to be tagged with or excluded
 
 ### Attributes Reference
 In addition to all arguments, the following fields are also available

@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     sigsci = {
-      source = "signalsciences/sigsci"
+      source  = "signalsciences/sigsci"
       version = "0.3.0"
     }
   }
@@ -59,7 +59,8 @@ resource "sigsci_corp_rule" "test" {
     value    = "1.2.3.5"
   }
   actions {
-    type = "excludeSignal"
+    type   = "excludeSignal"
+    signal = sigsci_corp_signal_tag.test.id
   }
 }
 
@@ -179,7 +180,7 @@ resource "sigsci_site_rule" "test" {
   }
 
   actions {
-    type = "allow"
+    type = "block"
   }
 }
 
