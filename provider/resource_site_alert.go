@@ -51,7 +51,7 @@ func resourceSiteAlert() *schema.Resource {
 			},
 			"skip_notifications": {
 				Type:        schema.TypeBool,
-				Description: "A flag skips notifications",
+				Description: "A flag to skip notifications",
 				Optional:    true,
 			},
 		},
