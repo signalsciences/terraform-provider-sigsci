@@ -52,8 +52,7 @@ func resourceSite() *schema.Resource {
 			"block_http_code": { // CANNOT UPDATE THIS FIELD,
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when traffic is being blocked",
-				Optional:    true,
-				Default:     406,
+				Computed:    true,
 			},
 			"primary_agent_key": {
 				Type:        schema.TypeMap,
@@ -163,7 +162,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 	corp := pm.Corp
 	site := d.Get("short_name").(string)
-	siteu, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
+	_, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
@@ -173,7 +172,6 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(siteu)
 
 	return readSite(d, m)
 }

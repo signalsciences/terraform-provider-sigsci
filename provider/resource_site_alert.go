@@ -128,7 +128,7 @@ func resourceSiteAlertUpdate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 
-	alert, err := sc.ReplaceCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CustomAlert{
+	alert, err := sc.UpdateCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CustomAlertBody{
 		TagName:           d.Get("tag_name").(string),
 		LongName:          d.Get("long_name").(string),
 		Interval:          d.Get("interval").(int),

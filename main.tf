@@ -1,11 +1,11 @@
-terraform {
-  required_providers {
-    sigsci = {
-      source  = "signalsciences/sigsci"
-      version = "0.3.0"
-    }
-  }
-}
+//terraform {
+//  required_providers {
+//    sigsci = {
+//      source  = "signalsciences/sigsci"
+//      version = "0.3.0"
+//    }
+//  }
+//}
 
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
@@ -291,25 +291,4 @@ resource "sigsci_site_integration" "test_integration" {
   type            = "slack"
   url             = "https://wat.slack.com"
   events          = ["listCreated"]
-}
-
-
-resource "sigsci_corp_rule" "ramsey-network-rule" {
-  site_short_names = [sigsci_site.my-site.short_name]
-  type             = "request"
-  corp_scope       = "global"
-  enabled          = false
-  group_operator   = "all"
-  signal           = "ramsey-network"
-  reason           = "Adds a signal flag on any request that came from a Ramsey Network"
-  expiration       = ""
-  conditions {
-    type     = "single"
-    field    = "ip"
-    operator = "inList"
-    value    = "corp.ramsey-network"
-  }
-  actions {
-    type = "allow"
-  }
 }
