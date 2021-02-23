@@ -200,12 +200,12 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   }
 
   alerts {
-    long_name          = "alert 1"
-    interval           = 60
-    threshold          = 10
-    skip_notifications = true
-    enabled            = true
-    action             = "info"
+    long_name              = "alert 1"
+    interval               = 60
+    threshold              = 10
+    skip_notifications     = true
+    enabled                = true
+    action                 = "info"
     block_duration_seconds = sigsci_site.my-site.block_duration_seconds
   }
 

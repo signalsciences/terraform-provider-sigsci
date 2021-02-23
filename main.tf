@@ -2,7 +2,7 @@
 //  required_providers {
 //    sigsci = {
 //      source  = "signalsciences/sigsci"
-//      version = "0.3.0"
+//      version = "0.4.0"
 //    }
 //  }
 //}
@@ -19,7 +19,7 @@ provider "sigsci" {
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
   display_name           = "manual terraform test"
-  block_duration_seconds = 86411
+  block_duration_seconds = 86400
   agent_anon_mode        = ""
   agent_level            = "block"
 }
