@@ -1,11 +1,11 @@
-terraform {
-  required_providers {
-    sigsci = {
-      source  = "signalsciences/sigsci"
-      version = "0.3.0"
-    }
-  }
-}
+//terraform {
+//  required_providers {
+//    sigsci = {
+//      source  = "signalsciences/sigsci"
+//      version = "0.3.0"
+//    }
+//  }
+//}
 
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
