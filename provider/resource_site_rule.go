@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"reflect"
 )
 
 func resourceSiteRule() *schema.Resource {
@@ -313,11 +312,6 @@ func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	_, err := sc.UpdateSiteRuleByID(corp, site, d.Id(), updateSiteRuleBody)
 	if err != nil {
 		return err
-	}
-	rule, err := sc.GetSiteRuleByID(corp, site, d.Id())
-	if err == nil && !reflect.DeepEqual(updateSiteRuleBody, rule.CreateSiteRuleBody) {
-		return fmt.Errorf("Update failed for rule ID %s in corp %s in site %s\ngot:\n%#v\nexpected:\n%#v\nPlease re-run",
-			d.Id(), corp, site, rule.CreateSiteRuleBody, updateSiteRuleBody)
 	}
 	return resourceSiteRuleRead(d, m)
 }

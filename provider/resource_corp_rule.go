@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"reflect"
 )
 
 func resourceCorpRule() *schema.Resource {
@@ -211,10 +210,6 @@ func resourceCorpRuleCreate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	_, err = sc.GetCorpRuleByID(corp, rule.ID)
-	if err != nil {
-		return fmt.Errorf("%s. Could not create rule with ID %s in corp %s. Please re-run", err.Error(), rule.ID, corp)
-	}
 	d.SetId(rule.ID)
 	return resourceCorpRuleRead(d, m)
 }
@@ -241,11 +236,6 @@ func resourceCorpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	_, err := sc.UpdateCorpRuleByID(corp, d.Id(), updateCorpRuleBody)
 	if err != nil {
 		return fmt.Errorf("%s. Could not update rule with ID %s in corp %s ", err.Error(), corp, d.Id())
-	}
-	rule, err := sc.GetCorpRuleByID(corp, d.Id())
-	if err == nil && !reflect.DeepEqual(updateCorpRuleBody, rule.CreateCorpRuleBody) {
-		return fmt.Errorf("Update failed for rule ID %s in corp %s\ngot:\n%#v\nexpected:\n%#v\nPlease re-run",
-			d.Id(), corp, rule.CreateCorpRuleBody, updateCorpRuleBody)
 	}
 	return resourceCorpRuleRead(d, m)
 }

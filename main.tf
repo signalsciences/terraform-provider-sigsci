@@ -24,7 +24,6 @@ resource "sigsci_site" "my-site" {
   agent_level            = "block"
 }
 
-
 resource "sigsci_corp_list" "test" {
   name        = "My corp list"
   type        = "ip"
@@ -180,7 +179,7 @@ resource "sigsci_site_rule" "test" {
   }
 
   actions {
-    type = "block"
+    type = "excludeSignal"
   }
 }
 
