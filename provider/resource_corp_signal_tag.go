@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"reflect"
 )
 
 //TODO maybe rename to corp tag
@@ -71,16 +70,11 @@ func resourceCorpSignalTagUpdate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
-	before, err := sc.GetCorpSignalTagByID(corp, d.Id())
-	if err != nil {
-		d.SetId("")
-		return fmt.Errorf("%s. Could not find signaltag to update with ID %s in corp %s", err.Error(), d.Id(), corp)
-	}
 	updateSignalTagBody := sigsci.UpdateSignalTagBody{
 		Description: d.Get("description").(string),
 	}
 
-	_, err = sc.UpdateCorpSignalTagByID(corp, d.Id(), updateSignalTagBody)
+	_, err := sc.UpdateCorpSignalTagByID(corp, d.Id(), updateSignalTagBody)
 	if err != nil {
 		return fmt.Errorf("%s. Could not update signaltag with ID %s in corp %s", err.Error(), d.Id(), corp)
 	}
