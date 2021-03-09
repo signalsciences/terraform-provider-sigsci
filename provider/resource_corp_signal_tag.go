@@ -84,11 +84,6 @@ func resourceCorpSignalTagUpdate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return fmt.Errorf("%s. Could not update signaltag with ID %s in corp %s", err.Error(), d.Id(), corp)
 	}
-	after, err := sc.GetCorpSignalTagByID(corp, d.Id())
-	if err == nil && reflect.DeepEqual(before, after) {
-		return fmt.Errorf("Update failed for signaltag ID %s in corp %s\ngot:\n%#v\nexpected:\n%#v\nPlease re-run",
-			d.Id(), corp, after, updateSignalTagBody)
-	}
 	return resourceCorpSignalTagRead(d, m)
 }
 

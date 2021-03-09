@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"reflect"
 )
 
 func resourceCorpList() *schema.Resource {
@@ -131,11 +130,6 @@ func resourceCorpListUpdate(d *schema.ResourceData, m interface{}) error {
 	_, err = sc.UpdateCorpListByID(corp, d.Id(), updateCorpListBody)
 	if err != nil {
 		return fmt.Errorf("%s. Could not update list with ID %s in corp %s. Please re-run", err.Error(), d.Id(), corp)
-	}
-	after, err := sc.GetCorpListByID(corp, d.Id())
-	if err == nil && reflect.DeepEqual(after.CreateListBody, before.CreateListBody) {
-		return fmt.Errorf("Update failed for list ID %s in corp %s\ngot:\n%#v\nexpected:\n%#v.Please re-run",
-			d.Id(), corp, after.CreateListBody, updateCorpListBody)
 	}
 	return resourceCorpListRead(d, m)
 }
