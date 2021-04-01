@@ -40,12 +40,12 @@ resource "sigsci_site_rule" "test" {
 
 ### Argument Reference
  - `site_short_names` - (Required) Sites with the rule available. Rules with a global corpScope will return '[]'.
- - `type`  Type of rule (request, signal, multival)
- - `enabled` - (Required)  enabled or disabled
+ - `type`  Type of rule (request, signal, multival, templatedSignal). 
+ - `enabled` - (Required) enabled or disabled
  - `group_operator` -   Conditions that must be matched when evaluating the request (all, any)
  - `signal`  -   The signal id of the signal being excluded or tagged. Only used for type=signal
  - `reason`  -   Description of the rule
- - `expiration` -  (Required) Date the rule will automatically be disabled. If rule is always enabled, will return empty string (RFC3339 date time)
+ - `expiration` - (Required) Date the rule will automatically be disabled. If rule is always enabled, will return empty string (RFC3339 date time)
  - `conditions` -   Conditions on which the rule should trigger. May be recursively nest up to 3 times.
    - `type` - (Required) (group, single)
    - `group_operator` -  type: group - Conditions that must be matched when evaluating the request (all, any)
@@ -61,10 +61,65 @@ resource "sigsci_site_rule" "test" {
 In addition to all arguments, the following fields are also available
  - `id` - the identifier of the resource
  
- ### Import
- You can import site rules with the generic site import formula
- 
-Example: 
+
+
+### Templated Signals
+We have curated a list of templates for common rules, the full list of available signals is available below. 
+
+For these you must specify type = "templatedSignal". 
+Note that they will show up in the site "Templated Rules" page in the Console.
+
+```hcl-terraform
+resource "sigsci_site_rule" "testsignal" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "templatedSignal"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example site rule update"
+  signal          = "PW-RESET-ATTEMPT"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "method"
+    operator = "equals"
+    value    = "POST"
+  }
+
+  conditions {
+    type     = "single"
+    field    = "path"
+    operator = "equals"
+    value    = "/change-password"
+  }
+
+  conditions {
+    type           = "multival"
+    group_operator = "all"
+    conditions {
+      field    = "name"
+      operator = "equals"
+      type     = "single"
+      value    = "foo"
+    }
+  }
+}
+```
+
+```javascript
+// These are all of the valid values for signal
+signals = ["2FA-CHANGED","2FA-DISABLED","ADDRESS-CHANGED","CC-VAL-ATTEMPT","CC-VAL-FAILURE", "CC-VAL-SUCCESS",
+   "EMAIL-CHANGED","EMAIL-VALIDATION","GC-VAL-ATTEMPT","GC-VAL-FAILURE", "GC-VAL-SUCCESS","INFO-VIEWED",
+   "INVITE-ATTEMPT","INVITE-FAILURE","INVITE-SUCCESS", "KBA-CHANGED","MESSAGE-SENT","PW-CHANGED","PW-RESET-ATTEMPT",
+   "RSRC-ID-ENUM-ATTEMPT", "RSRC-ID-ENUM-FAILURE","RSRC-ID-ENUM-SUCCESS","RSRC-ID-ENUM-SUCCESS","USER-ID-ENUM-ATTEMPT", 
+   "USER-ID-ENUM-FAILURE","USER-ID-ENUM-SUCCESS","USER-ID-ENUM-SUCCESS","WRONG-API-CLIENT"]
+```
+If you do not see the signal you want in this list, check out the [Templated Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_templated_rule.md) for some additional templates
+
+### Import
+You can import site rules with the generic site import formula
+
+Example:
 ```shell script
 terraform import sigsci_site_rule.test site_short_name:id 
 ```

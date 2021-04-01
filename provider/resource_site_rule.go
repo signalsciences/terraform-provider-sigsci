@@ -48,7 +48,7 @@ func resourceSiteRule() *schema.Resource {
 			"actions": {
 				Type:        schema.TypeSet,
 				Description: "Actions",
-				Required:    true,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {

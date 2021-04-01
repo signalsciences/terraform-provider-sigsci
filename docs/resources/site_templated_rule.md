@@ -38,7 +38,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
 
 ### Argument Reference
 - `site_short_name` - (Required) Identifying name of the site
-- `name` - (Required) Field name
+- `name` - (Required) Field name. A list of available names is below.
 - `detections` - (Required) Type of redaction (0: Request Parameter, 1: Request Header, 2: Response Header)
   - `enabled` - (Required) A flag to toggle this detection
   - `fields` - (Required) detection fields that should trigger an alert
@@ -57,6 +57,17 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
 In addition to all arguments, the following fields are also available
  - `id` - the identifier of the resource
  - `name` - Name of templated rule
+
+### Available Templates
+```javascript
+//These are the valid values for the 'name' field.  
+signals = ["AWS-SSRF", "CVE-2017-5638", "CVE-2017-7269", "CVE-2017-9805", "CVE-2018-9206", "CVE-2018-11776", 
+  "CVE-2019-0192", "CVE-2019-0193", "CVE-2019-0232", "CVE-2019-2725", "CVE-2019-3396", "CVE-2019-5418", "CVE-2019-6340",
+  "CVE-2019-14234", "CVE-2019-16759", "CVE-2021-26855", "LOGINATTEMPT", "LOGINFAILURE", "LOGINSUCCESS", "REGATTEMPT", 
+  "REGFAILURE", "REGSUCCESS"]
+```
+
+If you do not see the signal you want in this list, check out the [Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_rule.md) for some additional templates
 
 ### Import
 You can import corp lists with the generic site import formula

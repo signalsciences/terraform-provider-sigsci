@@ -291,3 +291,38 @@ resource "sigsci_site_integration" "test_integration" {
   url             = "https://wat.slack.com"
   events          = ["listCreated"]
 }
+
+resource "sigsci_site_rule" "testsignal" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "templatedSignal"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example site rule update"
+  signal          = "PW-RESET-ATTEMPT"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "method"
+    operator = "equals"
+    value    = "POST"
+  }
+
+  conditions {
+    type     = "single"
+    field    = "path"
+    operator = "equals"
+    value    = "/change-password"
+  }
+
+  conditions {
+    type           = "multival"
+    group_operator = "all"
+    conditions {
+      field    = "name"
+      operator = "equals"
+      type     = "single"
+      value    = "foo"
+    }
+  }
+}
