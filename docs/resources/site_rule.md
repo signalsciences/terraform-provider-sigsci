@@ -41,11 +41,11 @@ resource "sigsci_site_rule" "test" {
 ### Argument Reference
  - `site_short_names` - (Required) Sites with the rule available. Rules with a global corpScope will return '[]'.
  - `type`  Type of rule (request, signal, multival)
- - `enabled` -   enabled or disabled
+ - `enabled` - (Required)  enabled or disabled
  - `group_operator` -   Conditions that must be matched when evaluating the request (all, any)
  - `signal`  -   The signal id of the signal being excluded or tagged. Only used for type=signal
  - `reason`  -   Description of the rule
- - `expiration` -   Date the rule will automatically be disabled. If rule is always enabled, will return empty string (RFC3339 date time)
+ - `expiration` -  (Required) Date the rule will automatically be disabled. If rule is always enabled, will return empty string (RFC3339 date time)
  - `conditions` -   Conditions on which the rule should trigger. May be recursively nest up to 3 times.
    - `type` - (Required) (group, single)
    - `group_operator` -  type: group - Conditions that must be matched when evaluating the request (all, any)
@@ -62,7 +62,7 @@ In addition to all arguments, the following fields are also available
  - `id` - the identifier of the resource
  
  ### Import
- You can import corp rules with the generic site import formula
+ You can import site rules with the generic site import formula
  
 Example: 
 ```shell script
