@@ -114,7 +114,7 @@ signals = ["2FA-CHANGED","2FA-DISABLED","ADDRESS-CHANGED","CC-VAL-ATTEMPT","CC-V
    "RSRC-ID-ENUM-ATTEMPT", "RSRC-ID-ENUM-FAILURE","RSRC-ID-ENUM-SUCCESS","RSRC-ID-ENUM-SUCCESS","USER-ID-ENUM-ATTEMPT", 
    "USER-ID-ENUM-FAILURE","USER-ID-ENUM-SUCCESS","USER-ID-ENUM-SUCCESS","WRONG-API-CLIENT"]
 ```
-If you do not see the signal you want in this list, check out the [Templated Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_templated_rule.md) for some additional templates
+If you do not see the signal you want in this list, check out the [Templated Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_templated_rule.md) for some additional templates
 
 ### Import
 You can import site rules with the generic site import formula

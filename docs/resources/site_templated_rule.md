@@ -33,7 +33,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
   }
 }
 ```
-|Warning: You must terraform apply with the option parallelism=1 when using this resource or risk data inconsistencies! [See the FAQ.](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/guides/FAQ.md)|
+|Warning: You must terraform apply with the option parallelism=1 when using this resource or risk data inconsistencies! [See the FAQ.](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/guides/FAQ.md)|
 |---|
 
 ### Argument Reference
@@ -67,7 +67,7 @@ signals = ["AWS-SSRF", "CVE-2017-5638", "CVE-2017-7269", "CVE-2017-9805", "CVE-2
   "REGFAILURE", "REGSUCCESS"]
 ```
 
-If you do not see the signal you want in this list, check out the [Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_rule.md) for some additional templates
+If you do not see the signal you want in this list, check out the [Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_rule.md) for some additional templates
 
 ### Import
 You can import corp lists with the generic site import formula

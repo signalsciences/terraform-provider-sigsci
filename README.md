@@ -56,37 +56,37 @@ provider "sigsci" {
 }
 ```
 ## Corp resources
-[Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site.md)
+[Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site.md)
 
-[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_list.md)
+[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_list.md)
 
-[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_signal_tag.md)
+[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_signal_tag.md)
 
-[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_rule.md)
+[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_rule.md)
 
-[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/corp_integration.md)
+[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_integration.md)
 
 ## Site resources
 
-[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_list.md)
+[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_list.md)
 
-[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_rule.md)
+[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_rule.md)
 
-[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_signal_tag.md)
+[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_signal_tag.md)
 
-[Redactions](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_redaction.md)
+[Redactions](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_redaction.md)
 
-[Alerts](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_alert.md)
+[Alerts](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_alert.md)
 
-[Templated Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_templated_rule.md)
+[Templated Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_templated_rule.md)
 
-[Allowlist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_allowlist.md)
+[Allowlist](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_allowlist.md)
 
-[Blocklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_blocklist.md)
+[Blocklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_blocklist.md)
 
-[Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_header_link.md)
+[Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_header_link.md)
 
-[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/docs/resources/site_integration.md)
+[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_integration.md)
 
 More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
 
@@ -108,7 +108,7 @@ terraform import sigsci_site_list.manual-list test_site:site.manual-list //Examp
 
 
 ## Example
-[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/master/main.tf) has an example of every resource 
+[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource 
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
