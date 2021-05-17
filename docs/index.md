@@ -221,7 +221,7 @@ resource "sigsci_site_templated_rule" "test_template_rule" {
 }
 ```
 
-##### BlackList
+##### Blocklist
 ```hcl-terraform
 resource "sigsci_site_blocklist" "test" {
   site_short_name = sigsci_site.my-site.short_name
