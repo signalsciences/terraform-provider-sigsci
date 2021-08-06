@@ -88,7 +88,7 @@ func resourceCorpSignalTagRead(d *schema.ResourceData, m interface{}) error {
 	signaltag, err := sc.GetCorpSignalTagByID(corp, d.Id())
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find signaltag with ID %s in corp %s", err.Error(), d.Id(), corp)
+		return nil
 	}
 	err = d.Set("short_name", signaltag.ShortName)
 	if err != nil {

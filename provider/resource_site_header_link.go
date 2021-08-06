@@ -72,7 +72,7 @@ func resourceSiteHeaderLinkRead(d *schema.ResourceData, m interface{}) error {
 	link, err := sc.GetHeaderLink(pm.Corp, site, d.Id())
 	if err != nil {
 		d.SetId("")
-		return err
+		return nil
 	}
 
 	d.SetId(d.Id())

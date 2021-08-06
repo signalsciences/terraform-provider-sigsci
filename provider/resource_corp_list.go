@@ -70,7 +70,7 @@ func resourceCorpListRead(d *schema.ResourceData, m interface{}) error {
 	list, err := sc.GetCorpListByID(corp, d.Id())
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find list with ID %s in corp %s", err.Error(), d.Id(), corp)
+		return nil
 	}
 	err = d.Set("name", list.Name)
 	if err != nil {

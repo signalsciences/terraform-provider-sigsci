@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -114,7 +113,7 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 	site, err := sc.GetSite(corp, sitename)
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("[ERROR] No site found with name %s in %s", sitename, corp)
+		return nil
 	}
 
 	d.SetId(site.Name)

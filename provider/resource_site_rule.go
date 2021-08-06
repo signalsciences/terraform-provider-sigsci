@@ -100,7 +100,6 @@ func resourceSiteRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
-							// ConflictsWith: []string{"conditions.0.operator"},
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -244,7 +243,7 @@ func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
 	rule, err := sc.GetSiteRuleByID(corp, site, d.Id())
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find rule with ID %s in corp %s site %s", err.Error(), d.Id(), corp, site)
+		return nil
 	}
 
 	err = d.Set("site_short_name", site)

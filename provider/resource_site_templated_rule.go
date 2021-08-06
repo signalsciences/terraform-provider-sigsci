@@ -143,7 +143,8 @@ func resourceTemplatedRuleRead(d *schema.ResourceData, m interface{}) error {
 
 	template, err := sc.GetSiteTemplateRuleByID(pm.Corp, d.Get("site_short_name").(string), d.Id())
 	if err != nil {
-		return err
+		d.SetId("")
+		return nil
 	}
 
 	d.SetId(template.Name)

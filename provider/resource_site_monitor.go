@@ -77,7 +77,7 @@ func resourceSiteMonitorRead(d *schema.ResourceData, m interface{}) error {
 	monitors, err := sc.GetSiteMonitor(pm.Corp, site, d.Id())
 	if err != nil {
 		d.SetId("")
-		return err
+		return nil
 	}
 	var monitor sigsci.SiteMonitor
 	for _, m := range monitors {

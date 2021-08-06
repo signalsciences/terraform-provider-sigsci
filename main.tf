@@ -1,11 +1,11 @@
-//terraform {
-//  required_providers {
-//    sigsci = {
-//      source  = "signalsciences/sigsci"
-//      version = "0.4.0"
-//    }
-//  }
-//}
+terraform {
+  required_providers {
+    sigsci = {
+      source  = "signalsciences/local/sigsci"
+      version = "0.4.2"
+    }
+  }
+}
 
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
@@ -227,7 +227,7 @@ resource "sigsci_site_rule" "testt" {
       field    = "signalType"
       operator = "equals"
       type     = "single"
-      value    = "RESPONSESPLIT"
+      value    = "RESPONSESPLIT2"
     }
   }
 
@@ -290,39 +290,4 @@ resource "sigsci_site_integration" "test_integration" {
   type            = "slack"
   url             = "https://wat.slack.com"
   events          = ["listCreated"]
-}
-
-resource "sigsci_site_rule" "testsignal" {
-  site_short_name = sigsci_site.my-site.short_name
-  type            = "templatedSignal"
-  group_operator  = "all"
-  enabled         = true
-  reason          = "Example site rule update"
-  signal          = "PW-RESET-ATTEMPT"
-  expiration      = ""
-
-  conditions {
-    type     = "single"
-    field    = "method"
-    operator = "equals"
-    value    = "POST"
-  }
-
-  conditions {
-    type     = "single"
-    field    = "path"
-    operator = "equals"
-    value    = "/change-password"
-  }
-
-  conditions {
-    type           = "multival"
-    group_operator = "all"
-    conditions {
-      field    = "name"
-      operator = "equals"
-      type     = "single"
-      value    = "foo"
-    }
-  }
 }

@@ -84,7 +84,8 @@ func resourceSiteAlertRead(d *schema.ResourceData, m interface{}) error {
 
 	alert, err := sc.GetCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id())
 	if err != nil {
-		return err
+		d.SetId("")
+		return nil
 	}
 
 	d.SetId(alert.ID)

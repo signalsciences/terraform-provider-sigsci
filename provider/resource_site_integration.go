@@ -71,7 +71,7 @@ func resourceSiteIntegrationRead(d *schema.ResourceData, m interface{}) error {
 	integration, err := sc.GetIntegration(pm.Corp, site, d.Id())
 	if err != nil {
 		d.SetId("")
-		return err
+		return nil
 	}
 
 	d.SetId(d.Id())

@@ -76,7 +76,7 @@ func resourceSiteBlocklistRead(d *schema.ResourceData, m interface{}) error {
 	Blocklists, err := sc.ListBlacklistIPs(corp, site)
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find Blocklists for site %s in corp %s", err.Error(), site, corp)
+		return nil
 	}
 	var Blocklist *sigsci.ListIP
 	for _, w := range Blocklists {
