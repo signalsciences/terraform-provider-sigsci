@@ -80,6 +80,7 @@ func resourceSiteRule() *schema.Resource {
 							Type:        schema.TypeString,
 							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
 							Optional:    true,
+							ValidateFunc: validateConditionField,
 						},
 						"operator": {
 							Type:        schema.TypeString,
@@ -111,6 +112,7 @@ func resourceSiteRule() *schema.Resource {
 										Type:        schema.TypeString,
 										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
 										Optional:    true,
+										ValidateFunc: validateConditionField,
 									},
 									"operator": {
 										Type:        schema.TypeString,
@@ -143,6 +145,7 @@ func resourceSiteRule() *schema.Resource {
 													Type:        schema.TypeString,
 													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
 													Optional:    true,
+													ValidateFunc: validateConditionField,
 												},
 												"operator": {
 													Type:        schema.TypeString,

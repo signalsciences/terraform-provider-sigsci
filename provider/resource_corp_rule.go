@@ -82,6 +82,7 @@ func resourceCorpRule() *schema.Resource {
 							Type:        schema.TypeString,
 							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
 							Optional:    true,
+							ValidateFunc: validateConditionField,
 						},
 						"operator": {
 							Type:        schema.TypeString,
@@ -114,6 +115,7 @@ func resourceCorpRule() *schema.Resource {
 										Type:        schema.TypeString,
 										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
 										Optional:    true,
+										ValidateFunc: validateConditionField,
 									},
 									"operator": {
 										Type:        schema.TypeString,
@@ -145,6 +147,7 @@ func resourceCorpRule() *schema.Resource {
 													Type:        schema.TypeString,
 													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
 													Optional:    true,
+													ValidateFunc: validateConditionField,
 												},
 												"operator": {
 													Type:        schema.TypeString,

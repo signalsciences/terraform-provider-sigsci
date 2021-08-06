@@ -479,3 +479,11 @@ var siteImporter = schema.ResourceImporter{
 		return []*schema.ResourceData{d}, nil
 	},
 }
+
+
+func validateConditionField(val interface{}, key string) ([]string, []error) {
+	if existsInString(val.(string), "scheme","method","path","useragent","domain","ip","responseCode","agentname","paramname","paramvalue","country","name","valueString","valueIp","signalType","signal", "requestHeader") {
+		return nil, nil
+	}
+	return []string{fmt.Sprintf("received '%s' for conditions.field, but it should probably be one of\n(scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader)", val.(string))}, nil
+}

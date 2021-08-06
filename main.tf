@@ -221,13 +221,13 @@ resource "sigsci_site_rule" "testt" {
   conditions {
     type           = "multival"
     field          = "signal"
-    group_operator = "all"
+    group_operator = "any"
     operator       = "exists"
     conditions {
       field    = "signalType"
       operator = "equals"
       type     = "single"
-      value    = "RESPONSESPLIT2"
+      value    = "RESPONSESPLIT"
     }
   }
 
@@ -247,7 +247,7 @@ resource "sigsci_site_rule" "testt" {
       operator       = "doesNotExist"
       group_operator = "all"
       conditions {
-        field    = "name"
+        field    = "value"
         operator = "equals"
         type     = "single"
         value    = "cookie"
