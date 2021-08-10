@@ -76,7 +76,7 @@ func resourceSiteAllowlistRead(d *schema.ResourceData, m interface{}) error {
 	allowlists, err := sc.ListWhitelistIPs(corp, site)
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find allowlists for site %s in corp %s", err.Error(), site, corp)
+		return nil
 	}
 	var allowlist *sigsci.ListIP
 	for _, w := range allowlists {

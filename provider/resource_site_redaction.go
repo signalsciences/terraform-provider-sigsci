@@ -54,7 +54,8 @@ func resourceSiteRedactionRead(d *schema.ResourceData, m interface{}) error {
 
 	redaction, err := sc.GetSiteRedactionByID(pm.Corp, d.Get("site_short_name").(string), d.Id())
 	if err != nil {
-		return err
+		d.SetId("")
+		return nil
 	}
 
 	d.SetId(redaction.ID)

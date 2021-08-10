@@ -52,6 +52,7 @@ func resourceCorpRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Actions",
 				Required:    true,
+				MaxItems: 2,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -71,6 +72,7 @@ func resourceCorpRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Conditions",
 				Required:    true,
+				MaxItems: 10,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -82,6 +84,7 @@ func resourceCorpRule() *schema.Resource {
 							Type:        schema.TypeString,
 							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
 							Optional:    true,
+							ValidateFunc: validateConditionField,
 						},
 						"operator": {
 							Type:        schema.TypeString,
@@ -103,6 +106,7 @@ func resourceCorpRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
+							MaxItems: 10,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -114,6 +118,7 @@ func resourceCorpRule() *schema.Resource {
 										Type:        schema.TypeString,
 										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
 										Optional:    true,
+										ValidateFunc: validateConditionField,
 									},
 									"operator": {
 										Type:        schema.TypeString,
@@ -134,6 +139,7 @@ func resourceCorpRule() *schema.Resource {
 										Type:        schema.TypeSet,
 										Description: "Conditions",
 										Optional:    true,
+										MaxItems: 10,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -145,6 +151,7 @@ func resourceCorpRule() *schema.Resource {
 													Type:        schema.TypeString,
 													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
 													Optional:    true,
+													ValidateFunc: validateConditionField,
 												},
 												"operator": {
 													Type:        schema.TypeString,
@@ -247,8 +254,9 @@ func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 	rule, err := sc.GetCorpRuleByID(corp, d.Id())
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find rule with ID %s in corp %s ", err.Error(), d.Id(), corp)
+		return nil
 	}
+	d.SetId(rule.ID)
 	err = d.Set("type", rule.Type)
 	if err != nil {
 		return err

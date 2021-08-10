@@ -66,7 +66,7 @@ func resourceCorpIntegrationRead(d *schema.ResourceData, m interface{}) error {
 	integration, err := sc.GetCorpIntegration(pm.Corp, d.Id())
 	if err != nil {
 		d.SetId("")
-		return err
+		return nil
 	}
 
 	d.SetId(d.Id())

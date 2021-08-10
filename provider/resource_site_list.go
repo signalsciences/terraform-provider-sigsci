@@ -72,7 +72,7 @@ func resourceSiteListRead(d *schema.ResourceData, m interface{}) error {
 	list, err := sc.GetSiteListByID(pm.Corp, site, d.Id())
 	if err != nil {
 		d.SetId("")
-		return err
+		return nil
 	}
 
 	d.SetId(d.Id())

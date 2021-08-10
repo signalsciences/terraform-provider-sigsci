@@ -1,8 +1,19 @@
+terraform {
+  required_providers {
+    sigsci = {
+      source  = "signalsciences/sigsci"
+      version = "0.4.2"
+    }
+  }
+}
+
+// To build locally:
+// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/0.4.2/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
 //terraform {
 //  required_providers {
 //    sigsci = {
-//      source  = "signalsciences/sigsci"
-//      version = "0.4.0"
+//      source  = "signalsciences/local/sigsci"
+//      version = "0.4.2"
 //    }
 //  }
 //}
@@ -93,7 +104,6 @@ resource "sigsci_site_signal_tag" "test_tag" {
   name            = "My new signal tag"
   description     = "description"
 }
-
 
 resource "sigsci_site_signal_tag" "test" {
   site_short_name = sigsci_site.my-site.short_name
@@ -209,7 +219,6 @@ resource "sigsci_site_redaction" "test_redaction" {
   redaction_type  = 0
 }
 
-
 resource "sigsci_site_rule" "testt" {
   site_short_name = sigsci_site.my-site.short_name
   type            = "request"
@@ -221,7 +230,7 @@ resource "sigsci_site_rule" "testt" {
   conditions {
     type           = "multival"
     field          = "signal"
-    group_operator = "all"
+    group_operator = "any"
     operator       = "exists"
     conditions {
       field    = "signalType"
@@ -247,7 +256,7 @@ resource "sigsci_site_rule" "testt" {
       operator       = "doesNotExist"
       group_operator = "all"
       conditions {
-        field    = "name"
+        field    = "valueString"
         operator = "equals"
         type     = "single"
         value    = "cookie"
@@ -285,13 +294,6 @@ resource "sigsci_site_rule" "testt" {
   }
 }
 
-resource "sigsci_site_integration" "test_integration" {
-  site_short_name = sigsci_site.my-site.short_name
-  type            = "slack"
-  url             = "https://wat.slack.com"
-  events          = ["listCreated"]
-}
-
 resource "sigsci_site_rule" "testsignal" {
   site_short_name = sigsci_site.my-site.short_name
   type            = "templatedSignal"
@@ -325,4 +327,11 @@ resource "sigsci_site_rule" "testsignal" {
       value    = "foo"
     }
   }
+}
+
+resource "sigsci_site_integration" "test_integration" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "slack"
+  url             = "https://wat.slack.com"
+  events          = ["listCreated"]
 }

@@ -71,7 +71,8 @@ func resourceSiteSignalTagRead(d *schema.ResourceData, m interface{}) error {
 	site := d.Get("site_short_name").(string)
 	tag, err := sc.GetSiteSignalTagByID(pm.Corp, site, d.Id())
 	if err != nil {
-		return err
+		d.SetId("")
+		return nil
 	}
 
 	d.SetId(tag.TagName)

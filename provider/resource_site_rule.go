@@ -49,6 +49,7 @@ func resourceSiteRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Actions",
 				Optional:    true,
+				MaxItems: 2,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -69,6 +70,7 @@ func resourceSiteRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Conditions",
 				Required:    true,
+				MaxItems: 10,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -80,6 +82,7 @@ func resourceSiteRule() *schema.Resource {
 							Type:        schema.TypeString,
 							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
 							Optional:    true,
+							ValidateFunc: validateConditionField,
 						},
 						"operator": {
 							Type:        schema.TypeString,
@@ -100,7 +103,7 @@ func resourceSiteRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
-							// ConflictsWith: []string{"conditions.0.operator"},
+							MaxItems: 10,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -112,6 +115,7 @@ func resourceSiteRule() *schema.Resource {
 										Type:        schema.TypeString,
 										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
 										Optional:    true,
+										ValidateFunc: validateConditionField,
 									},
 									"operator": {
 										Type:        schema.TypeString,
@@ -122,7 +126,6 @@ func resourceSiteRule() *schema.Resource {
 										Type:        schema.TypeString,
 										Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
 										Optional:    true,
-										// ConflictsWith: []string{"conditions.0.operator", "conditions.0.value", "conditions.0.field", "conditions.1.operator", "conditions.1.value", "conditions.1.field"}, does # work here
 									},
 									"value": {
 										Type:        schema.TypeString,
@@ -133,6 +136,7 @@ func resourceSiteRule() *schema.Resource {
 										Type:        schema.TypeSet,
 										Description: "Conditions",
 										Optional:    true,
+										MaxItems: 10,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -144,6 +148,7 @@ func resourceSiteRule() *schema.Resource {
 													Type:        schema.TypeString,
 													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
 													Optional:    true,
+													ValidateFunc: validateConditionField,
 												},
 												"operator": {
 													Type:        schema.TypeString,
@@ -154,7 +159,6 @@ func resourceSiteRule() *schema.Resource {
 													Type:        schema.TypeString,
 													Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
 													Optional:    true,
-													// ConflictsWith: []string{"conditions.0.operator", "conditions.0.value", "conditions.0.field", "conditions.1.operator", "conditions.1.value", "conditions.1.field"}, does # work here
 												},
 												"value": {
 													Type:        schema.TypeString,
@@ -228,7 +232,7 @@ func resourceSiteRuleCreate(d *schema.ResourceData, m interface{}) error {
 	}
 	_, err = sc.GetSiteRuleByID(corp, site, rule.ID)
 	if err != nil {
-		return fmt.Errorf("%s. Could not create rule with ID %s in corp %s in site %s. Please re-run", err.Error(), rule.ID, corp, site)
+		return err
 	}
 	d.SetId(rule.ID)
 	return resourceSiteRuleRead(d, m)
@@ -244,9 +248,10 @@ func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
 	rule, err := sc.GetSiteRuleByID(corp, site, d.Id())
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("%s. Could not find rule with ID %s in corp %s site %s", err.Error(), d.Id(), corp, site)
+		return nil
 	}
 
+	d.SetId(rule.ID)
 	err = d.Set("site_short_name", site)
 	if err != nil {
 		return err
@@ -334,3 +339,4 @@ func resourceSiteRuleDelete(d *schema.ResourceData, m interface{}) error {
 
 	return fmt.Errorf("Could not delete rule with ID %s in corp %s site %s. Please re-run", d.Id(), corp, site)
 }
+
