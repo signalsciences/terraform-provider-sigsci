@@ -44,6 +44,5 @@ jobs:
           version: latest
           args: release --rm-dist
         env:
-          GPG_TTY: $(tty)
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
