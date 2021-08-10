@@ -90,6 +90,7 @@ func resourceCorpSignalTagRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
+	d.SetId(signaltag.TagName)
 	err = d.Set("short_name", signaltag.ShortName)
 	if err != nil {
 		return err

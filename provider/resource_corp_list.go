@@ -72,6 +72,7 @@ func resourceCorpListRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
+	d.SetId(list.ID)
 	err = d.Set("name", list.Name)
 	if err != nil {
 		return err

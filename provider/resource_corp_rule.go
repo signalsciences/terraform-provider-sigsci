@@ -52,6 +52,7 @@ func resourceCorpRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Actions",
 				Required:    true,
+				MaxItems: 2,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -71,6 +72,7 @@ func resourceCorpRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Conditions",
 				Required:    true,
+				MaxItems: 10,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -104,6 +106,7 @@ func resourceCorpRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
+							MaxItems: 10,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -136,6 +139,7 @@ func resourceCorpRule() *schema.Resource {
 										Type:        schema.TypeSet,
 										Description: "Conditions",
 										Optional:    true,
+										MaxItems: 10,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -252,6 +256,7 @@ func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
+	d.SetId(rule.ID)
 	err = d.Set("type", rule.Type)
 	if err != nil {
 		return err
