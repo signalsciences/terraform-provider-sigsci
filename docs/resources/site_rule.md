@@ -40,7 +40,7 @@ resource "sigsci_site_rule" "test" {
 
 ### Argument Reference
  - `site_short_names` - (Required) Sites with the rule available. Rules with a global corpScope will return '[]'.
- - `type`  Type of rule (request, signal, multival, templatedSignal). 
+ - `type`  Type of rule (request, signal, multival, templatedSignal).
  - `enabled` - (Required) enabled or disabled
  - `group_operator` -   Conditions that must be matched when evaluating the request (all, any)
  - `signal`  -   The signal id of the signal being excluded or tagged. Only used for type=signal
@@ -54,9 +54,12 @@ resource "sigsci_site_rule" "test" {
    - `value` -  type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
    - `conditions` -  Conditions on which this condition should trigger. Can recursively add this 3 deep.
  - `actions` - Action to take when triggered
-   - `type` - (block, allow, excludeSignal) 
+   - `type` - (block, allow, excludeSignal, addSignal). A RateLimit rule has valid values of (logRequest, blockSignal)
    - `signal` - id of signal to be tagged with or excluded
-
+ - `rate_limit` - Enable rate limiting on this rule
+   -  `threshold` - Number of requests to count before rate limiting is activated
+   -  `interval` -  Length of time in minutes the threshold should be measured for (default: 1, options: 1, 5, 10)
+   -  `duration` -  Length of time in seconds to enforce the rule for once activated (default: 600, minimum: 300, maximum: 3600)
 ### Attributes Reference
 In addition to all arguments, the following fields are also available
  - `id` - the identifier of the resource

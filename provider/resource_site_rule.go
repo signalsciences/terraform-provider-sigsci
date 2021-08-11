@@ -54,7 +54,7 @@ func resourceSiteRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(block, allow, exclude) (rateLimit rule valid values: logRequest, blockSignal)",
+							Description: "(block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)",
 							Required:    true,
 							ForceNew:    true,
 						},
@@ -193,6 +193,7 @@ func resourceSiteRule() *schema.Resource {
 						"duration": {
 							Type:        schema.TypeInt,
 							Description: "duration in seconds (300 < x < 3600)",
+							Default:     600,
 							Required:    true,
 						},
 					},
