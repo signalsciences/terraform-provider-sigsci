@@ -122,9 +122,9 @@ If you do not see the signal you want in this list, check out the [Templated Rul
 ### Import
 You can import site rules with the generic site import formula. 
 
-If you are getting the error "Error: Cannot import non-existent remote object" you may need to find the ID via an api call to https://dashboard.signalsciences.net/api/v0/corps/CORP_ABC/sites/SITE_123/rules?type=templatedSignal.  Search the resulting list in the "signal" field and grab its real id.
 
 Example:
 ```shell script
 terraform import sigsci_site_rule.test site_short_name:id 
 ```
+If you are getting the error "Error: Cannot import non-existent remote object" you may need to find the ID via an api call to https://dashboard.signalsciences.net/api/v0/corps/CORP_ABC/sites/SITE_123/rules?type=templatedSignal.  Search the resulting list in the "signal" field and grab its real id.
