@@ -40,7 +40,7 @@ resource "sigsci_site_rule" "test" {
 
 ### Argument Reference
  - `site_short_names` - (Required) Sites with the rule available. Rules with a global corpScope will return '[]'.
- - `type`  Type of rule (request, signal, multival, templatedSignal).
+ - `type`  Type of rule (rateLimit, request, signal, multival, templatedSignal).
  - `enabled` - (Required) enabled or disabled
  - `group_operator` -   Conditions that must be matched when evaluating the request (all, any)
  - `signal`  -   The signal id of the signal being excluded or tagged. Only used for type=signal
