@@ -1,22 +1,22 @@
-terraform {
-  required_providers {
-    sigsci = {
-      source  = "signalsciences/sigsci"
-      version = "0.4.2"
-    }
-  }
-}
-
-// To build locally:
-// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/0.4.2/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
 //terraform {
 //  required_providers {
 //    sigsci = {
-//      source  = "signalsciences/local/sigsci"
+//      source  = "signalsciences/sigsci"
 //      version = "0.4.2"
 //    }
 //  }
 //}
+
+// To build locally:
+// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/0.4.2/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
+terraform {
+  required_providers {
+    sigsci = {
+      source  = "signalsciences/local/sigsci"
+      version = "0.4.2"
+    }
+  }
+}
 
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
@@ -45,34 +45,34 @@ resource "sigsci_corp_list" "test" {
     "1.2.3.4",
   ]
 }
-
-resource "sigsci_corp_rule" "test" {
-  site_short_names = [sigsci_site.my-site.short_name]
-  type             = "signal"
-  corp_scope       = "specificSites"
-  enabled          = true
-  group_operator   = "any"
-  signal           = "SQLI"
-  reason           = "Example corp rule"
-  expiration       = ""
-
-  conditions {
-    type     = "single"
-    field    = "ip"
-    operator = "equals"
-    value    = "1.2.3.4"
-  }
-  conditions {
-    type     = "single"
-    field    = "ip"
-    operator = "equals"
-    value    = "1.2.3.5"
-  }
-  actions {
-    type   = "excludeSignal"
-    signal = sigsci_corp_signal_tag.test.id
-  }
-}
+//
+//resource "sigsci_corp_rule" "test" {
+//  site_short_names = [sigsci_site.my-site.short_name]
+//  type             = "signal"
+//  corp_scope       = "specificSites"
+//  enabled          = true
+//  group_operator   = "any"
+//  signal           = "SQLI"
+//  reason           = "Example corp rule"
+//  expiration       = ""
+//
+//  conditions {
+//    type     = "single"
+//    field    = "ip"
+//    operator = "equals"
+//    value    = "1.2.3.4"
+//  }
+//  conditions {
+//    type     = "single"
+//    field    = "ip"
+//    operator = "equals"
+//    value    = "1.2.3.5"
+//  }
+//  actions {
+//    type   = "excludeSignal"
+//    signal = sigsci_corp_signal_tag.test.id
+//  }
+//}
 
 resource "sigsci_corp_signal_tag" "test" {
   short_name  = "example-signal-tag"
@@ -294,44 +294,89 @@ resource "sigsci_site_rule" "testt" {
   }
 }
 
-resource "sigsci_site_rule" "testsignal" {
-  site_short_name = sigsci_site.my-site.short_name
-  type            = "templatedSignal"
-  group_operator  = "all"
-  enabled         = true
-  reason          = "Example site rule update"
-  signal          = "PW-RESET-ATTEMPT"
-  expiration      = ""
-
-  conditions {
-    type     = "single"
-    field    = "method"
-    operator = "equals"
-    value    = "POST"
-  }
-
-  conditions {
-    type     = "single"
-    field    = "path"
-    operator = "equals"
-    value    = "/change-password"
-  }
-
-  conditions {
-    type           = "multival"
-    group_operator = "all"
-    conditions {
-      field    = "name"
-      operator = "equals"
-      type     = "single"
-      value    = "foo"
-    }
-  }
-}
+//resource "sigsci_site_rule" "testsignal" {
+//  site_short_name = sigsci_site.my-site.short_name
+//  type            = "templatedSignal"
+//  group_operator  = "all"
+//  enabled         = true
+//  reason          = "Example site rule update"
+//  signal          = "PW-RESET-ATTEMPT"
+//  expiration      = ""
+//
+//  conditions {
+//    type     = "single"
+//    field    = "method"
+//    operator = "equals"
+//    value    = "POST"
+//  }
+//
+//  conditions {
+//    type     = "single"
+//    field    = "path"
+//    operator = "equals"
+//    value    = "/change-password"
+//  }
+//
+//  conditions {
+//    type           = "multival"
+//    group_operator = "all"
+//    conditions {
+//      field    = "name"
+//      operator = "equals"
+//      type     = "single"
+//      value    = "foo"
+//    }
+//  }
+//}
 
 resource "sigsci_site_integration" "test_integration" {
   site_short_name = sigsci_site.my-site.short_name
   type            = "slack"
   url             = "https://wat.slack.com"
   events          = ["listCreated"]
+}
+
+
+
+
+
+
+
+
+
+resource "sigsci_site_rule" "testbad" {
+  site_short_name = sigsci_site.my-site.short_name
+  type = "signal"
+  group_operator = "any"
+  enabled = true
+  reason = "WATWATWATWATWATAWTWAT"
+  signal = "SQLI"
+  expiration = ""
+
+  conditions {
+    type = "single"
+    field = "ip"
+    operator = "equals"
+    value = "1.6.6.6"
+  }
+
+  conditions {
+    type = "single"
+    field = "ip"
+    operator = "equals"
+    value = "1.2.3.5"
+    conditions {
+      type = "multival"
+      field = "ip"
+      operator = "equals"
+      group_operator = "all"
+      value = "1.2.3.8"
+    }
+  }
+
+  actions {
+    type = "excludeSignal"
+    signal = sigsci_corp_signal_tag.test.id
+  }
+
 }
