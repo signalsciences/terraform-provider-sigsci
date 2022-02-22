@@ -75,12 +75,12 @@ func resourceSiteRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(group, single)",
+							Description: "(group, multival, single)",
 							Required:    true,
 						},
 						"field": {
 							Type:        schema.TypeString,
-							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
+							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
 							Optional:    true,
 							ValidateFunc: validateConditionField,
 						},
@@ -91,7 +91,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"group_operator": {
 							Type:        schema.TypeString,
-							Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+							Description: "type: group, multival - Conditions that must be matched when evaluating the request (all, any)",
 							Optional:    true,
 						},
 						"value": {
@@ -108,12 +108,12 @@ func resourceSiteRule() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"type": {
 										Type:        schema.TypeString,
-										Description: "(group, single)",
+										Description: "(group, multival, single)",
 										Required:    true,
 									},
 									"field": {
 										Type:        schema.TypeString,
-										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
+										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
 										Optional:    true,
 										ValidateFunc: validateConditionField,
 									},
@@ -124,7 +124,7 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"group_operator": {
 										Type:        schema.TypeString,
-										Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+										Description: "type: group, multival - Conditions that must be matched when evaluating the request (all, any)",
 										Optional:    true,
 									},
 									"value": {
@@ -141,12 +141,12 @@ func resourceSiteRule() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"type": {
 													Type:        schema.TypeString,
-													Description: "(group, single)",
+													Description: "(group, multival, single)",
 													Required:    true,
 												},
 												"field": {
 													Type:        schema.TypeString,
-													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
+													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
 													Optional:    true,
 													ValidateFunc: validateConditionField,
 												},
@@ -157,7 +157,7 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"group_operator": {
 													Type:        schema.TypeString,
-													Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+													Description: "type: group, multival - Conditions that must be matched when evaluating the request (all, any)",
 													Optional:    true,
 												},
 												"value": {

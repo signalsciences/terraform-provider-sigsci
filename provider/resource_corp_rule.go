@@ -77,12 +77,12 @@ func resourceCorpRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(group, single)",
+							Description: "(group, multival, single)",
 							Required:    true,
 						},
 						"field": {
 							Type:        schema.TypeString,
-							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
 							Optional:    true,
 							ValidateFunc: validateConditionField,
 						},
@@ -93,7 +93,7 @@ func resourceCorpRule() *schema.Resource {
 						},
 						"group_operator": {
 							Type:        schema.TypeString,
-							Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+							Description: "type: group, multival - Conditions that must be matched when evaluating the request (all, any)",
 							Optional:    true,
 							// ConflictsWith: []string{"conditions.0.operator", "conditions.0.value", "conditions.0.field", "conditions.1.operator", "conditions.1.value", "conditions.1.field"}, does # work here
 						},
@@ -111,12 +111,12 @@ func resourceCorpRule() *schema.Resource {
 								Schema: map[string]*schema.Schema{
 									"type": {
 										Type:        schema.TypeString,
-										Description: "(group, single)",
+										Description: "(group, multival, single)",
 										Required:    true,
 									},
 									"field": {
 										Type:        schema.TypeString,
-										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
 										Optional:    true,
 										ValidateFunc: validateConditionField,
 									},
@@ -127,7 +127,7 @@ func resourceCorpRule() *schema.Resource {
 									},
 									"group_operator": {
 										Type:        schema.TypeString,
-										Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+										Description: "type: group, multival - Conditions that must be matched when evaluating the request (all, any)",
 										Optional:    true,
 									},
 									"value": {
@@ -144,12 +144,12 @@ func resourceCorpRule() *schema.Resource {
 											Schema: map[string]*schema.Schema{
 												"type": {
 													Type:        schema.TypeString,
-													Description: "(group, single)",
+													Description: "(group, multival, single)",
 													Required:    true,
 												},
 												"field": {
 													Type:        schema.TypeString,
-													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
 													Optional:    true,
 													ValidateFunc: validateConditionField,
 												},
@@ -160,7 +160,7 @@ func resourceCorpRule() *schema.Resource {
 												},
 												"group_operator": {
 													Type:        schema.TypeString,
-													Description: "type: group - Conditions that must be matched when evaluating the request (all, any)",
+													Description: "type: group, multival - Conditions that must be matched when evaluating the request (all, any)",
 													Optional:    true,
 												},
 												"value": {
