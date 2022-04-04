@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -49,7 +50,7 @@ func resourceSiteRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Actions",
 				Optional:    true,
-				MaxItems: 2,
+				MaxItems:    2,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -63,6 +64,12 @@ func resourceSiteRule() *schema.Resource {
 							Description: "signal id to tag",
 							Optional:    true,
 						},
+						"response_code": {
+							Type:         schema.TypeInt,
+							Description:  "HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided",
+							Optional:     true,
+							ValidateFunc: validateActionResponseCode,
+						},
 					},
 				},
 			},
@@ -70,7 +77,7 @@ func resourceSiteRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Conditions",
 				Required:    true,
-				MaxItems: 10,
+				MaxItems:    10,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -79,9 +86,9 @@ func resourceSiteRule() *schema.Resource {
 							Required:    true,
 						},
 						"field": {
-							Type:        schema.TypeString,
-							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
-							Optional:    true,
+							Type:         schema.TypeString,
+							Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
+							Optional:     true,
 							ValidateFunc: validateConditionField,
 						},
 						"operator": {
@@ -103,7 +110,7 @@ func resourceSiteRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
-							MaxItems: 10,
+							MaxItems:    10,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -112,9 +119,9 @@ func resourceSiteRule() *schema.Resource {
 										Required:    true,
 									},
 									"field": {
-										Type:        schema.TypeString,
-										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
-										Optional:    true,
+										Type:         schema.TypeString,
+										Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
+										Optional:     true,
 										ValidateFunc: validateConditionField,
 									},
 									"operator": {
@@ -136,7 +143,7 @@ func resourceSiteRule() *schema.Resource {
 										Type:        schema.TypeSet,
 										Description: "Conditions",
 										Optional:    true,
-										MaxItems: 10,
+										MaxItems:    10,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -145,9 +152,9 @@ func resourceSiteRule() *schema.Resource {
 													Required:    true,
 												},
 												"field": {
-													Type:        schema.TypeString,
-													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
-													Optional:    true,
+													Type:         schema.TypeString,
+													Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal)",
+													Optional:     true,
 													ValidateFunc: validateConditionField,
 												},
 												"operator": {
@@ -340,4 +347,3 @@ func resourceSiteRuleDelete(d *schema.ResourceData, m interface{}) error {
 
 	return fmt.Errorf("Could not delete rule with ID %s in corp %s site %s. Please re-run", d.Id(), corp, site)
 }
-
