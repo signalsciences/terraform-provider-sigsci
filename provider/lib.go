@@ -3,6 +3,7 @@ package provider
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"sort"
 	"strconv"
 	"strings"
@@ -454,6 +455,10 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 func flattenRuleActions(actions []sigsci.Action) []interface{} {
 	var actionsMap = make([]interface{}, len(actions), len(actions))
 	for i, action := range actions {
+
+		if action.ResponseCode == 0 {
+			action.ResponseCode = http.StatusNotAcceptable
+		}
 		actionMap := map[string]interface{}{
 			"type":          action.Type,
 			"signal":        action.Signal,

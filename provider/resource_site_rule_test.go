@@ -367,35 +367,34 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					// No need to check, we're really testing the next step
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1595556168.type", "allow"),
+					resource.TestCheckResourceAttr(resourceName, "actions.3902877111.type", "allow"),
 				),
 			},
-			// this test case does not work due to a bug in the TF testing framework
-			//{
-			//	Config: fmt.Sprintf(`
-			//        resource "sigsci_site_rule" "test"{
-			//            site_short_name="%s"
-			//            type="request"
-			//            group_operator="all"
-			//            enabled=true
-			//            reason="Example site rule update"
-			//            expiration=""
-			//            conditions {
-			//                type="single"
-			//                field="path"
-			//                operator="contains"
-			//                value="/login"
-			//            }
-			//            actions {
-			//                type = "block"
-			//            }
-			//    }`, testSite),
-			//	Check: resource.ComposeAggregateTestCheckFunc(
-			//		testInspect(),
-			//		resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-			//		resource.TestCheckResourceAttr(resourceName, "actions.609630257.type", "block"),
-			//	),
-			//},
+			{
+				Config: fmt.Sprintf(`
+			       resource "sigsci_site_rule" "test"{
+			           site_short_name="%s"
+			           type="request"
+			           group_operator="all"
+			           enabled=true
+			           reason="Example site rule update"
+			           expiration=""
+			           conditions {
+			               type="single"
+			               field="path"
+			               operator="contains"
+			               value="/login"
+			           }
+			           actions {
+			               type = "block"
+			           }
+			   }`, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					//testInspect(),
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2481804494.type", "block"),
+				),
+			},
 			{
 				Config: fmt.Sprintf(`
 			                resource "sigsci_site_rule" "test"{

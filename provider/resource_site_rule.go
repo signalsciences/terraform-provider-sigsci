@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
@@ -69,6 +70,7 @@ func resourceSiteRule() *schema.Resource {
 							Description:  "HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided",
 							Optional:     true,
 							ValidateFunc: validateActionResponseCode,
+							Default:      http.StatusNotAcceptable,
 						},
 					},
 				},
