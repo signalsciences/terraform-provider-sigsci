@@ -460,6 +460,8 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 			"type":   action.Type,
 			"signal": action.Signal,
 		}
+		// customResponseCode is enabled for site rules but disabled for corp rules
+		// this boolean flag reflects the differences and flattens objects accordinglyg
 		if customResponseCode {
 			if action.ResponseCode == 0 {
 				action.ResponseCode = http.StatusNotAcceptable
