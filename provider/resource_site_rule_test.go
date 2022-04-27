@@ -53,7 +53,7 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.895671942.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2526394097.type", "excludeSignal"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "2"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.field", "ip"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.group_operator", ""),
@@ -95,7 +95,7 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update 2"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.895671942.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2526394097.type", "excludeSignal"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.conditions.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.field", "ip"),
@@ -161,8 +161,8 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.3258037017.type", "logRequest"),
-					resource.TestCheckResourceAttr(resourceName, "actions.3258037017.signal", "site.my-new-tag"),
+					resource.TestCheckResourceAttr(resourceName, "actions.309149588.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.309149588.signal", "site.my-new-tag"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "10"),
 					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
@@ -320,9 +320,9 @@ func TestACCResourceSiteRuleTagSignal(t *testing.T) {
                 }`, testSite, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "2"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1990726244.type", "block"),
-					resource.TestCheckResourceAttr(resourceName, "actions.3968222288.signal", "site.newtag"),
-					resource.TestCheckResourceAttr(resourceName, "actions.3968222288.type", "addSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2481804494.type", "block"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2216959332.signal", "site.newtag"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2216959332.type", "addSignal"),
 				),
 			},
 			{
@@ -389,7 +389,6 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 			           }
 			   }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					//testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.2481804494.type", "block"),
 				),
@@ -464,8 +463,8 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
 			             }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1285533755.type", "excludeSignal"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1285533755.signal", "CMDEXE"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2492640549.type", "excludeSignal"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2492640549.signal", "CMDEXE"),
 				),
 			},
 			{
@@ -490,7 +489,7 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
                 }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.1595556168.type", "allow"),
+					resource.TestCheckResourceAttr(resourceName, "actions.3902877111.type", "allow"),
 				),
 			},
 			{
