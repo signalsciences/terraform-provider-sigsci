@@ -155,7 +155,6 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
                         }
                 }`, testSite, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					//testCheckSiteRuleExists(resourceName),
 					//testCheckSiteRulesAreEqual(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "type", "rateLimit"),

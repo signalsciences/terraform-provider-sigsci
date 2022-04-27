@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -52,7 +53,7 @@ func resourceCorpRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Actions",
 				Required:    true,
-				MaxItems: 2,
+				MaxItems:    2,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -72,7 +73,7 @@ func resourceCorpRule() *schema.Resource {
 				Type:        schema.TypeSet,
 				Description: "Conditions",
 				Required:    true,
-				MaxItems: 10,
+				MaxItems:    10,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -81,9 +82,9 @@ func resourceCorpRule() *schema.Resource {
 							Required:    true,
 						},
 						"field": {
-							Type:        schema.TypeString,
-							Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
-							Optional:    true,
+							Type:         schema.TypeString,
+							Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+							Optional:     true,
 							ValidateFunc: validateConditionField,
 						},
 						"operator": {
@@ -106,7 +107,7 @@ func resourceCorpRule() *schema.Resource {
 							Type:        schema.TypeSet,
 							Description: "Conditions",
 							Optional:    true,
-							MaxItems: 10,
+							MaxItems:    10,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
@@ -115,9 +116,9 @@ func resourceCorpRule() *schema.Resource {
 										Required:    true,
 									},
 									"field": {
-										Type:        schema.TypeString,
-										Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
-										Optional:    true,
+										Type:         schema.TypeString,
+										Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+										Optional:     true,
 										ValidateFunc: validateConditionField,
 									},
 									"operator": {
@@ -139,7 +140,7 @@ func resourceCorpRule() *schema.Resource {
 										Type:        schema.TypeSet,
 										Description: "Conditions",
 										Optional:    true,
-										MaxItems: 10,
+										MaxItems:    10,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -148,9 +149,9 @@ func resourceCorpRule() *schema.Resource {
 													Required:    true,
 												},
 												"field": {
-													Type:        schema.TypeString,
-													Description: "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
-													Optional:    true,
+													Type:         schema.TypeString,
+													Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType)",
+													Optional:     true,
 													ValidateFunc: validateConditionField,
 												},
 												"operator": {
@@ -289,7 +290,7 @@ func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = d.Set("actions", flattenRuleActions(rule.Actions))
+	err = d.Set("actions", flattenCorpRuleActions(rule.Actions))
 	if err != nil {
 		return err
 	}

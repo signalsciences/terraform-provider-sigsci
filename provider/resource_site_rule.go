@@ -290,7 +290,7 @@ func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = d.Set("actions", flattenRuleActions(rule.Actions))
+	err = d.Set("actions", flattenSiteRuleActions(rule.Actions))
 	if err != nil {
 		return err
 	}

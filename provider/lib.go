@@ -452,7 +452,20 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 	}
 }
 
-func flattenRuleActions(actions []sigsci.Action) []interface{} {
+func flattenCorpRuleActions(actions []sigsci.Action) []interface{} {
+	var actionsMap = make([]interface{}, len(actions), len(actions))
+	for i, action := range actions {
+
+		actionMap := map[string]interface{}{
+			"type":   action.Type,
+			"signal": action.Signal,
+		}
+		actionsMap[i] = actionMap
+	}
+	return actionsMap
+}
+
+func flattenSiteRuleActions(actions []sigsci.Action) []interface{} {
 	var actionsMap = make([]interface{}, len(actions), len(actions))
 	for i, action := range actions {
 
