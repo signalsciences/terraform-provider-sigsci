@@ -452,7 +452,7 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 	}
 }
 
-func flattenCorpRuleActions(actions []sigsci.Action) []interface{} {
+func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
 	var actionsMap = make([]interface{}, len(actions), len(actions))
 	for i, action := range actions {
 
@@ -460,22 +460,11 @@ func flattenCorpRuleActions(actions []sigsci.Action) []interface{} {
 			"type":   action.Type,
 			"signal": action.Signal,
 		}
-		actionsMap[i] = actionMap
-	}
-	return actionsMap
-}
-
-func flattenSiteRuleActions(actions []sigsci.Action) []interface{} {
-	var actionsMap = make([]interface{}, len(actions), len(actions))
-	for i, action := range actions {
-
-		if action.ResponseCode == 0 {
-			action.ResponseCode = http.StatusNotAcceptable
-		}
-		actionMap := map[string]interface{}{
-			"type":          action.Type,
-			"signal":        action.Signal,
-			"response_code": action.ResponseCode,
+		if customResponseCode {
+			if action.ResponseCode == 0 {
+				action.ResponseCode = http.StatusNotAcceptable
+			}
+			actionMap["response_code"] = action.ResponseCode
 		}
 		actionsMap[i] = actionMap
 	}
