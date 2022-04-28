@@ -461,8 +461,12 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 			"signal": action.Signal,
 		}
 		// customResponseCode is enabled for site rules but disabled for corp rules
-		// this boolean flag reflects the differences and flattens objects accordinglyg
+		// this boolean flag reflects the differences and flattens objects accordingly
 		if customResponseCode {
+			// response code is set to 0 by sigsci api when action.type != "block"
+			// for types such as "allow" or "logRequest", response code is irrelevant and hence not provided in API response
+			// TF assigns default value of 0 which creates an issues when checking TF plan because we set default value of 406 (http.StatusNotAcceptable)
+			// This noop piece of code ensures tests pass as expected
 			if action.ResponseCode == 0 {
 				action.ResponseCode = http.StatusNotAcceptable
 			}
