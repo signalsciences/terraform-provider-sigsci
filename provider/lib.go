@@ -1,12 +1,15 @@
 package provider
 
 import (
+	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/signalsciences/go-sigsci"
+	"net/http"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/signalsciences/go-sigsci"
 )
 
 type providerMetadata struct {
@@ -308,7 +311,7 @@ func detectionFieldsEqual(old, new []sigsci.ConfiguredDetectionField) bool {
 	sort.Slice(new, func(i, j int) bool {
 		return new[i].Name < new[j].Name
 	})
-	for i, _ := range old {
+	for i := range old {
 		if old[i].Name != new[i].Name {
 			return false
 		}
@@ -392,10 +395,15 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 		if castElement["signal"] != nil {
 			signal = castElement["signal"].(string)
 		}
+		var responseCode int
+		if castElement["response_code"] != nil {
+			responseCode = castElement["response_code"].(int)
+		}
 
 		a := sigsci.Action{
-			Type:   castElement["type"].(string),
-			Signal: signal,
+			Type:         castElement["type"].(string),
+			Signal:       signal,
+			ResponseCode: responseCode,
 		}
 		actions = append(actions, a)
 	}
@@ -444,12 +452,25 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 	}
 }
 
-func flattenRuleActions(actions []sigsci.Action) []interface{} {
+func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
 	var actionsMap = make([]interface{}, len(actions), len(actions))
 	for i, action := range actions {
+
 		actionMap := map[string]interface{}{
 			"type":   action.Type,
 			"signal": action.Signal,
+		}
+		// customResponseCode is enabled for site rules but disabled for corp rules
+		// this boolean flag reflects the differences and flattens objects accordingly
+		if customResponseCode {
+			// response code is set to 0 by sigsci api when action.type != "block"
+			// for types such as "allow" or "logRequest", response code is irrelevant and hence not provided in API response
+			// TF assigns default value of 0 which creates an issues when checking TF plan because we set default value of 406 (http.StatusNotAcceptable)
+			// This noop piece of code ensures tests pass as expected
+			if action.ResponseCode == 0 {
+				action.ResponseCode = http.StatusNotAcceptable
+			}
+			actionMap["response_code"] = action.ResponseCode
 		}
 		actionsMap[i] = actionMap
 	}
@@ -481,8 +502,18 @@ var siteImporter = schema.ResourceImporter{
 }
 
 func validateConditionField(val interface{}, key string) ([]string, []error) {
-	if existsInString(val.(string), "scheme","method","path","useragent","domain","ip","responseCode","agentname","paramname","paramvalue","country","name","valueString","valueIp","signalType","signal", "requestHeader", "postParameter") {
+	if existsInString(val.(string), "scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname", "paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType", "signal", "requestHeader", "postParameter") {
 		return nil, nil
 	}
 	return []string{fmt.Sprintf("received '%s' for conditions.field. This is not necessairly an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, postParameter)", val.(string))}, nil
+}
+
+func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
+	// response code needs to be within 400-499
+	code := val.(int)
+	if 400 <= code && code < 500 {
+		return nil, nil
+	}
+	rangeError := errors.New(fmt.Sprintf("received action responseCode '%d'. should be in 400-499 range.", code))
+	return nil, []error{rangeError}
 }

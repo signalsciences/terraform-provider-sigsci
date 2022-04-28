@@ -2,9 +2,10 @@ package provider
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"testing"
 )
 
 func TestResourceCorpRule_basic(t *testing.T) {
@@ -159,7 +160,6 @@ func TestResourceCorpRule_SortedSiteNames(t *testing.T) {
 					}
 			}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "site_short_names.#", "3"),
 				),
 			},
@@ -197,7 +197,6 @@ func TestResourceCorpRule_SortedSiteNames(t *testing.T) {
 					}
 			}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testInspect(),
 					resource.TestCheckResourceAttr(resourceName, "site_short_names.#", "3"),
 					//resource.TestCheckResourceAttr(resourceName, "site_short_names.1785148924", testSite),
 				),

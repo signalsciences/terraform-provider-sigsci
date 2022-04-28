@@ -48,3 +48,5 @@ override.tf.json
 
 .idea/
 terraform-provider-sigsci
+
+dist/
