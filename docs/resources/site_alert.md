@@ -18,7 +18,7 @@ resource "sigsci_site_alert" "test" {
  - `tag_name` - (Required) The name of the tag whose occurrences the alert is watching. Must match an existing tag
  - `long_name` -  A human readable description of the alert. Must be between 3 and 25 characters.
  - `interval` - (Required) The number of minutes of past traffic to examine. Must be 1, 10 or 60.
- - `threshold` - The number of occurrences of the tag in the interval needed to trigger the alert.
+ - `threshold` - (Required) The number of occurrences of the tag in the interval needed to trigger the alert.
  - `action` -  A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours.
  - `skip_notifications` -  A boolean flag to send notifications
 
