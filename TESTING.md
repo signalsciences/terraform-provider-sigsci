@@ -1,4 +1,4 @@
-# TESTING.md sigsci provider
+## Testing instructions for provider
 
 ### Pre-requisites
 
