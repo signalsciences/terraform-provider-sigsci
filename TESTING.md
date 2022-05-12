@@ -1,4 +1,4 @@
-## Testing instructions for provider
+# Testing instructions for provider
 
 ### Pre-requisites
 
