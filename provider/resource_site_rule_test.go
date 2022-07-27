@@ -148,10 +148,15 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
                             signal=sigsci_site_signal_tag.test_tag.id
                             type="logRequest"
                         }
-                        rate_limit = {
+                        rate_limit {
                             threshold=10
                             interval=10
                             duration=600
+                            client_identifiers {
+                                key="WAT"  
+                                name="X-HEADER-SOMETHING" 
+                                type="requestHeader"
+                            }
                         }
                 }`, testSite, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -164,9 +169,64 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "actions.309149588.type", "logRequest"),
 					resource.TestCheckResourceAttr(resourceName, "actions.309149588.signal", "site.my-new-tag"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "10"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.duration", "600"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.threshold", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.duration", "600"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.client_identifiers.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.client_identifiers.819968162.name", "X-HEADER-SOMETHING"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.client_identifiers.819968162.key", "WAT"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.205114826.client_identifiers.819968162.type", "requestHeader"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_signal_tag" "test_tag" {
+                      site_short_name = "%s" 
+                      name            = "My new tag"
+                      description     = "test description"
+                    }
+                    resource "sigsci_site_rule" "test" {
+                        site_short_name="%s"
+                        type= "rateLimit"
+                        group_operator="any"
+                        enabled= true
+                        reason= "Example site rule update"
+                        signal= sigsci_site_signal_tag.test_tag.id
+                        expiration= ""
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.4"
+                        }
+                        actions {
+                            signal=sigsci_site_signal_tag.test_tag.id
+                            type="logRequest"
+                        }
+                        rate_limit {
+                            threshold=7
+                            interval=1
+                            duration=6000
+                            client_identifiers {
+                                type="ip"
+                            }
+                            client_identifiers {
+                                name="awef" 
+                                type="postParameter"
+                            }
+                        }
+                }`, testSite, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					//testCheckSiteRuleExists(resourceName),
+					//testCheckSiteRulesAreEqual(resourceName),
+					testInspect(),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.threshold", "7"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.interval", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.duration", "6000"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.client_identifiers.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.client_identifiers.3982032124.name", "awef"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.client_identifiers.3982032124.type", "postParameter"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.1111409149.client_identifiers.2548995648.type", "ip"),
 				),
 			},
 			{
@@ -513,7 +573,7 @@ func TestACCResourceSiteRuleInvalidUpdateMaxConditions(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`
-                    resource "sigsci_site_rule" "test"{
+                    resource "sigsci_site_rule" "test" {
                         site_short_name="%s"
                         type= "request"
                         group_operator="any"

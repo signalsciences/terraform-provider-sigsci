@@ -410,46 +410,64 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 	return actions
 }
 
-func expandRuleRateLimit(rateLimitResource map[string]interface{}) *sigsci.RateLimit {
-	var threshold, interval, duration int
-	var err error
-	if val, ok := rateLimitResource["threshold"]; ok {
-		threshold, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
-	} else {
-		return nil
-	}
-	if val, ok := rateLimitResource["interval"]; ok {
-		interval, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
-	}
-	if val, ok := rateLimitResource["duration"]; ok {
-		duration, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
-	}
+func expandRuleRateLimit(rateLimitResource *schema.Set) *sigsci.RateLimit {
+	for _, genericElement := range rateLimitResource.List() {
+		var threshold, interval, duration int
+		var clientIdentifiers []sigsci.ClientIdentifier
 
-	return &sigsci.RateLimit{
-		Threshold: threshold,
-		Interval:  interval,
-		Duration:  duration,
+		castElement := genericElement.(map[string]interface{})
+		if castElement["threshold"] != nil {
+			threshold = castElement["threshold"].(int)
+		}
+		if castElement["interval"] != nil {
+			interval = castElement["interval"].(int)
+		}
+		if castElement["duration"] != nil {
+			duration = castElement["duration"].(int)
+		}
+		if val, ok := castElement["client_identifiers"]; ok {
+			for _, element := range val.(*schema.Set).List() {
+				castMap := element.(map[string]interface{})
+				clientIdentifiers = append(clientIdentifiers, sigsci.ClientIdentifier{
+					Type: castMap["type"].(string),
+					Key:  castMap["key"].(string),
+					Name: castMap["name"].(string),
+				})
+			}
+		}
+		// Rate limit has a max size of 1, return early
+		return &sigsci.RateLimit{
+			ClientIdentifiers: clientIdentifiers,
+			Threshold: threshold,
+			Interval:  interval,
+			Duration:  duration,
+		}
 	}
+	return &sigsci.RateLimit{}
 }
 
-func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
+func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) []interface{} {
 	if rateLimit == nil {
 		return nil
 	}
-	return map[string]string{
-		"threshold": strconv.Itoa(rateLimit.Threshold),
-		"interval":  strconv.Itoa(rateLimit.Interval),
-		"duration":  strconv.Itoa(rateLimit.Duration),
+	var client_identifiers []map[string]string
+	if len(rateLimit.ClientIdentifiers) > 0 {
+		for _, client_identifier := range rateLimit.ClientIdentifiers {
+			client_identifiers = append(client_identifiers, map[string]string{
+				"key":client_identifier.Key,
+				"name":client_identifier.Name,
+				"type":client_identifier.Type,
+			})
+		}
+
 	}
+	val := map[string]interface{} {
+		"client_identifiers": client_identifiers,
+		"threshold": rateLimit.Threshold,
+		"interval":  rateLimit.Interval,
+		"duration":  rateLimit.Duration,
+	}
+	return []interface{}{val}
 }
 
 func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
@@ -461,7 +479,7 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 			"signal": action.Signal,
 		}
 		// customResponseCode is enabled for site rules but disabled for corp rules
-		// this boolean flag reflects the differences and flattens objects accordinglyg
+		// this boolean flag reflects the differences and flattens objects accordingly
 		if customResponseCode {
 			if action.ResponseCode == 0 {
 				action.ResponseCode = http.StatusNotAcceptable

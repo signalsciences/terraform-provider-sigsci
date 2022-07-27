@@ -70,4 +70,5 @@ require (
 	google.golang.org/grpc v1.27.1 // indirect
 )
 
-//replace github.com/signalsciences/go-sigsci v0.1.3 => ../go-sigsci
+//replace github.com/signalsciences/go-sigsci v0.1.4 => ../go-sigsci
+
