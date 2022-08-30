@@ -99,6 +99,16 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 										Optional:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
+									"connection_pooling": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+									"domains": {
+										Type:        schema.TypeSet,
+										Description: "List of domain or request URIs, up to 100 entries.",
+										Required:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+									},
 									"origin": {
 										Type:        schema.TypeString,
 										Description: "Origin server URI.",
@@ -108,20 +118,12 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 										Type:        schema.TypeBool,
 										Description: "Pass the client supplied host header through to the upstream (including the upstream TLS handshake for use with SNI and certificate validation). If using Heroku or Server Name Indications (SNI), this must be disabled(default: false).",
 										Optional:    true,
+										Default:     false,
 									},
-									"domains": {
-										Type:        schema.TypeSet,
-										Description: "List of domain or request URIs, up to 100 entries.",
-										Required:    true,
-										Elem:        &schema.Schema{Type: schema.TypeString},
-									},
-									"connection_pooling": {
+									"trust_proxy_headers": {
 										Type:     schema.TypeBool,
 										Optional: true,
-									},
-									"tls_host_override": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Default:  true,
 									},
 								},
 							},
@@ -282,8 +284,8 @@ func expandCloudWAFInstanceWorkspaceConfigs(routesResource *schema.Set) []sigsci
 		castElement := genericElement.(map[string]interface{})
 		configs = append(configs, sigsci.CloudWAFInstanceWorkspaceConfig{
 			SiteName:          castElement["site_name"].(string),
-			InstanceLocation:  castElement["instance_location"].(string),
 			ClientIPHeader:    castElement["client_ip_header"].(string),
+			InstanceLocation:  castElement["instance_location"].(string),
 			ListenerProtocols: expandStringArray(castElement["listener_protocols"].(*schema.Set)),
 			Routes:            expandCloudWAFInstanceRoutes(castElement["routes"].(*schema.Set)),
 		})
@@ -298,11 +300,11 @@ func expandCloudWAFInstanceRoutes(routesResource *schema.Set) []sigsci.CloudWAFI
 		routes = append(routes, sigsci.CloudWAFInstanceWorkspaceRoute{
 			ID:                castElement["id"].(string),
 			CertificateIDs:    expandStringArray(castElement["certificate_ids"].(*schema.Set)),
+			ConnectionPooling: castElement["connection_pooling"].(bool),
 			Domains:           expandStringArray(castElement["domains"].(*schema.Set)),
 			Origin:            castElement["origin"].(string),
-			ConnectionPooling: castElement["connection_pooling"].(bool),
 			PassHostHeader:    castElement["pass_host_header"].(bool),
-			TLSHostOverride:   castElement["tls_host_override"].(bool),
+			TrustProxyHeaders: castElement["trust_proxy_headers"].(bool),
 		})
 	}
 	return routes
@@ -313,8 +315,8 @@ func flattenCloudWAFInstanceWorkspaceConfigs(configs []sigsci.CloudWAFInstanceWo
 	for i, config := range configs {
 		configMap := map[string]interface{}{
 			"site_name":          config.SiteName,
-			"instance_location":  config.InstanceLocation,
 			"client_ip_header":   config.ClientIPHeader,
+			"instance_location":  config.InstanceLocation,
 			"listener_protocols": flattenStringArray(config.ListenerProtocols),
 			"routes":             flattenCloudWAFInstanceRoutes(config.Routes),
 		}
@@ -327,13 +329,13 @@ func flattenCloudWAFInstanceRoutes(routes []sigsci.CloudWAFInstanceWorkspaceRout
 	var routesMap = make([]interface{}, len(routes))
 	for i, route := range routes {
 		routeMap := map[string]interface{}{
-			"id":                 route.ID,
-			"certificate_ids":    flattenStringArray(route.CertificateIDs),
-			"domains":            flattenStringArray(route.Domains),
-			"origin":             route.Origin,
-			"connection_pooling": route.ConnectionPooling,
-			"pass_host_header":   route.PassHostHeader,
-			"tls_host_override":  route.TLSHostOverride,
+			"id":                  route.ID,
+			"certificate_ids":     flattenStringArray(route.CertificateIDs),
+			"connection_pooling":  route.ConnectionPooling,
+			"domains":             flattenStringArray(route.Domains),
+			"origin":              route.Origin,
+			"pass_host_header":    route.PassHostHeader,
+			"trust_proxy_headers": route.TrustProxyHeaders,
 		}
 		routesMap[i] = routeMap
 	}

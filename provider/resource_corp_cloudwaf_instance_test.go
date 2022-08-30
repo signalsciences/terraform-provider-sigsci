@@ -36,7 +36,6 @@ func TestAccResourceCorpCloudWAFInstanceCRUD(t *testing.T) {
 							origin = "https://example.com"
 							connection_pooling = true
 							pass_host_header = false
-							tls_host_override = false
 						}
 					}
 				}`, testSite),
@@ -48,18 +47,18 @@ func TestAccResourceCorpCloudWAFInstanceCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "tls_min_version", "1.2"),
 					resource.TestCheckResourceAttr(resourceName, "use_uploaded_certificates", "false"),
 					resource.TestCheckResourceAttr(resourceName, "workspace_configs.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.client_ip_header", "Fastly-Client-IP"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.instance_location", "advanced"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.listener_protocols.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.listener_protocols.1552086545", "https"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.certificate_ids.#", "0"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.connection_pooling", "true"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.domains.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.domains.3053388764", "example.net"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.origin", "https://example.com"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.pass_host_header", "false"),
-					resource.TestCheckResourceAttr(resourceName, "workspace_configs.2212177635.routes.2687077035.tls_host_override", "false"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.client_ip_header", "Fastly-Client-IP"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.instance_location", "advanced"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.listener_protocols.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.listener_protocols.1552086545", "https"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.certificate_ids.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.connection_pooling", "true"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.domains.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.domains.3053388764", "example.net"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.origin", "https://example.com"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.pass_host_header", "false"),
+					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.trust_proxy_headers", "true"),
 				),
 			},
 			{
