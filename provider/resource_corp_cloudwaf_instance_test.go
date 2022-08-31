@@ -34,8 +34,9 @@ func TestAccResourceCorpCloudWAFInstanceCRUD(t *testing.T) {
 						routes {
 							domains = ["example.net"]
 							origin = "https://example.com"
-							connection_pooling = true
+							connection_pooling = null
 							pass_host_header = false
+							trust_proxy_headers = true
 						}
 					}
 				}`, testSite),

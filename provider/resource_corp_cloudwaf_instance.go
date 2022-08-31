@@ -32,7 +32,7 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 			},
 			"region": {
 				Type:        schema.TypeString,
-				Description: `Region the CloudWAF Instance is being deployed to.(Supported region: "us-east-1", "us-west-1", "af-south-1", "ap-northeast-1", "ap-northeast-2", "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "eu-west-3", "sa-east-1", "us-east-2", "us-west-2").`,
+				Description: `Region the CloudWAF Instance is being deployed to. (Supported region: "us-east-1", "us-west-1", "af-south-1", "ap-northeast-1", "ap-northeast-2", "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "eu-west-3", "sa-east-1", "us-east-2", "us-west-2").`,
 				Required:    true,
 			},
 			"tls_min_version": {
@@ -100,8 +100,10 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 									"connection_pooling": {
-										Type:     schema.TypeBool,
-										Optional: true,
+										Type:        schema.TypeBool,
+										Description: "If enabled, this will allow open TCP connections to be reused (default: true)",
+										Optional:    true,
+										Default:     true,
 									},
 									"domains": {
 										Type:        schema.TypeSet,
@@ -116,15 +118,15 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 									},
 									"pass_host_header": {
 										Type:        schema.TypeBool,
-										Description: "Pass the client supplied host header through to the upstream (including the upstream TLS handshake for use with SNI and certificate validation). If using Heroku or Server Name Indications (SNI), this must be disabled(default: false).",
+										Description: "Pass the client supplied host header through to the upstream (including the upstream TLS handshake for use with SNI and certificate validation). If using Heroku or Server Name Indications (SNI), this must be disabled (default: false).",
 										Optional:    true,
 										Default:     false,
 									},
 									"trust_proxy_headers": {
 										Type:        schema.TypeBool,
-										Description: "If true, will trust proxy headers coming into the agent. If false, will ignore and drop those headers (default: true)",
+										Description: "If true, will trust proxy headers coming into the agent. If false, will ignore and drop those headers (default: false)",
 										Optional:    true,
-										Default:     true,
+										Default:     false,
 									},
 								},
 							},
