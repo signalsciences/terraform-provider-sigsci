@@ -47,9 +47,9 @@ resource "sigsci_site_rule" "test" {
  - `reason`  -   Description of the rule
  - `expiration` - (Required) Date the rule will automatically be disabled. If rule is always enabled, will return empty string (RFC3339 date time)
  - `conditions` -   Conditions on which the rule should trigger. May be recursively nest up to 3 times.
-   - `type` - (Required) (group, single)
-   - `group_operator` -  type: group - Conditions that must be matched when evaluating the request (all, any)
-   - `field` -  type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, queryParameter)
+   - `type` - (Required) (group, multival, single)
+   - `group_operator` -  type: group, multival - Conditions that must be matched when evaluating the request (all, any)
+   - `field` -  type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
    - `operator` -  type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
    - `value` -  type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
    - `conditions` -  Conditions on which this condition should trigger. Can recursively add this 3 deep.
