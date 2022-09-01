@@ -266,7 +266,7 @@ func resourceCorpCloudWAFInstanceDelete(d *schema.ResourceData, m interface{}) e
 		return err
 	}
 
-	return resource.Retry(d.Timeout(schema.TimeoutCreate)-time.Minute, func() *resource.RetryError {
+	return resource.Retry(d.Timeout(schema.TimeoutDelete)-time.Minute, func() *resource.RetryError {
 		cwaf, err := sc.GetCloudWAFInstance(pm.Corp, cwafInstanceID)
 		if err != nil && err.Error() == cloudWAFInstanceErrGetNotFound {
 			d.SetId("")
