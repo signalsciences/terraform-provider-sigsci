@@ -20,6 +20,11 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"cloudwaf_instance_id": {
+				Type:        schema.TypeString,
+				Description: "CloudWAF instance unique identifier.",
+				Computed:    true,
+			},
 			"name": {
 				Type:        schema.TypeString,
 				Description: "Friendly name to identify a CloudWAF instance.",
@@ -134,6 +139,54 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 					},
 				},
 			},
+			"deployment": {
+				Type:        schema.TypeList, // use TypeList to workaround SDK TypeMap limitation with only string value support: https://github.com/hashicorp/terraform-plugin-sdk/issues/62
+				Description: "The sites primary Agent key",
+				Computed:    true,
+				MaxItems:    1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"status": {
+							Type:        schema.TypeString,
+							Description: "Current status of the deployment.",
+							Computed:    true,
+						},
+						"message": {
+							Type:        schema.TypeString,
+							Description: "CloudWAF instance message.",
+							Computed:    true,
+						},
+						"dns_entry": {
+							Type:        schema.TypeString,
+							Description: "CloudWAF instance's DNS Entry.",
+							Computed:    true,
+						},
+						"egress_ips": {
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ip": {
+										Type:        schema.TypeString,
+										Description: "Egress IP address CloudWAF will be directing traffic to origin from.",
+										Computed:    true,
+									},
+									"status": {
+										Type:        schema.TypeString,
+										Description: "EgressIP Status.",
+										Computed:    true,
+									},
+									"updated_at": {
+										Type:        schema.TypeString,
+										Description: "When EgressIP was last updated on.",
+										Computed:    true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -168,6 +221,7 @@ func resourceCorpCloudWAFInstanceCreate(d *schema.ResourceData, m interface{}) e
 	}
 
 	d.SetId(cwaf.ID)
+
 	return resourceCorpCloudWAFInstanceRead(d, m)
 }
 
@@ -204,6 +258,10 @@ func resourceCorpCloudWAFInstanceRead(d *schema.ResourceData, m interface{}) err
 	}
 
 	d.SetId(d.Id())
+	err = d.Set("cloudwaf_instance_id", cwaf.ID)
+	if err != nil {
+		return err
+	}
 	err = d.Set("name", cwaf.Name)
 	if err != nil {
 		return err
@@ -228,6 +286,11 @@ func resourceCorpCloudWAFInstanceRead(d *schema.ResourceData, m interface{}) err
 	if err != nil {
 		return err
 	}
+	err = d.Set("deployment", flattenCloudWAFInstanceDeployment(cwaf.Deployment))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -343,4 +406,26 @@ func flattenCloudWAFInstanceRoutes(routes []sigsci.CloudWAFInstanceWorkspaceRout
 		routesMap[i] = routeMap
 	}
 	return routesMap
+}
+
+func flattenCloudWAFInstanceDeployment(deployment sigsci.CloudWAFInstanceDeployment) []interface{} {
+	return []interface{}{
+		map[string]interface{}{
+			"status":     deployment.Status,
+			"message":    deployment.Message,
+			"dns_entry":  deployment.DNSEntry,
+			"egress_ips": flattenCloudWAFInstanceEgressIPs(deployment.EgressIPs),
+		},
+	}
+}
+
+func flattenCloudWAFInstanceEgressIPs(egressIPs []sigsci.CloudWAFInstanceEgressIP) []interface{} {
+	var egressIPsSet = make([]interface{}, len(egressIPs))
+	for i, egressIP := range egressIPs {
+		egressIPsSet[i] = map[string]interface{}{
+			"ip":         egressIP.IP,
+			"status":     egressIP.Status,
+			"updated_at": egressIP.UpdatedAt}
+	}
+	return egressIPsSet
 }

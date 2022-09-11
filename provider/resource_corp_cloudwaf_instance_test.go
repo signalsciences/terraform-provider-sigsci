@@ -42,6 +42,7 @@ func TestAccResourceCorpCloudWAFInstanceCRUD(t *testing.T) {
 				}`, testSite),
 
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet(resourceName, "cloudwaf_instance_id"),
 					resource.TestCheckResourceAttr(resourceName, "name", "Cloud WAF created by SigSci Terraform provider test"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test CWAF Created by SigSci Terraform provider"),
 					resource.TestCheckResourceAttr(resourceName, "region", "us-west-1"),
@@ -60,6 +61,8 @@ func TestAccResourceCorpCloudWAFInstanceCRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.origin", "https://example.com"),
 					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.pass_host_header", "false"),
 					resource.TestCheckResourceAttr(resourceName, "workspace_configs.368698502.routes.3172309932.trust_proxy_headers", "true"),
+					resource.TestCheckResourceAttr(resourceName, "deployment.0.status", "done"),
+					resource.TestCheckResourceAttrSet(resourceName, "deployment.0.dns_entry"),
 				),
 			},
 			{
