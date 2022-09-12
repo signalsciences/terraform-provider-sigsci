@@ -57,6 +57,8 @@ provider "sigsci" {
 
 [Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_integration.md)
 
+[Cloud WAF Instance](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_instance.md)
+
 ## Site resources
 
 [Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_list.md)
