@@ -38,21 +38,17 @@ resource "sigsci_corp_cloudwaf_instance" "test_corp_cloudwaf" {
 - `tls_min_version` - (Required) TLS minimum version. Versions Available: "1.0", "1.2".
 - `use_uploaded_certificates` - (Required) If "true", use the uploaded certificate.
 - `workspace_configs` - (Required) Workspace Configs. Detailed below.
-
-#### `workspace_configs`
-- `site_name` - (Required) Site name.
-- `instance_location` - (Required) Set instance location to "direct" or "advanced".
-- `client_ip_header` - (Optional) Specify the request header containing the client IP address, available when InstanceLocation is set to "advanced". Default: "X-Forwarded-For".
-- `listener_protocols` - (Required) Specify the protocol or protocols required. ex. ["http", "https"], ["https"].
-- `routes` - (Required) Routes. Detailed below.
-
-##### `routes`
-- `certificate_ids` - (Optional) List of certificate IDs in string associated with request URI or domains. IDs will be available in certificate GET request.
-- `connection_pooling` - (Optional) If enabled, this will allow open TCP connections to be reused (default: true).
-- `domains` - (Required) List of domain or request URIs, up to 100 entries.
-- `origin` - (Required) Origin server URI.
-- `pass_host_header` - (Optional) Pass the client supplied host header through to the upstream (including the upstream TLS handshake for use with SNI and certificate validation). If using Heroku or Server Name Indications (SNI), this must be disabled (default: false).
-- `trust_proxy_headers` - (Optional) If true, will trust proxy headers coming into the agent. If false, will ignore and drop those headers (default: false).
+  - `site_name` - (Required) Site name.
+  - `instance_location` - (Required) Set instance location to "direct" or "advanced".
+  - `client_ip_header` - (Optional) Specify the request header containing the client IP address, available when InstanceLocation is set to "advanced". Default: "X-Forwarded-For".
+  - `listener_protocols` - (Required) Specify the protocol or protocols required. ex. ["http", "https"], ["https"].
+  - `routes` - (Required) Routes. Detailed below.
+    - `certificate_ids` - (Optional) List of certificate IDs in string associated with request URI or domains. IDs will be available in certificate GET request.
+    - `connection_pooling` - (Optional) If enabled, this will allow open TCP connections to be reused (default: true).
+    - `domains` - (Required) List of domain or request URIs, up to 100 entries.
+    - `origin` - (Required) Origin server URI.
+    - `pass_host_header` - (Optional) Pass the client supplied host header through to the upstream (including the upstream TLS handshake for use with SNI and certificate validation). If using Heroku or Server Name Indications (SNI), this must be disabled (default: false).
+    - `trust_proxy_headers` - (Optional) If true, will trust proxy headers coming into the agent. If false, will ignore and drop those headers (default: false).
 
 ### Attributes Reference
 In addition to all arguments, the following fields are also available
