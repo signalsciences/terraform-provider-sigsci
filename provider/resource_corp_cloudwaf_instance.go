@@ -20,11 +20,6 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"cloudwaf_instance_id": {
-				Type:        schema.TypeString,
-				Description: "CloudWAF instance unique identifier.",
-				Computed:    true,
-			},
 			"name": {
 				Type:        schema.TypeString,
 				Description: "Friendly name to identify a CloudWAF instance.",
@@ -258,10 +253,6 @@ func resourceCorpCloudWAFInstanceRead(d *schema.ResourceData, m interface{}) err
 	}
 
 	d.SetId(d.Id())
-	err = d.Set("cloudwaf_instance_id", cwaf.ID)
-	if err != nil {
-		return err
-	}
 	err = d.Set("name", cwaf.Name)
 	if err != nil {
 		return err

@@ -42,7 +42,6 @@ func TestAccResourceCorpCloudWAFInstanceCRUD(t *testing.T) {
 				}`, testSite),
 
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet(resourceName, "cloudwaf_instance_id"),
 					resource.TestCheckResourceAttr(resourceName, "name", "Cloud WAF created by SigSci Terraform provider test"),
 					resource.TestCheckResourceAttr(resourceName, "description", "Test CWAF Created by SigSci Terraform provider"),
 					resource.TestCheckResourceAttr(resourceName, "region", "us-west-1"),
