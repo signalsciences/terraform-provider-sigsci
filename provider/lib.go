@@ -12,6 +12,13 @@ import (
 	"github.com/signalsciences/go-sigsci"
 )
 
+func suppressEquivalentTrimSpaceDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if strings.TrimSpace(old) == strings.TrimSpace(new) {
+		return true
+	}
+	return false
+}
+
 type providerMetadata struct {
 	Corp   string
 	Client sigsci.Client

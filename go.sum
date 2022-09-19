@@ -168,8 +168,8 @@ github.com/posener/complete v1.2.1/go.mod h1:6gapUrK/U1TAN7ciCoNRIdVC5sbdBTUh1DK
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/sergi/go-diff v1.0.0 h1:Kpca3qRNrduNnOQeazBd0ysaKrUJiIuISHxogkT9RPQ=
 github.com/sergi/go-diff v1.0.0/go.mod h1:0CfEIISq7TuYL3j771MWULgwwjU+GofnZX9QAmXWZgo=
-github.com/signalsciences/go-sigsci v0.1.5 h1:sKAFGo70Bv/F1QYL5W9mmo4BAWX0B9xmVk0rWQwmKRA=
-github.com/signalsciences/go-sigsci v0.1.5/go.mod h1:9eUL/FIXlslxnqtsf0yk67CSBiYdL4ToYjYybzWQ77A=
+github.com/signalsciences/go-sigsci v0.1.6 h1:O3v1kQOA00d+HO4pD8ykymouojBe02bYy0gj15ow8jA=
+github.com/signalsciences/go-sigsci v0.1.6/go.mod h1:9eUL/FIXlslxnqtsf0yk67CSBiYdL4ToYjYybzWQ77A=
 github.com/spf13/afero v1.2.2 h1:5jhuqJyZCZf2JRofRvN/nIFgIWNzPa3/Vz8mYylgbWc=
 github.com/spf13/afero v1.2.2/go.mod h1:9ZxEEn6pIJ8Rxe320qSDBk6AsU0r9pR7Q4OcevTdifk=
 github.com/spf13/pflag v1.0.2/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=
