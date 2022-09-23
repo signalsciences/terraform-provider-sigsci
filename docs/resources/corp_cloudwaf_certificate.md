@@ -18,15 +18,8 @@ CHAIN
 [encoded privatekey]]
 ----END PRIVATE KEY-----
 PRIVATEKEY
-    lifecycle {
-        ignore_changes = [
-            private_key
-        ]
-    }
 }
 ```
-|Warning: Changes for `private_key` must be ignored in your HCL as it is required for creation but not provided in a read response due to the sensitive nature of the private key.|
-|---|
 
 ### Argument Reference
 - `name` - (Required) Friendly name to identify a CloudWAF certificate.
@@ -42,10 +35,6 @@ In addition to all arguments, the following fields are also available
 - `fingerprint` - SHA1 fingerprint of the certififcate.
 - `status` - Current status of the certificate - could be one of "unknown", "active", "pendingverification", "expired", "error".
 - `subject_alternative_names` - Subject alternative names from the uploaded certificate.
-- `created_by` - Email address of the user that created the certfificate.
-- `created` - Created RFC3339 date time.
-- `updated_by` - Email address of the user that updated the certificate.
-- `updated_at` - Updated RFC3339 date time.
 
 ### Import
 You can import corp lists with the generic site import formula

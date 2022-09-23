@@ -73,11 +73,6 @@ CERT
 					private_key = <<PRIVATEKEY
 %s
 PRIVATEKEY
-					lifecycle {
-						ignore_changes = [
-							private_key
-						]
-					}
 				}`, certificateName, certificateBody, privateKey),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", certificateName),
@@ -87,17 +82,14 @@ PRIVATEKEY
 					resource.TestCheckResourceAttr(resourceName, "expires_at", "2032-08-31T17:19:15Z"),
 					resource.TestCheckResourceAttr(resourceName, "fingerprint", "d3d246a79291ce3448f13b99d34d09066861c71a"),
 					resource.TestCheckResourceAttr(resourceName, "status", "active"),
-					resource.TestCheckResourceAttrSet(resourceName, "created_by"),
-					resource.TestCheckResourceAttrSet(resourceName, "created"),
-					resource.TestCheckResourceAttrSet(resourceName, "updated_by"),
-					resource.TestCheckResourceAttrSet(resourceName, "updated_at"),
 				),
 			},
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateVerify: true,
-				ImportStateCheck:  testAccImportStateCheckFunction(1),
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"private_key"},
+				ImportStateCheck:        testAccImportStateCheckFunction(1),
 			},
 		},
 	})
@@ -181,11 +173,6 @@ CHAIN
 					private_key = <<PRIVATEKEY
 %s
 PRIVATEKEY
-					lifecycle {
-						ignore_changes = [
-							private_key
-						]
-					}
 				}`, certificateNameSAN, certificateBodySAN, certificateBodySAN, privateKeySAN),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceNameSAN, "name", certificateNameSAN),
@@ -203,17 +190,14 @@ PRIVATEKEY
 					resource.TestCheckResourceAttr(resourceNameSAN, "subject_alternative_names.2605964798", "www.example.org"),
 					resource.TestCheckResourceAttr(resourceNameSAN, "subject_alternative_names.3053388764", "example.net"),
 					resource.TestCheckResourceAttr(resourceNameSAN, "subject_alternative_names.57398617", "ftp.example.com"),
-					resource.TestCheckResourceAttrSet(resourceNameSAN, "created_by"),
-					resource.TestCheckResourceAttrSet(resourceNameSAN, "created"),
-					resource.TestCheckResourceAttrSet(resourceNameSAN, "updated_by"),
-					resource.TestCheckResourceAttrSet(resourceNameSAN, "updated_at"),
 				),
 			},
 			{
-				ResourceName:      resourceNameSAN,
-				ImportState:       true,
-				ImportStateVerify: true,
-				ImportStateCheck:  testAccImportStateCheckFunction(1),
+				ResourceName:            resourceNameSAN,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"private_key"},
+				ImportStateCheck:        testAccImportStateCheckFunction(1),
 			},
 		},
 	})

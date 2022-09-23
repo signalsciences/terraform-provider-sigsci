@@ -26,6 +26,7 @@ func resourceCorpCloudWAFCertificate() *schema.Resource {
 				Type:             schema.TypeString,
 				Description:      "Body of the certificate in PEM format",
 				Required:         true,
+				ForceNew:         true,
 				DiffSuppressFunc: suppressEquivalentTrimSpaceDiffs,
 			},
 			"certificate_chain": {
@@ -65,26 +66,6 @@ func resourceCorpCloudWAFCertificate() *schema.Resource {
 				Description: "Subject alternative names from the uploaded certificate",
 				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-			},
-			"created_by": {
-				Type:        schema.TypeString,
-				Description: "Email address of the user that created the certfificate",
-				Computed:    true,
-			},
-			"created": {
-				Type:        schema.TypeString,
-				Description: "Created RFC3339 date time",
-				Computed:    true,
-			},
-			"updated_by": {
-				Type:        schema.TypeString,
-				Description: "Email address of the user that updated the certificate",
-				Computed:    true,
-			},
-			"updated_at": {
-				Type:        schema.TypeString,
-				Description: "Updated RFC3339 date time",
-				Computed:    true,
 			},
 		},
 	}
@@ -151,28 +132,6 @@ func resourceCorpCloudWAFCertificateRead(d *schema.ResourceData, m interface{}) 
 		return err
 	}
 	err = d.Set("subject_alternative_names", flattenStringArray(cwaf.SubjectAlternativeNames))
-	if err != nil {
-		return err
-	}
-	err = d.Set("created_by", cwaf.CreatedBy)
-	if err != nil {
-		return err
-	}
-	err = d.Set("created", cwaf.Created)
-	if err != nil {
-		return err
-	}
-	err = d.Set("updated_by", cwaf.UpdatedBy)
-	if err != nil {
-		return err
-	}
-	err = d.Set("updated_at", cwaf.UpdatedAt)
-	if err != nil {
-		return err
-	}
-
-	// set zero value for diff - https://github.com/hashicorp/terraform/issues/20985
-	err = d.Set("private_key", "")
 	if err != nil {
 		return err
 	}
