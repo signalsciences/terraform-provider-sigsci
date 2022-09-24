@@ -39,6 +39,7 @@ func resourceCorpCloudWAFCertificate() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Private key of the certificate in PEM format - must be unencrypted",
 				Required:    true,
+				ForceNew:    true,
 				Sensitive:   true,
 			},
 			"common_name": {
