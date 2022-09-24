@@ -59,6 +59,8 @@ provider "sigsci" {
 
 [Cloud WAF Instance](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_instance.md)
 
+[Cloud WAF Certificate](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_certificate.md)
+
 ## Site resources
 
 [Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_list.md)
