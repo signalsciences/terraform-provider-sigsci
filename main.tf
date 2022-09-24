@@ -2,18 +2,18 @@ terraform {
   required_providers {
     sigsci = {
       source  = "signalsciences/sigsci"
-      version = "0.4.2"
+      version = "1.1.0"
     }
   }
 }
 
 // To build locally:
-// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/0.4.2/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
+// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/1.1.0/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
 //terraform {
 //  required_providers {
 //    sigsci = {
 //      source  = "signalsciences/local/sigsci"
-//      version = "0.4.2"
+//      version = "1.1.0"
 //    }
 //  }
 //}
@@ -334,4 +334,63 @@ resource "sigsci_site_integration" "test_integration" {
   type            = "slack"
   url             = "https://wat.slack.com"
   events          = ["listCreated"]
+}
+
+resource "sigsci_corp_cloudwaf_certificate" "test_cloudwaf_certificate"{
+  name = "Certificate Name"
+  certificate_body = <<CERT
+-----BEGIN CERTIFICATE-----
+MIIDzjCCArYCCQD6uBPuCbaDuDANBgkqhkiG9w0BAQsFADCBqDELMAkGA1UEBhMC
+VVMxEzARBgNVBAgMCkNhbGlmb3JuaWExFjAUBgNVBAcMDVNhbiBGcmFuY2lzY28x
+HTAbBgNVBAoMFEV4YW1wbGUgT3JnYW5pemF0aW9uMRMwEQYDVQQLDApFeGFtcGxl
+IE9VMRQwEgYDVQQDDAtleGFtcGxlLmNvbTEiMCAGCSqGSIb3DQEJARYTZXhhbXBs
+ZUBleGFtcGxlLmNvbTAeFw0yMjA5MjQwMDE4MjRaFw0zMjA5MjEwMDE4MjRaMIGo
+MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNU2Fu
+IEZyYW5jaXNjbzEdMBsGA1UECgwURXhhbXBsZSBPcmdhbml6YXRpb24xEzARBgNV
+BAsMCkV4YW1wbGUgT1UxFDASBgNVBAMMC2V4YW1wbGUuY29tMSIwIAYJKoZIhvcN
+AQkBFhNleGFtcGxlQGV4YW1wbGUuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAscvDb2j2s9bdiAIHbqRoM2qZBxdM4atSwAJQrXVe3pbne2KLZw53
+kHpVtjaugfMKBnXueR1iilYu5eXtgNfrNHgq0X0+NToL/xtSgYthp89lxBYArUVy
+kiM5gy8BqpApfAwQ5MMDgGflIV/mTCcCyNK3DwuOgO7oVp0V2zdtJhgvZ8e3qkuT
+3dOxC27aUFYf/P88UILoc9YWRCkw2Gww/Zr908a/mgVBJ9v+/sKP3/yk8jzrRhL5
+JsGWC5Gbv1gpkyzSjKyboYePvJJo5D6Fue9XZmzry3wepG1oUcLO6QpH+lTBfTjd
+xHKA4sIza1J/RDBLgUBney1nMxLN8RzU5QIDAQABMA0GCSqGSIb3DQEBCwUAA4IB
+AQAPRvwDkKTKCDQj5F4ZUTE9AIEs0w99KuXiWBGz3RmYl5zwZCrVWeOI+lPfCG0v
+prMgh5ydUgUOqrs8S7MAkt8GaU5lb0MSKmz1jPgEEbLBp6VYv2UbrWlBz9JIxTLw
+riPHNUzKb6SXk5wuoO8w7+GsBNI8fWPDSQqSWLlNsi0r4ReLxlM5WBNC10d3q2ia
+jV6r8iMpiArwbJn4WSTlFuJ6crrjgbBVCFxxwoF1sHhwGg+5idxm2AHSzvENyFW4
+UVhVTn9w3UPLMkEl7nAVzydpdMb/M/GLCV787BrQL35EtiCr9MSL9Gc8vR/9PzPP
+QodC+xWXbig7xKLqZgQ/PbPt
+-----END CERTIFICATE-----
+CERT
+  private_key = <<PRIVATEKEY
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxy8NvaPaz1t2I
+AgdupGgzapkHF0zhq1LAAlCtdV7elud7YotnDneQelW2Nq6B8woGde55HWKKVi7l
+5e2A1+s0eCrRfT41Ogv/G1KBi2Gnz2XEFgCtRXKSIzmDLwGqkCl8DBDkwwOAZ+Uh
+X+ZMJwLI0rcPC46A7uhWnRXbN20mGC9nx7eqS5Pd07ELbtpQVh/8/zxQguhz1hZE
+KTDYbDD9mv3Txr+aBUEn2/7+wo/f/KTyPOtGEvkmwZYLkZu/WCmTLNKMrJuhh4+8
+kmjkPoW571dmbOvLfB6kbWhRws7pCkf6VMF9ON3EcoDiwjNrUn9EMEuBQGd7LWcz
+Es3xHNTlAgMBAAECggEAV0K/f52Pf0JUZd1BEo+ESL/nrTBFXni8W1qHiCqTzkFY
+CRmbe5ABJJq2GIEL8uF6qSMWUMEYTPbxe4n2oAbY/F6B/WEvt+XuX11kiAoFetvy
+gWOfH2t3SLwbDQR0F+c7RROS8wO3Yz0amt+7YuK+nhu1FqBAZ41Z4LCmOnogitIA
+cCErKpHqCJbYT99eaXTt2QpXJNI8fItXaO4p8zfKxzBKybhsyu3tEerKWnhqz+25
+Xr7OieYkZM3ryrIsVWZ299wH2D+gA9O+PbY2RJ0Vf3YVf8VdyYRJ5oCAaioNUfZw
+HeGGlfClZzrpX1MjiNNfli05cLqX0iE2bIO+jvZkIQKBgQDadIMHfGQs8CPxbPqi
+fZRuHdPedogM80f4E5RyKhTzEqTG6x0pfjkDr57rdqJEWhM3TjsMIiJRnEIomWar
+2tyckmvkxuSioiWb/+HXJN5u6AtsMgQ4WLMm9HOO0ir5uSKQd0iQrCMAaGDNdV52
+6eipkWLdhYAhW31bycv9cX04+QKBgQDQWlkTovazzNElJU4h1YQCq99VS1gmYb9U
+HAzg3Jmu7WF4Oln+HxZMWqwR38vCuMHiwtCmsqGAEKK2ev6W6iq7iVJLKzTXV++a
+612Mr+JohbHNL0bKlgTMt/i2TnmBWOlhL7xuIwduru1pQ4mM7Vh7Hv+CrVTGm4VZ
+Khzq+vbCTQKBgEnprgO0ZLiHr8GZ29tqnfP8B5l3hWTMU4duKIXQEzKDFllvZ3iI
+ioXiv+RvSUvTJjlKMNRUIER4mDHgZUq0THx1Vigb23PjZNI5a5I9mTzxKhw7eA4Q
+hN0jTI4AMiY4K6exlE3O0DDtIAOkOIgHcH8e/9JvvwCKUgniZzCjW3kRAoGAeEId
+tgLSyFbIxNrybP7zciNIBdA2MfkrWN3T5RoPLnNfVejANrg0w592P97fmiXP6xWt
+Hvpt0yBG+nKlbe/8+D+7mx12I3FjIBUH6wM9+Dxqsta90oKihJMPYBKNeUYbdnf6
+F8vqJ02aRK6xvwDjmDT9H6zyCKyNXDi9djeio+UCgYEAm1g/2O42eVBzYG/WTJ2H
+7jplYemfbIFVpl3Uo18UJKZl/AIzm9tw/+c884naSubwQ8TukI3bDjwWu99R26bo
+HQRmLMnP+t7xp84Rn4jXReWlr9sexXHPg/Lj25MdR1t3Ow53qSh4nw/cUPr42N9o
+cX4iWLb38v7KEornZfofXEw=
+-----END PRIVATE KEY-----
+PRIVATEKEY
 }
