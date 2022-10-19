@@ -47,6 +47,11 @@ func resourceSiteRule() *schema.Resource {
 				Description: "Date the rule will automatically be disabled. If rule is always enabled, will return empty string",
 				Required:    true,
 			},
+			"requestlogging": {
+				Type:        schema.TypeString,
+				Description: "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for request rules that have a block or allow action.",
+				Required:    false,
+			},
 			"actions": {
 				Type:        schema.TypeSet,
 				Description: "Actions",
@@ -224,12 +229,13 @@ func resourceSiteRuleCreate(d *schema.ResourceData, m interface{}) error {
 	site := d.Get("site_short_name").(string)
 
 	siteRulesBody := sigsci.CreateSiteRuleBody{
-		Type:          d.Get("type").(string),
-		GroupOperator: d.Get("group_operator").(string),
-		Enabled:       d.Get("enabled").(bool),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		GroupOperator:  d.Get("group_operator").(string),
+		Enabled:        d.Get("enabled").(bool),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	siteRulesBody.Conditions = expandRuleConditions(d.Get("conditions").(*schema.Set))
@@ -290,6 +296,10 @@ func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("requestlogging", rule.RequestLogging)
+	if err != nil {
+		return err
+	}
 	err = d.Set("actions", flattenRuleActions(rule.Actions, true))
 	if err != nil {
 		return err
@@ -313,12 +323,13 @@ func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	site := d.Get("site_short_name").(string)
 
 	updateSiteRuleBody := sigsci.CreateSiteRuleBody{
-		Type:          d.Get("type").(string),
-		GroupOperator: d.Get("group_operator").(string),
-		Enabled:       d.Get("enabled").(bool),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		GroupOperator:  d.Get("group_operator").(string),
+		Enabled:        d.Get("enabled").(bool),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	updateSiteRuleBody.Conditions = expandRuleConditions(d.Get("conditions").(*schema.Set))
