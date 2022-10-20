@@ -112,13 +112,14 @@ resource "sigsci_site_signal_tag" "test" {
 }
 
 resource "sigsci_site_alert" "test_site_alert" {
-  site_short_name = sigsci_site.my-site.short_name
-  tag_name        = sigsci_site_signal_tag.test_tag.id
-  long_name       = "test_alert"
-  interval        = 10
-  threshold       = 12
-  enabled         = true
-  action          = "info"
+  site_short_name        = sigsci_site.my-site.short_name
+  tag_name               = sigsci_site_signal_tag.test_tag.id
+  long_name              = "test_alert"
+  interval               = 10
+  threshold              = 12
+  enabled                = true
+  action                 = "info"
+  block_duration_seconds = 86400
 }
 
 resource "sigsci_site_templated_rule" "test_template_rule" {
@@ -336,8 +337,8 @@ resource "sigsci_site_integration" "test_integration" {
   events          = ["listCreated"]
 }
 
-resource "sigsci_corp_cloudwaf_certificate" "test_cloudwaf_certificate"{
-  name = "Certificate Name"
+resource "sigsci_corp_cloudwaf_certificate" "test_cloudwaf_certificate" {
+  name             = "Certificate Name"
   certificate_body = <<CERT
 -----BEGIN CERTIFICATE-----
 MIIDzjCCArYCCQD6uBPuCbaDuDANBgkqhkiG9w0BAQsFADCBqDELMAkGA1UEBhMC
@@ -363,7 +364,7 @@ UVhVTn9w3UPLMkEl7nAVzydpdMb/M/GLCV787BrQL35EtiCr9MSL9Gc8vR/9PzPP
 QodC+xWXbig7xKLqZgQ/PbPt
 -----END CERTIFICATE-----
 CERT
-  private_key = <<PRIVATEKEY
+  private_key      = <<PRIVATEKEY
 -----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxy8NvaPaz1t2I
 AgdupGgzapkHF0zhq1LAAlCtdV7elud7YotnDneQelW2Nq6B8woGde55HWKKVi7l

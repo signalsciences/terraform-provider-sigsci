@@ -54,6 +54,11 @@ func resourceSiteAlert() *schema.Resource {
 				Description: "A flag to skip notifications",
 				Optional:    true,
 			},
+			"block_duration_seconds": {
+				Type:        schema.TypeInt,
+				Description: "The number of seconds this alert is active.",
+				Optional:    true,
+			},
 		},
 	}
 }
@@ -63,13 +68,14 @@ func resourceSiteAlertCreate(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 
 	alert, err := sc.CreateCustomAlert(pm.Corp, d.Get("site_short_name").(string), sigsci.CustomAlertBody{
-		TagName:           d.Get("tag_name").(string),
-		LongName:          d.Get("long_name").(string),
-		Interval:          d.Get("interval").(int),
-		Threshold:         d.Get("threshold").(int),
-		Enabled:           d.Get("enabled").(bool),
-		Action:            d.Get("action").(string),
-		SkipNotifications: d.Get("skip_notifications").(bool),
+		TagName:              d.Get("tag_name").(string),
+		LongName:             d.Get("long_name").(string),
+		Interval:             d.Get("interval").(int),
+		Threshold:            d.Get("threshold").(int),
+		Enabled:              d.Get("enabled").(bool),
+		Action:               d.Get("action").(string),
+		SkipNotifications:    d.Get("skip_notifications").(bool),
+		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 	})
 	if err != nil {
 		return err
@@ -121,6 +127,10 @@ func resourceSiteAlertRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("block_duration_seconds", alert.BlockDurationSeconds)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -130,13 +140,14 @@ func resourceSiteAlertUpdate(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 
 	alert, err := sc.UpdateCustomAlert(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CustomAlertBody{
-		TagName:           d.Get("tag_name").(string),
-		LongName:          d.Get("long_name").(string),
-		Interval:          d.Get("interval").(int),
-		Threshold:         d.Get("threshold").(int),
-		Enabled:           d.Get("enabled").(bool),
-		Action:            d.Get("action").(string),
-		SkipNotifications: d.Get("skip_notifications").(bool),
+		TagName:              d.Get("tag_name").(string),
+		LongName:             d.Get("long_name").(string),
+		Interval:             d.Get("interval").(int),
+		Threshold:            d.Get("threshold").(int),
+		Enabled:              d.Get("enabled").(bool),
+		Action:               d.Get("action").(string),
+		SkipNotifications:    d.Get("skip_notifications").(bool),
+		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 	})
 	if err != nil {
 		d.SetId("")
