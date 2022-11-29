@@ -168,6 +168,7 @@ resource "sigsci_site_rule" "test" {
   reason          = "Example site rule update"
   signal          = "SQLI"
   expiration      = ""
+  requestlogging  = "sampled"
 
   conditions {
     type     = "single"
