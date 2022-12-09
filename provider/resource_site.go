@@ -64,13 +64,13 @@ func resourceSite() *schema.Resource {
 							Computed: true,
 						},
 						"secret_key": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:      schema.TypeString,
+							Computed:  true,
 							Sensitive: true,
 						},
 						"access_key": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:      schema.TypeString,
+							Computed:  true,
 							Sensitive: true,
 						},
 					},

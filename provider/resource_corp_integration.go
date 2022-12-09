@@ -1,9 +1,10 @@
 package provider
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"log"
 )
 
 func resourceCorpIntegration() *schema.Resource {

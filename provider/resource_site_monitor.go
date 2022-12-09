@@ -3,9 +3,10 @@ package provider
 import (
 	"errors"
 	"fmt"
+	"net/url"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"net/url"
 )
 
 func resourceSiteMonitor() *schema.Resource {

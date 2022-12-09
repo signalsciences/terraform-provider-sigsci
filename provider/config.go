@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+
 	"github.com/signalsciences/go-sigsci"
 )
 
