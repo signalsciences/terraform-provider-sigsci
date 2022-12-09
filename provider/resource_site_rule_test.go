@@ -30,6 +30,7 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
                         reason= "Example site rule update"
                         signal= "SQLI"
                         expiration= ""
+                        requestlogging= ""
                         conditions {
                             type="single"
                             field="ip"
@@ -79,6 +80,7 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
                         reason= "Example site rule update 2"
                         signal= "SQLI"
                         expiration= ""
+                        requestlogging = ""
                         conditions {
                             type="single"
                             field="ip"
@@ -88,7 +90,7 @@ func TestACCResourceSiteRule_basic(t *testing.T) {
                         actions {
                             type="excludeSignal"
                         }
-                        
+
                 }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "type", "signal"),
@@ -138,6 +140,7 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
                         reason= "Example site rule update"
                         signal= sigsci_site_signal_tag.test_tag.id
                         expiration= ""
+                        requestlogging= ""
                         conditions {
                             type="single"
                             field="ip"
@@ -367,6 +370,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 					// No need to check, we're really testing the next step
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.3902877111.type", "allow"),
+					resource.TestCheckResourceAttr(resourceName, "requestlogging", "sampled"),
 				),
 			},
 			{
@@ -391,6 +395,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.2481804494.type", "block"),
+					resource.TestCheckResourceAttr(resourceName, "requestlogging", "sampled"),
 				),
 			},
 			{
@@ -418,6 +423,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.1905498400.type", "block"),
 					resource.TestCheckResourceAttr(resourceName, "actions.1905498400.response_code", "499"),
+					resource.TestCheckResourceAttr(resourceName, "requestlogging", "sampled"),
 				),
 			},
 			{
@@ -448,6 +454,7 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
 			                     enabled=true
 			                     reason= "Example site rule update"
 			                     expiration=""
+			                     requestlogging=""
 			                     signal="CMDEXE"
 			                     conditions {
 			                         type="single"
@@ -490,6 +497,7 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.3902877111.type", "allow"),
+					resource.TestCheckResourceAttr(resourceName, "requestlogging", "sampled"),
 				),
 			},
 			{
