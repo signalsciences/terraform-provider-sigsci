@@ -2,21 +2,13 @@ terraform {
   required_providers {
     sigsci = {
       source  = "signalsciences/sigsci"
-      version = "1.1.0"
+      version = "1.2.1"
     }
   }
 }
 
 // To build locally:
-// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/1.1.0/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
-//terraform {
-//  required_providers {
-//    sigsci = {
-//      source  = "signalsciences/local/sigsci"
-//      version = "1.1.0"
-//    }
-//  }
-//}
+// make && cp terraform-provider-sigsci ~/.terraform.d/plugins/signalsciences/local/sigsci/1.2.1/darwin_amd64/terraform-provider-sigsci && rm .terraform.lock.hcl && tf init
 
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
