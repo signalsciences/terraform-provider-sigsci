@@ -50,7 +50,8 @@ func resourceSiteRule() *schema.Resource {
 			"requestlogging": {
 				Type:        schema.TypeString,
 				Description: "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for request rules that have a block or allow action.",
-				Required:    false,
+				Optional:    true,
+				Default:     "sampled",
 			},
 			"actions": {
 				Type:        schema.TypeSet,
