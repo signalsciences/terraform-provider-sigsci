@@ -2,9 +2,10 @@ package provider
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"time"
 )
 
 func resourceSiteBlocklist() *schema.Resource {
@@ -78,6 +79,7 @@ func resourceSiteBlocklistRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
+
 	var Blocklist *sigsci.ListIP
 	for _, w := range Blocklists {
 		if w.ID == d.Id() {
@@ -86,8 +88,9 @@ func resourceSiteBlocklistRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if Blocklist == nil {
+		id := d.Id()
 		d.SetId("")
-		return fmt.Errorf("could not find Blocklist with id %s", d.Id())
+		return fmt.Errorf("could not find Blocklist with id %s", id)
 	}
 
 	err = d.Set("source", Blocklist.Source)

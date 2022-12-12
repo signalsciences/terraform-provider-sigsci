@@ -2,9 +2,10 @@ package provider
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"time"
 )
 
 func resourceSiteAllowlist() *schema.Resource {
@@ -86,8 +87,9 @@ func resourceSiteAllowlistRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if allowlist == nil {
+		id := d.Id()
 		d.SetId("")
-		return fmt.Errorf("could not find allowlist with id %s", d.Id())
+		return fmt.Errorf("could not find allowlist with id %s", id)
 	}
 
 	err = d.Set("source", allowlist.Source)
