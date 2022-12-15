@@ -834,3 +834,127 @@ func testACCCheckSiteRuleDestroy(s *terraform.State) error {
 	}
 	return nil
 }
+
+func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
+	t.Parallel()
+	resourceName := "sigsci_site_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_signal_tag" "test_tag" {
+                      site_short_name = "%s"
+                      name            = "My new tag"
+                      description     = "test description"
+                    }
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "rateLimit"
+                        group_operator="any"
+                        enabled= true
+                        reason= "Site rule update with rate limit"
+                        signal=sigsci_site_signal_tag.test_tag.id
+                        requestlogging=""
+                        expiration= ""
+                        rate_limit = {
+                            threshold = 5
+                            interval  = 10
+                            duration  = 300
+                        }
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.4"
+                        }
+                        actions {
+                            type="logRequest"
+                            signal="WRONG-API-CLIENT"
+                        }
+                }`, testSite, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testCheckSiteRuleExists(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "type", "rateLimit"),
+					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
+					resource.TestCheckResourceAttr(resourceName, "reason", "Site rule update with rate limit"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.%", "3"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "5"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.duration", "300"),
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.signal", "WRONG-API-CLIENT"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.field", "ip"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.group_operator", ""),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.operator", "equals"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.type", "single"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.value", "1.2.3.4"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.conditions.#", "0"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_signal_tag" "test_tag" {
+                      site_short_name = "%s"
+                      name            = "My new tag"
+                      description     = "test description"
+                    }
+                    resource "sigsci_site_rule" "test"{
+                        site_short_name="%s"
+                        type= "rateLimit"
+                        group_operator="any"
+                        enabled= false
+                        reason= "Site rule update with rate limit"
+                        signal= sigsci_site_signal_tag.test_tag.id
+                        requestlogging=""
+                        expiration= ""
+                        rate_limit = {
+                            threshold = 6
+                            interval  = 10
+                            duration  = 300
+                        }
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.9"
+                        }
+                        actions {
+                            type="logRequest"
+                            signal="WRONG-API-CLIENT"
+                        }
+                }`, testSite, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "type", "rateLimit"),
+					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
+					resource.TestCheckResourceAttr(resourceName, "reason", "Site rule update with rate limit"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.%", "3"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "6"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.duration", "300"),
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.signal", "WRONG-API-CLIENT"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.conditions.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.field", "ip"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.group_operator", ""),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.operator", "equals"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.type", "single"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.value", "1.2.3.9"),
+				),
+			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+	})
+}
