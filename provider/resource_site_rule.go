@@ -335,6 +335,7 @@ func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
 
 	updateSiteRuleBody.Conditions = expandRuleConditions(d.Get("conditions").(*schema.Set))
 	updateSiteRuleBody.Actions = expandRuleActions(d.Get("actions").(*schema.Set))
+	updateSiteRuleBody.RateLimit = expandRuleRateLimit(d.Get("rate_limit").(map[string]interface{}))
 
 	_, err := sc.UpdateSiteRuleByID(corp, site, d.Id(), updateSiteRuleBody)
 	if err != nil {
