@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )

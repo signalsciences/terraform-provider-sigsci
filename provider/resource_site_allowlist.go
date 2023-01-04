@@ -2,9 +2,10 @@ package provider
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
-	"time"
 )
 
 func resourceSiteAllowlist() *schema.Resource {
