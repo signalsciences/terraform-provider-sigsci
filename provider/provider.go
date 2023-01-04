@@ -38,6 +38,12 @@ func Provider() terraform.ResourceProvider {
 				Sensitive:    true,
 				AtLeastOneOf: []string{"password", "auth_token"},
 			},
+			"api_url": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("SIGSCI_URL", nil),
+				Description: "URL override for testing",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"sigsci_site":                resourceSite(),
@@ -70,6 +76,7 @@ func providerConfigure() schema.ConfigureFunc {
 			Email:    d.Get("email").(string),
 			Password: d.Get("password").(string),
 			APIToken: d.Get("auth_token").(string),
+			URL:      d.Get("api_url").(string),
 		}
 		client, err := config.Client()
 		if err != nil {
