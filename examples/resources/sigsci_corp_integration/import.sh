@@ -1,0 +1,1 @@
+terraform import sigsci_corp_integration.test_corp_integration id

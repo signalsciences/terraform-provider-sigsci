@@ -1,0 +1,1 @@
+terraform import sigsci_site_integration.test_integration site_short_name:id

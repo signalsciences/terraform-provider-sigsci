@@ -1,0 +1,1 @@
+terraform import sigsci_site_allowlist.test site_short_name:id

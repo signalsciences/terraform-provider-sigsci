@@ -1,0 +1,1 @@
+terraform import sigsci_site_signal_tag.test site_short_name:id
