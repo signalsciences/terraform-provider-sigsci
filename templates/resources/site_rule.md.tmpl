@@ -1,0 +1,79 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Example Usage
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name)}}
+
+|Warning: You must terraform apply with the option parallelism=1 when using this resource or risk data inconsistencies! [See the FAQ.](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/guides/FAQ.md)|
+|---|
+
+{{ .SchemaMarkdown | trimspace }}
+
+### Templated Signals
+We have curated a list of templates for common rules, the full list of available signals is available below.
+
+For these you must specify type = "templatedSignal".
+Note that they will show up in the site "Templated Rules" page in the Console.
+
+```hcl-terraform
+resource "sigsci_site_rule" "testsignal" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "templatedSignal"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example site rule update"
+  signal          = "PW-RESET-ATTEMPT"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "method"
+    operator = "equals"
+    value    = "POST"
+  }
+
+  conditions {
+    type     = "single"
+    field    = "path"
+    operator = "equals"
+    value    = "/change-password"
+  }
+
+  conditions {
+    type           = "multival"
+    group_operator = "all"
+    conditions {
+      field    = "name"
+      operator = "equals"
+      type     = "single"
+      value    = "foo"
+    }
+  }
+}
+```
+
+```javascript
+// These are all of the valid values for signal
+signals = ["2FA-CHANGED","2FA-DISABLED","ADDRESS-CHANGED","CC-VAL-ATTEMPT","CC-VAL-FAILURE", "CC-VAL-SUCCESS",
+   "EMAIL-CHANGED","EMAIL-VALIDATION","GC-VAL-ATTEMPT","GC-VAL-FAILURE", "GC-VAL-SUCCESS","INFO-VIEWED",
+   "INVITE-ATTEMPT","INVITE-FAILURE","INVITE-SUCCESS", "KBA-CHANGED","MESSAGE-SENT","PW-CHANGED","PW-RESET-ATTEMPT",
+   "RSRC-ID-ENUM-ATTEMPT", "RSRC-ID-ENUM-FAILURE","RSRC-ID-ENUM-SUCCESS","RSRC-ID-ENUM-SUCCESS","USER-ID-ENUM-ATTEMPT",
+   "USER-ID-ENUM-FAILURE","USER-ID-ENUM-SUCCESS","USER-ID-ENUM-SUCCESS","WRONG-API-CLIENT"]
+```
+If you do not see the signal you want in this list, check out the [Templated Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_templated_rule.md) for some additional templates
+
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ tffile .ImportFile}}

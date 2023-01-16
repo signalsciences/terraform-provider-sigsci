@@ -1,0 +1,1 @@
+terraform import sigsci_corp_cloudwaf_instance.test_corp_cloudwaf id

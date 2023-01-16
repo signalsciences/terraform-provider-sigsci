@@ -1,0 +1,36 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Example Usage
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name)}}
+
+|Warning: You must terraform apply with the option parallelism=1 when using this resource or risk data inconsistencies! [See the FAQ.](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/guides/FAQ.md)|
+|---|
+
+{{ .SchemaMarkdown | trimspace }}
+
+### Available Templates
+```javascript
+//These are the valid values for the 'name' field.
+signals = ["AWS-SSRF", "CVE-2017-5638", "CVE-2017-7269", "CVE-2017-9805", "CVE-2018-9206", "CVE-2018-11776",
+  "CVE-2019-0192", "CVE-2019-0193", "CVE-2019-0232", "CVE-2019-2725", "CVE-2019-3396", "CVE-2019-5418", "CVE-2019-6340",
+  "CVE-2019-14234", "CVE-2019-16759", "CVE-2021-26855", "LOGINATTEMPT", "LOGINFAILURE", "LOGINSUCCESS", "REGATTEMPT",
+  "REGFAILURE", "REGSUCCESS"]
+```
+
+If you do not see the signal you want in this list, check out the [Rules page](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_rule.md) for some additional templates
+
+## Import
+
+Import is supported using the following syntax:
+
+{{ tffile .ImportFile}}
