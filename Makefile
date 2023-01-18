@@ -17,3 +17,8 @@ testacc: ## Run acceptance tests
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
 	go test ./provider -v -sweep=test $(SWEEPARGS) -timeout 2m
+
+docs:
+	go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs && tfplugindocs generate
+
+.PHONY: docs
