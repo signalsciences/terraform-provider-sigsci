@@ -194,11 +194,12 @@ func TestACCResourceSiteRuleConditionSignal(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`
                     resource "sigsci_site_rule" "test" {
-                        site_short_name = "%s" 
+                        site_short_name = "%s"
                         type            = "request"
                         group_operator  = "all"
                         enabled         = true
                         reason          = "Example site rule update"
+                        requestlogging  = "sampled"
                         expiration      = ""
 
                         conditions {
@@ -272,6 +273,7 @@ func TestACCResourceSiteRuleConditionSignal(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "conditions.2455721190.conditions.3887678098.conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.1840769124.conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.2455721190.conditions.2522856064.conditions.#", "3"),
+					resource.TestCheckResourceAttr(resourceName, "requestlogging", "sampled"),
 				),
 			},
 			{
@@ -296,7 +298,7 @@ func TestACCResourceSiteRuleTagSignal(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`
                     resource "sigsci_site_signal_tag" "test_tag" {
-                      site_short_name = "%s" 
+                      site_short_name = "%s"
                       name            = "newtag"
                       description     = "test description"
                     }
@@ -306,6 +308,7 @@ func TestACCResourceSiteRuleTagSignal(t *testing.T) {
                         group_operator="all"
                         enabled= true
                         reason= "Example site rule update"
+                        requestlogging="sampled"
                         expiration= ""
                         conditions {
                             type="single"
@@ -356,6 +359,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 			                     enabled=true
 			                     reason= "Example site rule update"
 			                     expiration=""
+			                     requestlogging="sampled"
 			                     conditions {
 			                         type="single"
 			                         field="path"
@@ -381,6 +385,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 			           group_operator="all"
 			           enabled=true
 			           reason="Example site rule update"
+			           requestlogging="sampled"
 			           expiration=""
 			           conditions {
 			               type="single"
@@ -406,6 +411,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 			                    group_operator="all"
 			                    enabled=true
 			                    reason="Example site rule update"
+			                    requestlogging="sampled"
 			                    expiration=""
 			                    conditions {
 			                        type="single"
@@ -417,7 +423,7 @@ func TestACCResourceSiteRuleActions(t *testing.T) {
 			                        type = "block"
 			                        response_code = 499
 			                    }
-			
+
 			            }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
@@ -453,8 +459,8 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
 			                     group_operator="all"
 			                     enabled=true
 			                     reason= "Example site rule update"
+                                 requestlogging=""
 			                     expiration=""
-			                     requestlogging=""
 			                     signal="CMDEXE"
 			                     conditions {
 			                         type="single"
@@ -482,6 +488,7 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
                         group_operator="all"
                         enabled=true
                         reason="Example site rule update"
+                        requestlogging="sampled"
                         expiration=""
                         conditions {
                             type="single"
@@ -527,6 +534,7 @@ func TestACCResourceSiteRuleInvalidUpdateMaxConditions(t *testing.T) {
                         group_operator="any"
                         enabled=true
                         reason= "Example site rule update"
+                        requestlogging= "sampled"
                         expiration=""
                         conditions {
                            field    = "ip"
@@ -582,7 +590,7 @@ func TestACCResourceSiteRuleInvalidUpdateMaxConditions(t *testing.T) {
                            type     = "single"
                            value    = "1.1.1.9"
                         }
-                        
+
                         actions {
                             type = "block"
                         }
