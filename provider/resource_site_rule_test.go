@@ -128,8 +128,8 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(`
                     resource "sigsci_site_signal_tag" "test_tag" {
-                      site_short_name = "%s" 
-                      name            = "My new tag"
+                      site_short_name = "%s"
+                      name            = "My rate limit tag"
                       description     = "test description"
                     }
                     resource "sigsci_site_rule" "test" {
@@ -164,8 +164,8 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.309149588.type", "logRequest"),
-					resource.TestCheckResourceAttr(resourceName, "actions.309149588.signal", "site.my-new-tag"),
+					resource.TestCheckResourceAttr(resourceName, "actions.194535128.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.194535128.signal", "site.my-rate-limit-tag"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "10"),
 					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
@@ -863,7 +863,7 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
 				Config: fmt.Sprintf(`
                     resource "sigsci_site_signal_tag" "test_tag" {
                       site_short_name = "%s"
-                      name            = "My new tag"
+                      name            = "My rate limit tag"
                       description     = "test description"
                     }
                     resource "sigsci_site_rule" "test"{
@@ -916,7 +916,7 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
 				Config: fmt.Sprintf(`
                     resource "sigsci_site_signal_tag" "test_tag" {
                       site_short_name = "%s"
-                      name            = "My new tag"
+                      name            = "My rate limit tag"
                       description     = "test description"
                     }
                     resource "sigsci_site_rule" "test"{
