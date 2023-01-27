@@ -16,5 +16,5 @@ jobs:
     - name: Build
       run: go build ./...
 
-    - name: Staticcheck
-      run: staticcheck ./...
+    - name: Lint
+      run: make lint
