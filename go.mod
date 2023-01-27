@@ -7,6 +7,7 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-sdk v1.14.0
 	github.com/signalsciences/go-sigsci v0.1.8
+	golang.org/x/lint v0.0.0-20190409202823-959b441ac422
 	honnef.co/go/tools v0.3.3
 )
 
