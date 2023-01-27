@@ -9,6 +9,7 @@ check:
 all: build check
 
 lint:
+	go install honnef.co/go/tools/cmd/staticcheck && staticcheck ./...
 	golint ./...
 
 testacc: ## Run acceptance tests
