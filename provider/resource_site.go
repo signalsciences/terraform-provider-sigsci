@@ -155,7 +155,7 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		"access_key": primaryAgentKey.AccessKey,
 	})
 
-	return nil
+	return err
 }
 
 func updateSite(d *schema.ResourceData, m interface{}) error {

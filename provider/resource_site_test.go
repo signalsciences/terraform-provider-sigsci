@@ -24,10 +24,8 @@ func init() {
 				BlockHTTPCode:        400,
 				BlockDurationSeconds: 60,
 			})
-			if err != nil {
-				return err
-			}
-			return nil
+
+			return err
 		},
 	})
 }

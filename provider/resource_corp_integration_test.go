@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -16,14 +15,14 @@ func TestAccResourceCorpIntegrationCRUD(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
+				Config: `
                    resource "sigsci_corp_integration" "test_integration"{
                        type = "slack"
                        url = "https://hooks.slack.com/services/blah/blah"
                        events = [
                          "webhookEvents"
                        ]
-				}`),
+				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "type", "slack"),
 					resource.TestCheckResourceAttr(resourceName, "url", "https://hooks.slack.com/services/blah/blah"),
@@ -32,7 +31,7 @@ func TestAccResourceCorpIntegrationCRUD(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(`
+				Config: `
 			       resource "sigsci_corp_integration" "test_integration"{
 			           type = "slack"
 			           url = "https://hooks.slack.com/services/blah/blah"
@@ -40,7 +39,7 @@ func TestAccResourceCorpIntegrationCRUD(t *testing.T) {
 			             "corpUpdated",
 			             "listDeleted"
 			           ]
-				}`),
+				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "type", "slack"),
 					resource.TestCheckResourceAttr(resourceName, "url", "https://hooks.slack.com/services/blah/blah"),

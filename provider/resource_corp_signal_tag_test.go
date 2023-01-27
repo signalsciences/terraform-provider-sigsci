@@ -18,11 +18,11 @@ func TestACCResourceCorpSignalTag_basic(t *testing.T) {
 
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprint(`
+				Config: `
 					resource "sigsci_corp_signal_tag" "test"{
 						short_name="testacc-signal-tagg"
 						description= "An example of a custom signal tag"
-				}`),
+				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(resourceName, "configurable"),
 					resource.TestCheckResourceAttrSet(resourceName, "informational"),

@@ -772,6 +772,8 @@ func testCheckSiteRulesAreEqual(name string) resource.TestCheckFunc {
 		return nil
 	}
 }
+
+/*
 func testCheckSiteGroupRulesAreEqual(name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		pm := testAccProvider.Meta().(providerMetadata)
@@ -826,6 +828,8 @@ func testCheckSiteGroupRulesAreEqual(name string) resource.TestCheckFunc {
 		return nil
 	}
 }
+*/
+
 func testAccImportStateCheckFunction(expectedStates int) resource.ImportStateCheckFunc {
 	return func(s []*terraform.InstanceState) error {
 		if len(s) != expectedStates {

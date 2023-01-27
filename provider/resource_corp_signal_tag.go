@@ -129,5 +129,5 @@ func resourceCorpSignalTagDelete(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
-	return fmt.Errorf("Could not delete signaltag with ID %s in corp %s, Please re-run", d.Id(), corp)
+	return fmt.Errorf("could not delete signaltag with ID %s in corp %s, Please re-run", d.Id(), corp)
 }

@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"sort"
@@ -13,10 +12,7 @@ import (
 )
 
 func suppressEquivalentTrimSpaceDiffs(k, old, new string, d *schema.ResourceData) bool {
-	if strings.TrimSpace(old) == strings.TrimSpace(new) {
-		return true
-	}
-	return false
+	return strings.TrimSpace(old) == strings.TrimSpace(new)
 }
 
 type providerMetadata struct {
@@ -376,7 +372,7 @@ func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 }
 
 func flattenRuleConditions(conditions []sigsci.Condition) []interface{} {
-	var conditionsMap = make([]interface{}, len(conditions), len(conditions))
+	var conditionsMap = make([]interface{}, len(conditions))
 	for i, condition := range conditions {
 		conditionMap := map[string]interface{}{
 			"type":           condition.Type,
@@ -460,7 +456,7 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 }
 
 func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
-	var actionsMap = make([]interface{}, len(actions), len(actions))
+	var actionsMap = make([]interface{}, len(actions))
 	for i, action := range actions {
 
 		actionMap := map[string]interface{}{
@@ -485,11 +481,11 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 	return actionsMap
 }
 
-func resourceSiteImport(siteId string) (site string, id string, err error) {
-	parts := strings.SplitN(siteId, ":", 2)
+func resourceSiteImport(siteID string) (site string, id string, err error) {
+	parts := strings.SplitN(siteID, ":", 2)
 
 	if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
-		return "", "", fmt.Errorf("unexpected format of ID (%s), expected site:id", siteId)
+		return "", "", fmt.Errorf("unexpected format of ID (%s), expected site:id", siteID)
 	}
 
 	return parts[0], parts[1], nil
@@ -521,6 +517,6 @@ func validateActionResponseCode(val interface{}, key string) ([]string, []error)
 	if 400 <= code && code < 500 {
 		return nil, nil
 	}
-	rangeError := errors.New(fmt.Sprintf("received action responseCode '%d'. should be in 400-499 range.", code))
+	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 400-499 range", code)
 	return nil, []error{rangeError}
 }
