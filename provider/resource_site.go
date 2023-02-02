@@ -149,13 +149,11 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	err = d.Set("primary_agent_key", map[string]interface{}{
+	return d.Set("primary_agent_key", map[string]interface{}{
 		"name":       primaryAgentKey.Name,
 		"secret_key": primaryAgentKey.SecretKey,
 		"access_key": primaryAgentKey.AccessKey,
 	})
-
-	return err
 }
 
 func updateSite(d *schema.ResourceData, m interface{}) error {
