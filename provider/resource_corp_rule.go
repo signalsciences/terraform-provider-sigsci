@@ -314,5 +314,5 @@ func resourceCorpRuleDelete(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return nil
 	}
-	return fmt.Errorf("Could not delete rule with ID %s in corp %s. Please re-run", corp, d.Id())
+	return fmt.Errorf("could not delete rule with ID %s in corp %s. Please re-run", corp, d.Id())
 }

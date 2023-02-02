@@ -4,8 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/signalsciences/go-sigsci"
 )
 
@@ -113,7 +111,8 @@ func getDefaultAlert() sigsci.Alert {
 	}
 }
 
-// function used for debugging. set breakpoint at 'return nil' to inspect terraform state
+// function used for debugging. uncomment and set breakpoint at 'return nil' to inspect terraform state
+/*
 func testInspect() resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		pm := testAccProvider.Meta().(providerMetadata)
@@ -124,3 +123,4 @@ func testInspect() resource.TestCheckFunc {
 		return nil
 	}
 }
+*/

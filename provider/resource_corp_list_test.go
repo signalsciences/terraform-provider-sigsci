@@ -17,7 +17,7 @@ func TestACCResourceCorpList_basic(t *testing.T) {
 		CheckDestroy: testACCCheckCorpListDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprint(`
+				Config: `
 					resource "sigsci_corp_list" "test"{
 						name="My new list"
 						type= "ip"
@@ -27,7 +27,7 @@ func TestACCResourceCorpList_basic(t *testing.T) {
 							"2.3.4.5",
 							"1.2.3.4",
 						]
-				}`),
+				}`,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", "My new list"),
 					resource.TestCheckResourceAttr(resourceName, "type", "ip"),

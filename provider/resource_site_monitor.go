@@ -1,7 +1,7 @@
 package provider
 
+/*
 import (
-	"errors"
 	"fmt"
 	"net/url"
 
@@ -86,12 +86,12 @@ func resourceSiteMonitorRead(d *schema.ResourceData, m interface{}) error {
 			monitor = m
 		}
 		if monitor.ID == "" {
-			return errors.New(fmt.Sprintf("Could not find monitor with ID %s", d.Id()))
+			return fmt.Errorf("could not find monitor with ID %s", d.Id())
 		}
 	}
 	if monitor.ID == "" {
 		d.SetId("")
-		return errors.New(fmt.Sprintf("Could not find site monitor with id %s", d.Id()))
+		return fmt.Errorf("could not find site monitor with id %s", d.Id())
 	}
 
 	d.SetId(monitor.ID)
@@ -147,3 +147,4 @@ func resourceSiteMonitorDelete(d *schema.ResourceData, m interface{}) error {
 	d.SetId("")
 	return nil
 }
+*/
