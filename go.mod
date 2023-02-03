@@ -1,6 +1,6 @@
 module github.com/signalsciences/terraform-provider-sigsci
 
-go 1.17
+go 1.20
 
 require (
 	github.com/davecgh/go-spew v1.1.1
