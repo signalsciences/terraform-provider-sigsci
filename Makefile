@@ -8,12 +8,6 @@ check:
 
 all: build check
 
-lint:
-	go install honnef.co/go/tools/cmd/staticcheck
-	staticcheck ./...
-	go install golang.org/x/lint/golint
-	golint ./...
-
 testacc: ## Run acceptance tests
 	TF_ACC=1 go test -v ./...
 
