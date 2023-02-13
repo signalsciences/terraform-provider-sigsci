@@ -31,7 +31,7 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 	pm := m.(providerMetadata)
 	sc := pm.Client
 
-	d.SetId(d.Get("site_short_name").(string))
+	d.SetId(d.Get("fastly_sid").(string))
 
 	return sc.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
 }
