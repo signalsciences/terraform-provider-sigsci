@@ -29,11 +29,10 @@ func resourceEdgeDeploymentService() *schema.Resource {
 
 func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
-	sc := pm.Client
 
 	d.SetId(d.Get("fastly_sid").(string))
 
-	return sc.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
 }
 
 func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
@@ -42,14 +41,12 @@ func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 
 func updateEdgeDeploymentBackends(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
-	sc := pm.Client
 
-	return sc.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
 }
 
 func detachEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
-	sc := pm.Client
 
-	return sc.DetachEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.DetachEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
 }

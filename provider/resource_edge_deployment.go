@@ -23,11 +23,10 @@ func resourceEdgeDeployment() *schema.Resource {
 
 func createOrUpdateEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
-	sc := pm.Client
 
 	d.SetId(d.Get("site_short_name").(string))
 
-	return sc.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
+	return pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
 }
 
 func readEdgeDeployment(d *schema.ResourceData, m interface{}) error {
@@ -36,7 +35,6 @@ func readEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 
 func deleteEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
-	sc := pm.Client
 
-	return sc.DeleteEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
+	return pm.Client.DeleteEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
 }

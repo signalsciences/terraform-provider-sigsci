@@ -38,7 +38,6 @@ func (c *Config) Client() (interface{}, error) {
 		client = sigsci.NewTokenClient(c.Email, c.APIToken)
 	} else if c.Password != "" {
 		client, err = sigsci.NewClient(c.Email, c.Password)
-
 		if err != nil {
 			return nil, err
 		}
