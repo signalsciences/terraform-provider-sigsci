@@ -111,7 +111,7 @@ func resourceSiteIntegrationUpdate(d *schema.ResourceData, m interface{}) error 
 	if err != nil {
 		log.Printf("[ERROR] %s. Could not update integration with ID %s in corp %s site %s", err.Error(), d.Id(), pm.Corp, site)
 		d.SetId("")
-		return nil
+		return err
 	}
 	return resourceSiteIntegrationRead(d, m)
 }
