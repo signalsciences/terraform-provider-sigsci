@@ -508,7 +508,7 @@ func validateConditionField(val interface{}, key string) ([]string, []error) {
 	if existsInString(val.(string), "scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname", "paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType", "signal", "requestHeader", "queryParameter", "postParameter") {
 		return nil, nil
 	}
-	return []string{fmt.Sprintf("received '%s' for conditions.field. This is not necessairly an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)", val.(string))}, nil
+	return []string{fmt.Sprintf("received '%s' for conditions.field. This is not necessarily an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)", val.(string))}, nil
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
