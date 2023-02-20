@@ -32,12 +32,12 @@ func resourceSiteAlert() *schema.Resource {
 			"interval": {
 				Type:        schema.TypeInt,
 				Description: "The number of minutes of past traffic to examine. Must be 1, 10 or 60.",
-				Optional:    true,
+				Required:    true,
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
 				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000",
-				Optional:    true,
+				Required:    true,
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
