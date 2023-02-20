@@ -57,6 +57,7 @@ func resourceSite() *schema.Resource {
 				Type:        schema.TypeMap,
 				Description: "The sites primary Agent key",
 				Computed:    true,
+				Sensitive: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -66,12 +67,10 @@ func resourceSite() *schema.Resource {
 						"secret_key": {
 							Type:      schema.TypeString,
 							Computed:  true,
-							Sensitive: true,
 						},
 						"access_key": {
 							Type:      schema.TypeString,
 							Computed:  true,
-							Sensitive: true,
 						},
 					},
 				},
