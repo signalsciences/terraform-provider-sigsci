@@ -124,3 +124,31 @@ func testInspect() resource.TestCheckFunc {
 	}
 }
 */
+
+func TestValidateConditionField(t *testing.T) {
+	cases := []struct {
+		in      string
+		wantErr bool
+	}{
+		{in: "scheme"},
+		{in: "queryParameter"},
+		{in: "value"},
+
+		{in: "unknownconditionfield", wantErr: true},
+	}
+
+	for _, tt := range cases {
+		got, err := validateConditionField(tt.in, "key")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if got != nil && !tt.wantErr {
+			t.Errorf("validateConditionField(%q) returned invalid, want valid", tt.in)
+		}
+
+		if got == nil && tt.wantErr {
+			t.Errorf("validateConditionField(%q) returned valid, want invalid", tt.in)
+		}
+	}
+}
