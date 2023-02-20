@@ -47,7 +47,7 @@ func resourceSiteAlert() *schema.Resource {
 			"action": {
 				Type:        schema.TypeString,
 				Description: "A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.",
-				Optional:    true,
+				Required:    true,
 			},
 			"skip_notifications": {
 				Type:        schema.TypeBool,
