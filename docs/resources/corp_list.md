@@ -32,7 +32,7 @@ resource "sigsci_corp_list" "test" {
 
 - `entries` (Set of String) List entries
 - `name` (String) Descriptive list name
-- `type` (String) List types (string, ip, country, wildcard)
+- `type` (String) List types (string, ip, country, wildcard, signal)
 
 ### Optional
 

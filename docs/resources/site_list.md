@@ -34,7 +34,7 @@ resource "sigsci_site_list" "test" {
 - `entries` (Set of String) List entries
 - `name` (String) Descriptive list name
 - `site_short_name` (String) Site short name
-- `type` (String) List types (string, ip, country, wildcard)
+- `type` (String) List types (string, ip, country, wildcard, signal)
 
 ### Optional
 
