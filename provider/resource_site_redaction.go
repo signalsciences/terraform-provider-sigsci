@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -23,6 +25,9 @@ func resourceSiteRedaction() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Field Name",
 				Required:    true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
+				},
 			},
 			"redaction_type": {
 				Type:        schema.TypeInt,
