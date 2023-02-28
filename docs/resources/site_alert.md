@@ -31,18 +31,18 @@ resource "sigsci_site_alert" "test" {
 
 ### Required
 
+- `action` (String) A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.
+- `interval` (Number) The number of minutes of past traffic to examine. Must be 1, 10 or 60.
 - `site_short_name` (String) Site short name
 - `tag_name` (String) The name of the tag whose occurrences the alert is watching. Must match an existing tag
+- `threshold` (Number) The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000
 
 ### Optional
 
-- `action` (String) A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.
 - `block_duration_seconds` (Number) The number of seconds this alert is active.
 - `enabled` (Boolean) A flag to toggle this alert.
-- `interval` (Number) The number of minutes of past traffic to examine. Must be 1, 10 or 60.
 - `long_name` (String) description
 - `skip_notifications` (Boolean) A flag to skip notifications
-- `threshold` (Number) The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000
 
 ### Read-Only
 

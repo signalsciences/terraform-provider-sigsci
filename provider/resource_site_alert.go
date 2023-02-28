@@ -32,12 +32,12 @@ func resourceSiteAlert() *schema.Resource {
 			"interval": {
 				Type:        schema.TypeInt,
 				Description: "The number of minutes of past traffic to examine. Must be 1, 10 or 60.",
-				Optional:    true,
+				Required:    true,
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
 				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000",
-				Optional:    true,
+				Required:    true,
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
@@ -47,7 +47,7 @@ func resourceSiteAlert() *schema.Resource {
 			"action": {
 				Type:        schema.TypeString,
 				Description: "A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.",
-				Optional:    true,
+				Required:    true,
 			},
 			"skip_notifications": {
 				Type:        schema.TypeBool,

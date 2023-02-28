@@ -58,6 +58,7 @@ resource "sigsci_site_rule" "test" {
 
 ### Required
 
+- `actions` (Block Set, Min: 1, Max: 2) Actions (see [below for nested schema](#nestedblock--actions))
 - `conditions` (Block Set, Min: 1, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions))
 - `enabled` (Boolean) enable the rule
 - `expiration` (String) Date the rule will automatically be disabled. If rule is always enabled, will return empty string
@@ -68,7 +69,6 @@ resource "sigsci_site_rule" "test" {
 
 ### Optional
 
-- `actions` (Block Set, Max: 2) Actions (see [below for nested schema](#nestedblock--actions))
 - `rate_limit` (Map of String) Rate Limit
 - `requestlogging` (String) Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for request rules that have a block or allow action.
 - `signal` (String) The signal id of the signal being excluded
@@ -76,6 +76,19 @@ resource "sigsci_site_rule" "test" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+
+<a id="nestedblock--actions"></a>
+### Nested Schema for `actions`
+
+Required:
+
+- `type` (String) (block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)
+
+Optional:
+
+- `response_code` (Number) HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided
+- `signal` (String) signal id to tag
+
 
 <a id="nestedblock--conditions"></a>
 ### Nested Schema for `conditions`
@@ -120,21 +133,6 @@ Optional:
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
 - `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
-
-
-
-
-<a id="nestedblock--actions"></a>
-### Nested Schema for `actions`
-
-Required:
-
-- `type` (String) (block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)
-
-Optional:
-
-- `response_code` (Number) HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided
-- `signal` (String) signal id to tag
 
 ### Templated Signals
 We have curated a list of templates for common rules, the full list of available signals is available below.
