@@ -24,7 +24,7 @@ func resourceCorpList() *schema.Resource {
 			},
 			"type": {
 				Type:        schema.TypeString,
-				Description: "List types (string, ip, country, wildcard)",
+				Description: "List types (string, ip, country, wildcard, signal)",
 				Required:    true,
 			},
 			"description": {

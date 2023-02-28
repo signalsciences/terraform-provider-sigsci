@@ -29,7 +29,7 @@ func resourceSiteList() *schema.Resource {
 			},
 			"type": {
 				Type:        schema.TypeString,
-				Description: "List types (string, ip, country, wildcard)",
+				Description: "List types (string, ip, country, wildcard, signal)",
 				Required:    true,
 				ForceNew:    true, // Hopefully this can be changed in the api later
 			},
