@@ -470,14 +470,13 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
 			                     }
 			                     actions {
 			                         type = "excludeSignal"
-			                         signal = "CMDEXE"
 			                     }
 
 			             }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "signal", "CMDEXE"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.2492640549.type", "excludeSignal"),
-					resource.TestCheckResourceAttr(resourceName, "actions.2492640549.signal", "CMDEXE"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2526394097.type", "excludeSignal"),
 				),
 			},
 			{
