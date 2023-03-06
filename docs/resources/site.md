@@ -40,7 +40,7 @@ resource "sigsci_site" "my-site" {
 
 - `block_http_code` (Number) HTTP response code to send when traffic is being blocked
 - `id` (String) The ID of this resource.
-- `primary_agent_key` (Map of String) The sites primary Agent key
+- `primary_agent_key` (Map of String, Sensitive) The sites primary Agent key
 
 ## Import
 
