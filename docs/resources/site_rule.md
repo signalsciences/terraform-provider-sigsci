@@ -44,8 +44,7 @@ resource "sigsci_site_rule" "test" {
   }
 
   actions {
-    type   = "excludeSignal"
-    signal = "corp.signal_id"
+    type = "excludeSignal"
   }
 }
 ```
