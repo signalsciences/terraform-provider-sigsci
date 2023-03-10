@@ -42,8 +42,9 @@ terraform {
 provider "sigsci" {
   //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
-  //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-  //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
+  //  auth_token = "" // May also provide via env variable SIGSCI_TOKEN
+  //  password = ""   // May also provide via env variable SIGSCI_PASSWORD
+  //  fastly_key = "" // May also provide via env variable FASTLY_KEY. Required for Edge Deployments functionality.
 }
 ```
 ## Corp resources
@@ -82,6 +83,10 @@ provider "sigsci" {
 [Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_header_link.md)
 
 [Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_integration.md)
+
+[Edge Deployments](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/edge_deployment.md)
+
+[Edge Deployment Services](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/edge_deployment_service.md)
 
 More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
 
