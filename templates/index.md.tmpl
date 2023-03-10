@@ -30,7 +30,18 @@ make build
 {{ tffile "examples/provider/provider.tf" }}
 {{- end }}
 
-{{ .SchemaMarkdown | trimspace }}
+## Schema
+
+### Required
+- `corp` (String) Corp short name (id)
+- `email` (String) The email to be used for authentication
+
+### Optional
+
+- `api_url` (String) URL override for testing
+- `auth_token` (String, Sensitive) The token used for authentication specify either the password or the token
+- `fastly_key` (String, Sensitive) The Fastly API key used for deploying Signal Sciences as a Fastly edge security service. For edge deployment service       calls, the Fastly key must have write access to the given service.
+- `password` (String, Sensitive) The password used to for authentication specify either the password or the token
 
 # Resources
 
