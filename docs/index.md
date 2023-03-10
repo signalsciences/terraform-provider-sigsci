@@ -50,4 +50,4 @@ provider "sigsci" {
 
 # Resources
 
-For examples of how to use each resource, see [docs/resources](docs/resources).
+For examples of how to use each resource, see [docs/resources](./resources).
