@@ -9,7 +9,6 @@ Check out the [Terraform Documentation](https://www.terraform.io/docs/configurat
 
 ## Building the provider
 If you are using terraform >0.13.x, our release can be automatically downloaded from their registry using the block described in "Using the provider"
- 
 
 If you are using terraform 0.12.x, you must either build or copy the appropriate executable to your plugin directory. ex `terraform.d/plugins/darwin_amd64`
 
@@ -47,68 +46,13 @@ provider "sigsci" {
   //  fastly_key = "" // May also provide via env variable FASTLY_KEY. Required for Edge Deployments functionality.
 }
 ```
-## Corp resources
-[Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site.md)
 
-[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_list.md)
+## Resources
 
-[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_signal_tag.md)
-
-[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_rule.md)
-
-[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_integration.md)
-
-[Cloud WAF Instance](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_instance.md)
-
-[Cloud WAF Certificate](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_certificate.md)
-
-## Site resources
-
-[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_list.md)
-
-[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_rule.md)
-
-[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_signal_tag.md)
-
-[Redactions](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_redaction.md)
-
-[Alerts](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_alert.md)
-
-[Templated Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_templated_rule.md)
-
-[Allowlist](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_allowlist.md)
-
-[Blocklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_blocklist.md)
-
-[Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_header_link.md)
-
-[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_integration.md)
-
-[Edge Deployments](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/edge_deployment.md)
-
-[Edge Deployment Services](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/edge_deployment_service.md)
-
-More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
-
-
-## Importing
-
-All resources are importable. Importing will vary depending on if you are importing a corp level resource, or a site level resource
-##### Corp Resources
-```hcl-terraform
-terraform import resource.name id // General form
-terraform import sigsci_site.my-site test_site // Example
-```
-
-##### Site Resources
-```hcl-terraform
-terraform import resource.name site_short_name:id //General form
-terraform import sigsci_site_list.manual-list test_site:site.manual-list //Example
-```
-
+Resource documentation and examples can be found in [docs/resources](./docs/resources).
 
 ## Example
-[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource 
+[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource.
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
