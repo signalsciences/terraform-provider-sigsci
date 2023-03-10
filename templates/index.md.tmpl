@@ -1,0 +1,37 @@
+---
+page_title: "{{.ProviderShortName}} Provider"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+## Requirements
+* [Terraform](https://www.terraform.io/downloads.html) 0.12.x, 0.13.x
+* [Go](https://golang.org/doc/install) 1.14
+
+## Building the provider
+Build with make and the resulting binary will be terraform-provider-sigsci.
+
+First make the correct directory, cd to it, and checkout the repo.  make build will then build the provider and output it to terraform-provider-sigsci
+```shell script
+mkdir -p $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
+cd $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
+git clone git@github.com:signalsciences/terraform-provider-sigsci.git
+make build
+```
+
+# {{.ProviderShortName}} Provider
+
+{{ .Description | trimspace }}
+
+{{ if .HasExample -}}
+## Example Usage
+
+{{ tffile "examples/provider/provider.tf" }}
+{{- end }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+# Resources
+
+For examples of how to use each resource, see [docs/resources](docs/resources).
