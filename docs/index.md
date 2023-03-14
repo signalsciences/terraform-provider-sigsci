@@ -48,6 +48,7 @@ provider "sigsci" {
 - `auth_token` (String, Sensitive) The token used for authentication specify either the password or the token
 - `fastly_key` (String, Sensitive) The Fastly API key used for deploying Signal Sciences as a Fastly edge security service. For edge deployment service       calls, the Fastly key must have write access to the given service.
 - `password` (String, Sensitive) The password used to for authentication specify either the password or the token
+* `validate` (Bool) Enable validation of API credentials during provider initialization. Default is true
 
 # Resources
 

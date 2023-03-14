@@ -51,6 +51,12 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("SIGSCI_URL", nil),
 				Description: "URL override for testing",
 			},
+			"validate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Enable validation of API credentials during provider initialization. Default is true.",
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"sigsci_site":                resourceSite(),
@@ -97,11 +103,16 @@ func providerConfigure() schema.ConfigureFunc {
 			Corp:   d.Get("corp").(string),
 			Client: client.(sigsci.Client),
 		}
-		// Test before continuing
-		_, err = metadata.Client.GetCorp(metadata.Corp)
-		if err != nil {
-			return nil, err
+
+		validate := d.Get("validate").(bool)
+		if validate {
+			// Test before continuing
+			_, err = metadata.Client.GetCorp(metadata.Corp)
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		return metadata, nil
 	}
 }
