@@ -1,8 +1,7 @@
 terraform {
   required_providers {
     sigsci = {
-      source  = "signalsciences/sigsci"
-      version = "1.2.1"
+      source = "signalsciences/sigsci"
     }
   }
 }
@@ -15,6 +14,7 @@ provider "sigsci" {
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
   //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
   //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
+  //  fastly_key = ""  //may also provide via env variable FASTLY_KEY. Required for Edge Deployments functionality.
 }
 
 ############# Corp Level Resources #############
@@ -387,4 +387,13 @@ HQRmLMnP+t7xp84Rn4jXReWlr9sexXHPg/Lj25MdR1t3Ow53qSh4nw/cUPr42N9o
 cX4iWLb38v7KEornZfofXEw=
 -----END PRIVATE KEY-----
 PRIVATEKEY
+}
+
+resource "sigsci_edge_deployment" "edge" {
+  site_short_name = sigsci_site.my-site.short_name
+}
+
+resource "sigsci_edge_deployment_service" "edge" {
+  site_short_name = sigsci_site.my-site.short_name
+  fastly_sid      = "[Fastly service id]"
 }
