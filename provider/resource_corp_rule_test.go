@@ -82,7 +82,6 @@ func TestResourceCorpRule_basic(t *testing.T) {
 
 // The api appears to sort site_short_names
 func TestResourceCorpRule_SortedSiteNames(t *testing.T) {
-	t.Parallel()
 	resourceName := "sigsci_corp_rule.test"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
