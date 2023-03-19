@@ -343,6 +343,13 @@ func existsInString(needle string, haystack ...string) bool {
 	return false
 }
 
+func existsInRange(needle int, min, max int) bool {
+	if needle >= min && needle <= max {
+		return true
+	}
+	return false
+}
+
 func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 	var conditions []sigsci.Condition
 	for _, genericElement := range conditionsResource.List() {
