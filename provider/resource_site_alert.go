@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -33,11 +35,23 @@ func resourceSiteAlert() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "The number of minutes of past traffic to examine. Must be 1, 10 or 60.",
 				Required:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if existsInInt(val.(int), 1, 10, 60) {
+						return nil, nil
+					}
+					return nil, []error{errors.New("interval must be 1, 10, or 60")}
+				},
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
 				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000",
 				Required:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if existsInRange(val.(int), 1, 10000) {
+						return nil, nil
+					}
+					return nil, []error{errors.New("threshold must be between 1 and 10000")}
+				},
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
@@ -48,6 +62,12 @@ func resourceSiteAlert() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "A flag that describes what happens when the alert is triggered. 'info' creates an incident in the dashboard. 'flagged' creates an incident and blocks traffic for 24 hours. Must be info or flagged.",
 				Required:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if existsInString(val.(string), "info", "flagged") {
+						return nil, nil
+					}
+					return nil, []error{errors.New("action must be 'info' or 'flagged'")}
+				},
 			},
 			"skip_notifications": {
 				Type:        schema.TypeBool,
