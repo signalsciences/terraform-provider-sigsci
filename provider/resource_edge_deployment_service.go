@@ -2,6 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/signalsciences/go-sigsci"
 )
 
 func resourceEdgeDeploymentService() *schema.Resource {
@@ -23,6 +24,20 @@ func resourceEdgeDeploymentService() *schema.Resource {
 				Description: "Fastly service ID",
 				Required:    true,
 			},
+
+			"activate_version": {
+				Type:        schema.TypeBool,
+				Description: "activate Fastly service version after clone. Possible values are true or false",
+				Optional:    true,
+				Default:     true,
+			},
+
+			"percent_enabled": {
+				Type:        schema.TypeInt,
+				Description: "percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100",
+				Optional:    true,
+				Default:     0,
+			},
 		},
 	}
 }
@@ -32,7 +47,10 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 
 	d.SetId(d.Get("fastly_sid").(string))
 
-	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
+		ActivateVersion:         d.Get("activate_version").(bool),
+		PercentEnabled:          d.Get("percent_enabled").(int),
+	})
 }
 
 func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
@@ -42,7 +60,10 @@ func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 func updateEdgeDeploymentBackends(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
-	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
+		ActivateVersion:         d.Get("activate_version").(bool),
+		PercentEnabled:          d.Get("percent_enabled").(int),
+	})
 }
 
 func detachEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
