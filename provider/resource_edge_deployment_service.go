@@ -29,14 +29,12 @@ func resourceEdgeDeploymentService() *schema.Resource {
 				Type:        schema.TypeBool,
 				Description: "activate Fastly service version after clone. Possible values are true or false",
 				Optional:    true,
-				Default:     true,
 			},
 
 			"percent_enabled": {
 				Type:        schema.TypeInt,
 				Description: "percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100",
 				Optional:    true,
-				Default:     0,
 			},
 		},
 	}
