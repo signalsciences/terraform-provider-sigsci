@@ -2,6 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/signalsciences/go-sigsci"
 )
 
 func resourceEdgeDeploymentService() *schema.Resource {
@@ -32,7 +33,7 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 
 	d.SetId(d.Get("fastly_sid").(string))
 
-	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{})
 }
 
 func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
@@ -42,7 +43,7 @@ func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 func updateEdgeDeploymentBackends(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
-	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
+	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{})
 }
 
 func detachEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
