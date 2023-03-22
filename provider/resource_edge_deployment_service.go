@@ -9,7 +9,7 @@ func resourceEdgeDeploymentService() *schema.Resource {
 	return &schema.Resource{
 		Create:   createOrUpdateEdgeDeploymentService,
 		Read:     readEdgeDeploymentService,
-		Update:   updateEdgeDeploymentBackends,
+		Update:   createOrUpdateEdgeDeploymentService,
 		Delete:   detachEdgeDeploymentService,
 		Importer: &schema.ResourceImporter{},
 		Schema: map[string]*schema.Schema{
@@ -45,23 +45,15 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 
 	d.SetId(d.Get("fastly_sid").(string))
 
+	activateVersion := d.Get("activate_version").(bool)
 	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
-		ActivateVersion:         d.Get("activate_version").(bool),
+		ActivateVersion:         &activateVersion,
 		PercentEnabled:          d.Get("percent_enabled").(int),
 	})
 }
 
 func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	return nil
-}
-
-func updateEdgeDeploymentBackends(d *schema.ResourceData, m interface{}) error {
-	pm := m.(providerMetadata)
-
-	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
-		ActivateVersion:         d.Get("activate_version").(bool),
-		PercentEnabled:          d.Get("percent_enabled").(int),
-	})
 }
 
 func detachEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
