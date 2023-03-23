@@ -534,3 +534,32 @@ func validateActionResponseCode(val interface{}, key string) ([]string, []error)
 	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 400-499 range", code)
 	return nil, []error{rangeError}
 }
+
+func validateRegion(val interface{}, key string) ([]string, []error) {
+	// https://docs.fastly.com/signalsciences/api/#_corps__corpName__cloudwafInstances_post
+	regionList := []string{
+		"us-east-1",
+		"us-west-1",
+		"af-south-1",
+		"ap-northeast-1",
+		"ap-northeast-2",
+		"ap-south-1",
+		"ap-southeast-1",
+		"ap-southeast-2",
+		"ca-central-1",
+		"eu-central-1",
+		"eu-north-1",
+		"eu-west-1",
+		"eu-west-2",
+		"eu-west-3",
+		"sa-east-1",
+		"us-east-2",
+		"us-west-2",
+	}
+
+	if existsInString(val.(string), regionList...) {
+		return nil, nil
+	}
+
+	return nil, []error{fmt.Errorf("received region name '%s' is invalid. should be in (%s)", val.(string), strings.Join(regionList, ", "))}
+}
