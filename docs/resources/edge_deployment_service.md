@@ -27,6 +27,11 @@ resource "sigsci_edge_deployment_service" "my-service" {
 - `fastly_sid` (String) Fastly service ID
 - `site_short_name` (String) Site short name
 
+### Optional
+
+- `activate_version` (Boolean) activate Fastly service version after clone. Possible values are true or false
+- `percent_enabled` (Number) percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.
