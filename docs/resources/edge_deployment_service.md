@@ -14,8 +14,10 @@ description: |-
 
 ```terraform
 resource "sigsci_edge_deployment_service" "my-service" {
-  site_short_name = "manual_test"
-  fastly_sid      = "test_sid"
+  site_short_name  = "manual_test"
+  fastly_sid       = "test_sid"
+  activate_version = true
+  percent_enabled  = 100
 }
 ```
 
@@ -29,8 +31,8 @@ resource "sigsci_edge_deployment_service" "my-service" {
 
 ### Optional
 
-- `activate_version` (Boolean) activate Fastly service version after clone. Possible values are true or false
-- `percent_enabled` (Number) percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100
+- `activate_version` (Boolean) activate Fastly service version after clone. Possible values are true or false. Defaults to true.
+- `percent_enabled` (Number) percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100. Defaults to 0.
 
 ### Read-Only
 
