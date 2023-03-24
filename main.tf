@@ -394,6 +394,8 @@ resource "sigsci_edge_deployment" "edge" {
 }
 
 resource "sigsci_edge_deployment_service" "edge" {
-  site_short_name = sigsci_site.my-site.short_name
-  fastly_sid      = "[Fastly service id]"
+  site_short_name  = sigsci_site.my-site.short_name
+  fastly_sid       = "[Fastly service id]"
+  activate_version = true
+  percent_enabled  = 100
 }

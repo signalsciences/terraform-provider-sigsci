@@ -13,7 +13,7 @@ lint:
 	staticcheck ./...
 
 testacc: ## Run acceptance tests
-	TF_ACC=1 go test -v ./...
+	TF_ACC=1 go test -v ./... $(GOTESTFLAGS)
 
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
