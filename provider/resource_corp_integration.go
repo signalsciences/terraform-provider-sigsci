@@ -27,7 +27,7 @@ func resourceCorpIntegration() *schema.Resource {
 					if existsInString(val.(string), "mailingList", "slack", "microsoftTeams") {
 						return nil, nil
 					}
-					return nil, []error{fmt.Errorf("received type '%s' is invalid. should be 'mailingList', 'slack, or 'microsoftTeams'", val.(string))}
+					return nil, []error{fmt.Errorf("received type '%s' is invalid. should be 'mailingList', 'slack', or 'microsoftTeams'", val.(string))}
 				},
 			},
 			"url": {
