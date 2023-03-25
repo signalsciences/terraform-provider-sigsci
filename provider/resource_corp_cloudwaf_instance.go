@@ -77,7 +77,7 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 								if existsInString(val.(string), "direct", "advanced") {
 									return nil, nil
 								}
-								return nil, []error{errors.New(`instance_location must be "direct" or "advanced"`)}
+								return nil, []error{fmt.Errorf("received instance_location '%s' is invalid. should be 'direct' or 'advanced'", val.(string))}
 							},
 						},
 						"client_ip_header": {
