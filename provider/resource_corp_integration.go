@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -22,6 +23,12 @@ func resourceCorpIntegration() *schema.Resource {
 				Description: "One of (mailingList, slack, microsoftTeams)",
 				Required:    true,
 				ForceNew:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if existsInString(val.(string), "mailingList", "slack", "microsoftTeams") {
+						return nil, nil
+					}
+					return nil, []error{fmt.Errorf("received type '%s' is invalid. should be 'mailingList', 'slack, or 'microsoftTeams'", val.(string))}
+				},
 			},
 			"url": {
 				Type:        schema.TypeString,
