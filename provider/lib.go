@@ -561,5 +561,5 @@ func validateRegion(val interface{}, key string) ([]string, []error) {
 		return nil, nil
 	}
 
-	return nil, []error{fmt.Errorf("received region name '%s' is invalid. should be in (%s)", val.(string), strings.Join(regionList, ", "))}
+	return nil, []error{fmt.Errorf("received region name %q is invalid. should be in (%s)", val.(string), strings.Join(regionList, ", "))}
 }
