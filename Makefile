@@ -11,6 +11,7 @@ all: build check
 lint:
 	go install honnef.co/go/tools/cmd/staticcheck
 	staticcheck ./...
+	./scripts/gofmt.sh
 
 testacc: ## Run acceptance tests
 	TF_ACC=1 go test -v ./... $(GOTESTFLAGS)
