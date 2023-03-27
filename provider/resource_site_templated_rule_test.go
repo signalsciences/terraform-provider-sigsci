@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-//TODO implement sweepers for everyone
+// TODO implement sweepers for everyone
 func TestAccResourceTemplatedRulesCRUD(t *testing.T) {
 	resourceName := "sigsci_site_templated_rule.test_template_rule"
 

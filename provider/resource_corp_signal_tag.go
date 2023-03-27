@@ -7,7 +7,7 @@ import (
 	"github.com/signalsciences/go-sigsci"
 )
 
-//TODO maybe rename to corp tag
+// TODO maybe rename to corp tag
 func resourceCorpSignalTag() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCorpSignalTagCreate,
