@@ -24,10 +24,10 @@ func resourceCorpIntegration() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if existsInString(val.(string), "mailingList", "slack", "microsoftTeams") {
-						return nil, nil
+					if !existsInString(val.(string), "mailingList", "slack", "microsoftTeams") {
+						return nil, []error{fmt.Errorf("received type %q is invalid. should be "mailingList", "slack", or "microsoftTeams"`, val.(string))}
 					}
-					return nil, []error{fmt.Errorf("received type '%s' is invalid. should be 'mailingList', 'slack', or 'microsoftTeams'", val.(string))}
+					return nil, nil
 				},
 			},
 			"url": {
