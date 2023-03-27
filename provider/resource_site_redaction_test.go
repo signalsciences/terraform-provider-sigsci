@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-//TODO implement sweepers for everyone
+// TODO implement sweepers for everyone
 func TestAccResourceSiteRedactionCRUD(t *testing.T) {
 	resourceName := "sigsci_site_redaction.test_redaction"
 
