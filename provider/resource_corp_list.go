@@ -21,11 +21,13 @@ func resourceCorpList() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Descriptive list name",
 				Required:    true,
+				ForceNew:    true,
 			},
 			"type": {
 				Type:        schema.TypeString,
 				Description: "List types (string, ip, country, wildcard, signal)",
 				Required:    true,
+				ForceNew:    true,
 			},
 			"description": {
 				Type:        schema.TypeString,
