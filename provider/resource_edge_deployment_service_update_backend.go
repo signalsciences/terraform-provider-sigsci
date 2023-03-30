@@ -7,9 +7,9 @@ import (
 func resourceEdgeDeploymentServiceBackend() *schema.Resource {
 	return &schema.Resource{
 		Create:   updateEdgeDeploymentServiceBackend,
-		Read:     updateEdgeDeploymentServiceBackend,
+		Read:     readEdgeDeploymentServiceBackend,
 		Update:   updateEdgeDeploymentServiceBackend,
-		Delete:   updateEdgeDeploymentServiceBackend,
+		Delete:   deleteEdgeDeploymentServiceBackend,
 		Importer: &schema.ResourceImporter{},
 		Schema: map[string]*schema.Schema{
 			"site_short_name": {
@@ -40,4 +40,12 @@ func updateEdgeDeploymentServiceBackend(d *schema.ResourceData, m interface{}) e
 
 	return pm.Client.UpdateEdgeDeploymentBackends(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
 
+}
+
+func readEdgeDeploymentServiceBackend(d *schema.ResourceData, m interface{}) error {
+	return nil
+}
+
+func deleteEdgeDeploymentServiceBackend(d *schema.ResourceData, m interface{}) error {
+	return nil
 }
