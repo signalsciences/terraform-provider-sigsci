@@ -21,8 +21,9 @@ func resourceCorpList() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Descriptive list name",
 				Required:    true,
+				ForceNew:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if !validateStringLength(val.(string), 3, 32) {
+					if !validStringLength(val.(string), 3, 32) {
 						return nil, []error{fmt.Errorf(`received name %q is invalid. should be min len 3, max len 32`, val.(string))}
 					}
 					return nil, nil
@@ -32,6 +33,7 @@ func resourceCorpList() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "List types (string, ip, country, wildcard, signal)",
 				Required:    true,
+				ForceNew:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					if !existsInString(val.(string), "string", "ip", "country", "wildcard", "signal") {
 						return nil, []error{fmt.Errorf(`received type %q is invalid. should be "string", "ip", "country", "wildcard" or "signal"`, val.(string))}
@@ -44,7 +46,7 @@ func resourceCorpList() *schema.Resource {
 				Description: "Optional list description",
 				Optional:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if !validateStringLength(val.(string), 0, 140) {
+					if !validStringLength(val.(string), 0, 140) {
 						return nil, []error{fmt.Errorf(`received name %q is invalid. should be max len 140`, val.(string))}
 					}
 					return nil, nil
