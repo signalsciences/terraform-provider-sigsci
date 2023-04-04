@@ -353,10 +353,7 @@ func existsInRange(needle int, min, max int) bool {
 func validStringLength(needle string, min, max int) bool {
 	length := len(needle)
 
-	if length >= min && length <= max {
-		return true
-	}
-	return false
+	return length >= min && length <= max
 }
 
 func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
