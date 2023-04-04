@@ -350,6 +350,12 @@ func existsInRange(needle int, min, max int) bool {
 	return false
 }
 
+func validStringLength(needle string, min, max int) bool {
+	length := len(needle)
+
+	return length >= min && length <= max
+}
+
 func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 	var conditions []sigsci.Condition
 	for _, genericElement := range conditionsResource.List() {
