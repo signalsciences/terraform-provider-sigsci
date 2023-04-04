@@ -47,7 +47,7 @@ func resourceCorpList() *schema.Resource {
 				Optional:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					if !validStringLength(val.(string), 0, 140) {
-						return nil, []error{fmt.Errorf(`received name %q is invalid. should be max len 140`, val.(string))}
+						return nil, []error{fmt.Errorf(`received description %q is invalid. should be max len 140`, val.(string))}
 					}
 					return nil, nil
 				},
