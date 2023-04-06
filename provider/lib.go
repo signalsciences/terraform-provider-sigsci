@@ -416,10 +416,16 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 			responseCode = castElement["response_code"].(int)
 		}
 
+		var redirectURL string
+		if castElement["redirect_url"] != nil {
+			redirectURL = castElement["redirect_url"].(string)
+		}
+
 		a := sigsci.Action{
 			Type:         castElement["type"].(string),
 			Signal:       signal,
 			ResponseCode: responseCode,
+			RedirectURL:  redirectURL,
 		}
 		actions = append(actions, a)
 	}
@@ -532,12 +538,21 @@ func validateConditionField(val interface{}, key string) ([]string, []error) {
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
-	// response code needs to be within 400-499
+	// response code needs to be within 400-599
 	code := val.(int)
-	if 400 <= code && code < 500 {
+	if (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
 		return nil, nil
 	}
-	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 400-499 range", code)
+	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 400-599 range", code)
+	return nil, []error{rangeError}
+}
+
+func validateActionRedirectURL(val interface{}, key string) ([]string, []error) {
+	url := val.(string)
+	if strings.HasPrefix(url, "http") || strings.HasPrefix(url, "/") {
+		return nil, nil
+	}
+	rangeError := fmt.Errorf("received redirect url '%s'. must start with either 'http' or '/'", url)
 	return nil, []error{rangeError}
 }
 

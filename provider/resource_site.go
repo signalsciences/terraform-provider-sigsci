@@ -48,10 +48,15 @@ func resourceSite() *schema.Resource {
 				Optional:    true,
 				Default:     86400,
 			},
-			"block_http_code": { // CANNOT UPDATE THIS FIELD,
+			"block_http_code": {
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when traffic is being blocked",
-				Computed:    true,
+				Optional:    true,
+			},
+			"block_redirect_url": {
+				Type:        schema.TypeString,
+				Description: "URL to redirect to when blocking with a '301' or '302' HTTP status code",
+				Optional:    true,
 			},
 			"primary_agent_key": {
 				Type:        schema.TypeMap,
@@ -89,6 +94,7 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
+		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 	})
 
 	if err != nil {
@@ -130,6 +136,10 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("block_redirect_url", site.BlockRedirectURL)
+	if err != nil {
+		return err
+	}
 	err = d.Set("agent_anon_mode", site.AgentAnonMode)
 	if err != nil {
 		return err
@@ -165,6 +175,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 		AgentLevel:           d.Get("agent_level").(string),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
+		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
 	})
 	if err != nil {
