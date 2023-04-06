@@ -72,7 +72,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"response_code": {
 							Type:         schema.TypeInt,
-							Description:  "HTTP code agent for agent to respond with. range: 301,302, or 400-599, defaults to '406' if not provided",
+							Description:  "HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided",
 							Optional:     true,
 							ValidateFunc: validateActionResponseCode,
 							Default:      http.StatusNotAcceptable,
