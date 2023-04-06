@@ -538,12 +538,12 @@ func validateConditionField(val interface{}, key string) ([]string, []error) {
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
-	// response code needs to be within 400-599
+	// response code needs to be 301, 302, or 400-599
 	code := val.(int)
 	if (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
 		return nil, nil
 	}
-	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 400-599 range", code)
+	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 301, 302, or 400-599", code)
 	return nil, []error{rangeError}
 }
 
