@@ -243,7 +243,8 @@ Required:
 
 Optional:
 
-- `response_code` (Number) HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided
+- `redirect_url` (String) URL to redirect to when blocking response code is set to 301 or 302
+- `response_code` (Number) HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided
 - `signal` (String) signal id to tag
 
 ### Templated Signals
