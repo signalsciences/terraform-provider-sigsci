@@ -80,6 +80,9 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_edge_deployment":           resourceEdgeDeployment(),
 			"sigsci_edge_deployment_service":   resourceEdgeDeploymentService(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"sigsci_sites": dataSourceSites(),
+		},
 	}
 	provider.ConfigureFunc = providerConfigure()
 	return provider

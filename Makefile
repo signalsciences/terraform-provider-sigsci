@@ -6,6 +6,7 @@ check:
 	terraform init
 	terraform plan
 
+.PHONY: all
 all: build check
 
 lint:
@@ -23,4 +24,4 @@ sweep:
 docs:
 	go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs && tfplugindocs generate
 
-.PHONY: docs
+.PHONY: clean docs test

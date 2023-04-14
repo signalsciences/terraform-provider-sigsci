@@ -1,7 +1,11 @@
 package provider
 
 import (
+	"bytes"
+	"crypto/sha512"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"sort"
 	"strconv"
@@ -38,7 +42,7 @@ func expandStringArray(entries *schema.Set) []string {
 }
 
 func flattenDetections(detections []sigsci.Detection) []interface{} {
-	var detectionsSet = make([]interface{}, len(detections))
+	detectionsSet := make([]interface{}, len(detections))
 	for i, detection := range detections {
 		fieldSet := make([]interface{}, len(detection.Fields))
 		for j, field := range detection.Fields {
@@ -137,7 +141,7 @@ func expandAlerts(entries *schema.Set) []sigsci.Alert {
 }
 
 func flattenAlerts(alerts []sigsci.Alert) []interface{} {
-	var alertsSet = make([]interface{}, len(alerts))
+	alertsSet := make([]interface{}, len(alerts))
 	for i, alert := range alerts {
 		alertsSet[i] = map[string]interface{}{
 			"id":                     alert.ID,
@@ -385,7 +389,7 @@ func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 }
 
 func flattenRuleConditions(conditions []sigsci.Condition) []interface{} {
-	var conditionsMap = make([]interface{}, len(conditions))
+	conditionsMap := make([]interface{}, len(conditions))
 	for i, condition := range conditions {
 		conditionMap := map[string]interface{}{
 			"type":           condition.Type,
@@ -475,7 +479,7 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 }
 
 func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
-	var actionsMap = make([]interface{}, len(actions))
+	actionsMap := make([]interface{}, len(actions))
 	for i, action := range actions {
 
 		actionMap := map[string]interface{}{
@@ -513,7 +517,6 @@ func resourceSiteImport(siteID string) (site string, id string, err error) {
 var siteImporter = schema.ResourceImporter{
 	State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
 		site, id, err := resourceSiteImport(d.Id())
-
 		if err != nil {
 			return nil, err
 		}
@@ -583,4 +586,22 @@ func validateRegion(val interface{}, key string) ([]string, []error) {
 	}
 
 	return nil, []error{fmt.Errorf("received region name %q is invalid. should be in (%s)", val.(string), strings.Join(regionList, ", "))}
+}
+
+// genID marshals data into JSON and returns a hash of the bytes.
+//
+// The returned hash is typically used as input to SetId().
+func genID(data any) (string, error) {
+	bs, err := json.Marshal(data)
+	if err != nil {
+		return "", err
+	}
+
+	h := sha512.New()
+	if _, err := io.Copy(h, bytes.NewReader(bs)); err != nil {
+		return "", err
+	}
+
+	digest := fmt.Sprintf("%x\n", h.Sum(nil))
+	return digest, nil
 }
