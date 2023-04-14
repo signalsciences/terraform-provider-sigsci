@@ -56,7 +56,7 @@ func TestAccSigSciDataSourceSites(t *testing.T) {
 						return nil
 					},
 				),
-				ExpectNonEmptyPlan: true, // FIXME: Why is there a diff on next plan?
+				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
