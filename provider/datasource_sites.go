@@ -1,8 +1,6 @@
 package provider
 
 import (
-	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -11,6 +9,11 @@ func dataSourceSites() *schema.Resource {
 	return &schema.Resource{
 		Read: readSites,
 		Schema: map[string]*schema.Schema{
+			"filter": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter listed domains by either the site 'name' or 'display_name'",
+			},
 			"sites": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -149,24 +152,21 @@ func readSites(d *schema.ResourceData, m any) error {
 		return err
 	}
 
-	id, err := genID(sites)
-	if err != nil {
-		return fmt.Errorf("failed to generate a resource ID: %w", err)
-	}
+	d.SetId("list_sites")
 
-	d.SetId(id)
+	filter := d.Get("filter").(string)
 
-	return d.Set("sites", flattenSites(sites))
+	return d.Set("sites", flattenSites(sites, filter))
 }
 
 // flattenSites models data into format suitable for saving to Terraform state.
-func flattenSites(data []sigsci.Site) []map[string]any {
-	result := make([]map[string]any, len(data))
+func flattenSites(data []sigsci.Site, filter string) []map[string]any {
+	results := []map[string]any{}
 	if len(data) == 0 {
-		return result
+		return results
 	}
 
-	for i, site := range data {
+	for _, site := range data {
 		data := map[string]any{
 			"agent_anon_mode":      site.AgentAnonMode,
 			"agent_level":          site.AgentLevel,
@@ -198,8 +198,16 @@ func flattenSites(data []sigsci.Site) []map[string]any {
 				delete(data, k)
 			}
 		}
-		result[i] = data
+		results = append(results, data)
 	}
 
-	return result
+	if filter != "" {
+		for idx, site := range results {
+			if site["name"] == filter || site["display_name"] == filter {
+				return results[idx : idx+1]
+			}
+		}
+	}
+
+	return results
 }
