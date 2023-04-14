@@ -1,6 +1,9 @@
+clean:
+	rm -rf ./bin
 
-build:
-	go build -o terraform-provider-sigsci
+build: clean
+	go build -o bin/terraform-provider-sigsci
+	@sh -c "'$(CURDIR)/scripts/generate-dev-overrides.sh'"
 
 check:
 	terraform init

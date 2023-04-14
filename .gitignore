@@ -50,3 +50,4 @@ override.tf.json
 terraform-provider-sigsci
 
 dist/
+bin
