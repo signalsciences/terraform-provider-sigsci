@@ -1,11 +1,7 @@
 package provider
 
 import (
-	"bytes"
-	"crypto/sha512"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"sort"
 	"strconv"
@@ -586,22 +582,4 @@ func validateRegion(val interface{}, key string) ([]string, []error) {
 	}
 
 	return nil, []error{fmt.Errorf("received region name %q is invalid. should be in (%s)", val.(string), strings.Join(regionList, ", "))}
-}
-
-// genID marshals data into JSON and returns a hash of the bytes.
-//
-// The returned hash is typically used as input to SetId().
-func genID(data any) (string, error) {
-	bs, err := json.Marshal(data)
-	if err != nil {
-		return "", err
-	}
-
-	h := sha512.New()
-	if _, err := io.Copy(h, bytes.NewReader(bs)); err != nil {
-		return "", err
-	}
-
-	digest := fmt.Sprintf("%x\n", h.Sum(nil))
-	return digest, nil
 }
