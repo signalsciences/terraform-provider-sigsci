@@ -1,8 +1,0 @@
-provider_installation {
-
-  dev_overrides {
-    "signalsciences/sigsci" = "/Users/integralist/Code/fastly/terraform-provider-sigsci/bin"
-  }
-
-  direct {}
-}
