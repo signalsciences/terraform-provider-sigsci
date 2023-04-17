@@ -38,7 +38,7 @@ func expandStringArray(entries *schema.Set) []string {
 }
 
 func flattenDetections(detections []sigsci.Detection) []interface{} {
-	var detectionsSet = make([]interface{}, len(detections))
+	detectionsSet := make([]interface{}, len(detections))
 	for i, detection := range detections {
 		fieldSet := make([]interface{}, len(detection.Fields))
 		for j, field := range detection.Fields {
@@ -137,7 +137,7 @@ func expandAlerts(entries *schema.Set) []sigsci.Alert {
 }
 
 func flattenAlerts(alerts []sigsci.Alert) []interface{} {
-	var alertsSet = make([]interface{}, len(alerts))
+	alertsSet := make([]interface{}, len(alerts))
 	for i, alert := range alerts {
 		alertsSet[i] = map[string]interface{}{
 			"id":                     alert.ID,
@@ -385,7 +385,7 @@ func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 }
 
 func flattenRuleConditions(conditions []sigsci.Condition) []interface{} {
-	var conditionsMap = make([]interface{}, len(conditions))
+	conditionsMap := make([]interface{}, len(conditions))
 	for i, condition := range conditions {
 		conditionMap := map[string]interface{}{
 			"type":           condition.Type,
@@ -475,7 +475,7 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 }
 
 func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
-	var actionsMap = make([]interface{}, len(actions))
+	actionsMap := make([]interface{}, len(actions))
 	for i, action := range actions {
 
 		actionMap := map[string]interface{}{
@@ -513,7 +513,6 @@ func resourceSiteImport(siteID string) (site string, id string, err error) {
 var siteImporter = schema.ResourceImporter{
 	State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
 		site, id, err := resourceSiteImport(d.Id())
-
 		if err != nil {
 			return nil, err
 		}
