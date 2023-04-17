@@ -52,6 +52,7 @@ func resourceSite() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when traffic is being blocked",
 				Optional:    true,
+				Default:     406,
 			},
 			"block_redirect_url": {
 				Type:        schema.TypeString,
