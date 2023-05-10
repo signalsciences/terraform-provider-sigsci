@@ -527,6 +527,7 @@ func validateConditionField(val interface{}, key string) ([]string, []error) {
 		"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
 		"paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType",
 		"signal", "requestHeader", "queryParameter", "postParameter", "requestCookie", "value",
+		"responseHeader",
 	}
 
 	if existsInString(val.(string), knownFields...) {
