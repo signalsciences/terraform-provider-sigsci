@@ -3,6 +3,7 @@ package provider
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
@@ -100,7 +101,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"field": {
 							Type:         schema.TypeString,
-							Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+							Description:  fmt.Sprintf("type: single - (%s)", strings.Join(KnownConditionFields, ", ")),
 							Optional:     true,
 							ValidateFunc: validateConditionField,
 						},
@@ -133,7 +134,7 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"field": {
 										Type:         schema.TypeString,
-										Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+										Description:  fmt.Sprintf("type: single - (%s)", strings.Join(KnownConditionFields, ", ")),
 										Optional:     true,
 										ValidateFunc: validateConditionField,
 									},
@@ -166,7 +167,7 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"field": {
 													Type:         schema.TypeString,
-													Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+													Description:  fmt.Sprintf("type: single - (%s)", strings.Join(KnownConditionFields, ", ")),
 													Optional:     true,
 													ValidateFunc: validateConditionField,
 												},
