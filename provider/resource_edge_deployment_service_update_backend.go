@@ -23,12 +23,6 @@ func resourceEdgeDeploymentServiceBackend() *schema.Resource {
 				Description: "Fastly service ID",
 				Required:    true,
 			},
-
-			"fastly_service_vcl_active_version": {
-				Type:        schema.TypeInt,
-				Description: "Currently active version of the VCL service. Required to run to sync the VCL services origins to the NGWAF service",
-				Required:    true,
-			},
 		},
 	}
 }
