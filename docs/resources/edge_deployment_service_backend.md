@@ -17,6 +17,7 @@ description: |-
 
 ### Required
 
+- `fastly_service_vcl_active_version` (Number) Currently active version of the VCL service. Required to run to sync the VCL services origins to the NGWAF service
 - `fastly_sid` (String) Fastly service ID
 - `site_short_name` (String) Site short name
 
