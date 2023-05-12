@@ -522,18 +522,19 @@ var siteImporter = schema.ResourceImporter{
 	},
 }
 
-func validateConditionField(val interface{}, key string) ([]string, []error) {
-	knownFields := []string{
-		"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
-		"paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType",
-		"signal", "requestHeader", "queryParameter", "postParameter", "requestCookie", "value",
-	}
+var KnownConditionFields = []string{
+	"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
+	"paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType",
+	"signal", "requestHeader", "queryParameter", "postParameter", "requestCookie", "value",
+	"responseHeader",
+}
 
-	if existsInString(val.(string), knownFields...) {
+func validateConditionField(val interface{}, key string) ([]string, []error) {
+	if existsInString(val.(string), KnownConditionFields...) {
 		return nil, nil
 	}
 
-	return []string{fmt.Sprintf("received %q for conditions.field. This is not necessarily an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(%s)", val.(string), strings.Join(knownFields, ", "))}, nil
+	return []string{fmt.Sprintf("received %q for conditions.field. This is not necessarily an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(%s)", val.(string), strings.Join(KnownConditionFields, ", "))}, nil
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
