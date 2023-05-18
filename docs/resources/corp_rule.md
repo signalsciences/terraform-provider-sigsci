@@ -58,6 +58,7 @@ resource "sigsci_corp_rule" "test" {
 
 ### Optional
 
+- `requestlogging` (String) Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal`.
 - `signal` (String) The signal id of the signal being excluded
 - `site_short_names` (Set of String) Sites with the rule available. Rules with a global corpScope will return '[]'.
 
@@ -70,7 +71,7 @@ resource "sigsci_corp_rule" "test" {
 
 Required:
 
-- `type` (String) (block, allow, exclude)
+- `type` (String) (block, allow, addSignal, excludeSignal)
 
 Optional:
 
@@ -87,7 +88,9 @@ Required:
 Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions))
-- `field` (String) type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
+- `field` (String) types:
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, value)
+    - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
 - `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
@@ -102,10 +105,12 @@ Required:
 Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions--conditions))
-- `field` (String) type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
+- `field` (String) types:
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, value)
+    - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
-- `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
+- `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 <a id="nestedblock--conditions--conditions--conditions"></a>
 ### Nested Schema for `conditions.conditions.conditions`
@@ -116,10 +121,12 @@ Required:
 
 Optional:
 
-- `field` (String) type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
+- `field` (String) types:
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, value)
+    - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
-- `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
+- `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 ## Import
 
