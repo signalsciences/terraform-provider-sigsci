@@ -15,7 +15,7 @@ description: |-
 resource "sigsci_site_redaction" "test" {
   site_short_name = sigsci_site.my-site.short_name
   field           = "redacted"
-  redaction_type  = 0
+  redactiontype   = 0
 }
 ```
 
@@ -28,7 +28,7 @@ resource "sigsci_site_redaction" "test" {
 ### Required
 
 - `field` (String) Field Name
-- `redaction_type` (Number) Type of redaction (0: Request Parameter, 1: Request Header, 2: Response Header)
+- `redactiontype` (Number) Type of redaction (0: Request Parameter, 1: Request Header, 2: Response Header)
 - `site_short_name` (String) Site short name
 
 ### Read-Only

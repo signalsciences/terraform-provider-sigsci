@@ -210,7 +210,7 @@ resource "sigsci_site_allowlist" "test" {
 resource "sigsci_site_redaction" "test_redaction" {
   site_short_name = sigsci_site.my-site.short_name
   field           = "redacted"
-  redaction_type  = 0
+  redactiontype   = 0
 }
 
 resource "sigsci_site_rule" "testt" {

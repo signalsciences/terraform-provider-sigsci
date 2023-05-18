@@ -20,12 +20,12 @@ func TestAccResourceSiteRedactionCRUD(t *testing.T) {
                     resource "sigsci_site_redaction" "test_redaction" {
                       site_short_name    = "%s" 
                       field              = "field"
-                      redaction_type     = 0
+                      redactiontype      = 0
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "field", "field"),
-					resource.TestCheckResourceAttr(resourceName, "redaction_type", "0"),
+					resource.TestCheckResourceAttr(resourceName, "redactiontype", "0"),
 				),
 			},
 			{
@@ -33,12 +33,12 @@ func TestAccResourceSiteRedactionCRUD(t *testing.T) {
                      resource "sigsci_site_redaction" "test_redaction" {
                       site_short_name    = "%s" 
                       field              = "field 2"
-                      redaction_type     = 1
+                      redactiontype      = 1
 				}`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "field", "field 2"),
-					resource.TestCheckResourceAttr(resourceName, "redaction_type", "1"),
+					resource.TestCheckResourceAttr(resourceName, "redactiontype", "1"),
 				),
 			},
 			{

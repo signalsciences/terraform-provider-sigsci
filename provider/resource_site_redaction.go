@@ -29,7 +29,7 @@ func resourceSiteRedaction() *schema.Resource {
 					return strings.EqualFold(old, new)
 				},
 			},
-			"redaction_type": {
+			"redactiontype": {
 				Type:        schema.TypeInt,
 				Description: "Type of redaction (0: Request Parameter, 1: Request Header, 2: Response Header)",
 				Required:    true,
@@ -44,7 +44,7 @@ func resourceSiteRedactionCreate(d *schema.ResourceData, m interface{}) error {
 
 	redaction, err := sc.CreateSiteRedaction(pm.Corp, d.Get("site_short_name").(string), sigsci.CreateSiteRedactionBody{
 		Field:         d.Get("field").(string),
-		RedactionType: d.Get("redaction_type").(int),
+		RedactionType: d.Get("redactiontype").(int),
 	})
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func resourceSiteRedactionRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = d.Set("redaction_type", redaction.RedactionType)
+	err = d.Set("redactiontype", redaction.RedactionType)
 	if err != nil {
 		return err
 	}
@@ -85,7 +85,7 @@ func resourceSiteRedactionUpdate(d *schema.ResourceData, m interface{}) error {
 
 	redaction, err := sc.UpdateSiteRedactionByID(pm.Corp, d.Get("site_short_name").(string), d.Id(), sigsci.CreateSiteRedactionBody{
 		Field:         d.Get("field").(string),
-		RedactionType: d.Get("redaction_type").(int),
+		RedactionType: d.Get("redactiontype").(int),
 	})
 	if err != nil {
 		d.SetId("")
