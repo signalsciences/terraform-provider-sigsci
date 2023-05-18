@@ -27,7 +27,7 @@ func resourceCorpRule() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of rule (request, signal exclusion)",
+				Description: "Type of rule (request, signal)",
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					if existsInString(val.(string), "request", "signal") {
 						return nil, nil
