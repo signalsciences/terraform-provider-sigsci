@@ -20,7 +20,7 @@ func resourceSiteRule() *schema.Resource {
 			},
 			"type": {
 				Type:        schema.TypeString,
-				Description: "Type of rule (request, signal exclusion, rateLimit)",
+				Description: "Type of rule (request, signal, rateLimit)",
 				Required:    true,
 			},
 			"group_operator": {
@@ -50,7 +50,7 @@ func resourceSiteRule() *schema.Resource {
 			},
 			"requestlogging": {
 				Type:        schema.TypeString,
-				Description: "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for request rules that have a block or allow action.",
+				Description: "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal` or `rateLimit`.",
 				Optional:    true,
 			},
 			"actions": {
@@ -101,7 +101,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"field": {
 							Type:         schema.TypeString,
-							Description:  fmt.Sprintf("type: single - (%s)", strings.Join(KnownConditionFields, ", ")),
+							Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 							Optional:     true,
 							ValidateFunc: validateConditionField,
 						},
@@ -117,7 +117,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"value": {
 							Type:        schema.TypeString,
-							Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+							Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 							Optional:    true,
 						},
 						"conditions": {
@@ -134,7 +134,7 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"field": {
 										Type:         schema.TypeString,
-										Description:  fmt.Sprintf("type: single - (%s)", strings.Join(KnownConditionFields, ", ")),
+										Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 										Optional:     true,
 										ValidateFunc: validateConditionField,
 									},
@@ -150,7 +150,7 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"value": {
 										Type:        schema.TypeString,
-										Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+										Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 										Optional:    true,
 									},
 									"conditions": {
@@ -167,7 +167,7 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"field": {
 													Type:         schema.TypeString,
-													Description:  fmt.Sprintf("type: single - (%s)", strings.Join(KnownConditionFields, ", ")),
+													Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 													Optional:     true,
 													ValidateFunc: validateConditionField,
 												},
@@ -183,7 +183,7 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"value": {
 													Type:        schema.TypeString,
-													Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+													Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 													Optional:    true,
 												},
 											},
@@ -262,7 +262,6 @@ func resourceSiteRuleCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
-
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
@@ -323,7 +322,6 @@ func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
-
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp

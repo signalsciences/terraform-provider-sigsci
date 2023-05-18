@@ -32,7 +32,7 @@ resource "sigsci_corp_integration" "test_corp_integration" {
 
 ### Optional
 
-- `events` (Set of String) Array of event types. Visit https://docs.signalsciences.net/integrations to find out which events the service you are connecting allows.
+- `events` (Set of String) Array of event types. Visit https://docs.fastly.com/signalsciences/integrations to find out which events the service you are connecting allows.
 
 ### Read-Only
 
