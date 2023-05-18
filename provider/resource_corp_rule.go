@@ -180,9 +180,10 @@ func resourceCorpRule() *schema.Resource {
 				},
 			},
 			"requestlogging": {
-				Type:        schema.TypeString,
-				Description: "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal`.",
-				Optional:    true,
+				Type:             schema.TypeString,
+				Description:      "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal`.",
+				Optional:         true,
+				DiffSuppressFunc: suppressRequestLoggingDefaultDiffs,
 			},
 			"signal": {
 				Type:        schema.TypeString,
