@@ -54,7 +54,7 @@ resource "sigsci_corp_rule" "test" {
 - `expiration` (String) Date the rule will automatically be disabled. If rule is always enabled, will return empty string
 - `group_operator` (String) Conditions that must be matched when evaluating the request (all, any)
 - `reason` (String) Description of the rule
-- `type` (String) Type of rule (request, signal exclusion)
+- `type` (String) Type of rule (request, signal)
 
 ### Optional
 
