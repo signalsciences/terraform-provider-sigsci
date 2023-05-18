@@ -1,7 +1,7 @@
 package provider
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
 
@@ -60,7 +60,7 @@ func resourceSite() *schema.Resource {
 				Optional:    true,
 			},
 			"primary_agent_key": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Description: "The sites primary Agent key",
 				Computed:    true,
 				Sensitive:   true,

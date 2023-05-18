@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
 
@@ -149,7 +149,6 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 				Type:        schema.TypeList, // use TypeList to workaround SDK TypeMap limitation with only string value support: https://github.com/hashicorp/terraform-plugin-sdk/issues/62
 				Description: "The sites primary Agent key",
 				Computed:    true,
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"status": {
