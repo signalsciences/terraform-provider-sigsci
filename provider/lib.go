@@ -15,6 +15,13 @@ func suppressEquivalentTrimSpaceDiffs(k, old, new string, d *schema.ResourceData
 	return strings.TrimSpace(old) == strings.TrimSpace(new)
 }
 
+func suppressRequestLoggingDefaultDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if old == "" && new == "sampled" {
+		return true
+	}
+	return false
+}
+
 type providerMetadata struct {
 	Corp   string
 	Client sigsci.Client
