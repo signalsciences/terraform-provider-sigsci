@@ -16,7 +16,7 @@ func suppressEquivalentTrimSpaceDiffs(k, old, new string, d *schema.ResourceData
 }
 
 func suppressRequestLoggingDefaultDiffs(k, old, new string, d *schema.ResourceData) bool {
-	if old == "" && new == "sampled" {
+	if new == "" && old == "sampled" {
 		return true
 	}
 	return false
