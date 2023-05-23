@@ -62,7 +62,6 @@ resource "sigsci_corp_rule" "test" {
   }
   actions {
     type   = "excludeSignal"
-    signal = sigsci_corp_signal_tag.test.id
   }
 }
 
@@ -160,7 +159,6 @@ resource "sigsci_site_rule" "test" {
   reason          = "Example site rule update"
   signal          = "SQLI"
   expiration      = ""
-  requestlogging  = "sampled"
 
   conditions {
     type     = "single"
@@ -173,13 +171,26 @@ resource "sigsci_site_rule" "test" {
     field    = "ip"
     operator = "equals"
     value    = "1.2.3.5"
+  }
+  conditions {
+    type           = "multival"
+    field          = "queryParameter"
+    operator       = "exists"
+    group_operator = "all"
+
     conditions {
-      type           = "multival"
-      field          = "ip"
-      operator       = "equals"
-      group_operator = "all"
-      value          = "1.2.3.8"
+      type     = "single"
+      field    = "name"
+      operator = "equals"
+      value    = "hello"
     }
+
+    conditions {
+      type     = "single"
+      field    = "value"
+      operator = "equals"
+      value    = "world"
+     }
   }
 
   actions {
@@ -293,7 +304,7 @@ resource "sigsci_site_rule" "testsignal" {
   type            = "templatedSignal"
   group_operator  = "all"
   enabled         = true
-  reason          = "Example site rule update"
+  reason          = ""
   signal          = "PW-RESET-ATTEMPT"
   expiration      = ""
 
@@ -313,12 +324,14 @@ resource "sigsci_site_rule" "testsignal" {
 
   conditions {
     type           = "multival"
+    field          = "postParameter"
+    operator       = "exists"
     group_operator = "all"
     conditions {
       field    = "name"
       operator = "equals"
       type     = "single"
-      value    = "foo"
+      value    = "submit"
     }
   }
 }
