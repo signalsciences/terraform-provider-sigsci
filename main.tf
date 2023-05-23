@@ -61,7 +61,7 @@ resource "sigsci_corp_rule" "test" {
     value    = "1.2.3.5"
   }
   actions {
-    type   = "excludeSignal"
+    type = "excludeSignal"
   }
 }
 
@@ -190,7 +190,7 @@ resource "sigsci_site_rule" "test" {
       field    = "value"
       operator = "equals"
       value    = "world"
-     }
+    }
   }
 
   actions {
