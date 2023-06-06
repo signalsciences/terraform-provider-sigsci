@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
 
@@ -197,7 +197,7 @@ func resourceSiteRule() *schema.Resource {
 				},
 			},
 			"rate_limit": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Description: "Rate Limit",
 				Optional:    true,
 				Elem: &schema.Resource{
@@ -215,7 +215,6 @@ func resourceSiteRule() *schema.Resource {
 						"duration": {
 							Type:        schema.TypeInt,
 							Description: "duration in seconds (300 < x < 3600)",
-							Default:     600,
 							Required:    true,
 						},
 					},
