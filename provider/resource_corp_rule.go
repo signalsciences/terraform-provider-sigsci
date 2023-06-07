@@ -209,13 +209,14 @@ func resourceCorpRuleCreate(d *schema.ResourceData, m interface{}) error {
 	sc := pm.Client
 	corp := pm.Corp
 	corpRuleBody := sigsci.CreateCorpRuleBody{
-		Type:          d.Get("type").(string),
-		CorpScope:     d.Get("corp_scope").(string),
-		Enabled:       d.Get("enabled").(bool),
-		GroupOperator: d.Get("group_operator").(string),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		CorpScope:      d.Get("corp_scope").(string),
+		Enabled:        d.Get("enabled").(bool),
+		GroupOperator:  d.Get("group_operator").(string),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	corpRuleBody.SiteNames = expandStringArray(d.Get("site_short_names").(*schema.Set))
@@ -236,13 +237,14 @@ func resourceCorpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	corp := pm.Corp
 
 	updateCorpRuleBody := sigsci.CreateCorpRuleBody{
-		Type:          d.Get("type").(string),
-		CorpScope:     d.Get("corp_scope").(string),
-		Enabled:       d.Get("enabled").(bool),
-		GroupOperator: d.Get("group_operator").(string),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		CorpScope:      d.Get("corp_scope").(string),
+		Enabled:        d.Get("enabled").(bool),
+		GroupOperator:  d.Get("group_operator").(string),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	updateCorpRuleBody.SiteNames = expandStringArray(d.Get("site_short_names").(*schema.Set))
@@ -292,6 +294,10 @@ func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	err = d.Set("expiration", rule.Expiration)
+	if err != nil {
+		return err
+	}
+	err = d.Set("requestlogging", rule.RequestLogging)
 	if err != nil {
 		return err
 	}
