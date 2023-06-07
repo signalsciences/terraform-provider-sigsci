@@ -237,13 +237,14 @@ func resourceCorpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	corp := pm.Corp
 
 	updateCorpRuleBody := sigsci.CreateCorpRuleBody{
-		Type:          d.Get("type").(string),
-		CorpScope:     d.Get("corp_scope").(string),
-		Enabled:       d.Get("enabled").(bool),
-		GroupOperator: d.Get("group_operator").(string),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		CorpScope:      d.Get("corp_scope").(string),
+		Enabled:        d.Get("enabled").(bool),
+		GroupOperator:  d.Get("group_operator").(string),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	updateCorpRuleBody.SiteNames = expandStringArray(d.Get("site_short_names").(*schema.Set))
