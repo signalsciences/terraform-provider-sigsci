@@ -16,8 +16,6 @@ You may find prebuilt binaries in our [Releases](https://github.com/signalscienc
 
 If you wish to build from source, first make the correct directory, cd to it, and checkout the repo.  Running `make build` will then build the provider and output it to terraform-provider-sigsci
 ```shell script
-mkdir -p $GOPATH/src/github.com/signalsciences/
-cd $GOPATH/src/github.com/signalsciences/
 git clone git@github.com:signalsciences/terraform-provider-sigsci.git
 cd terraform-provider-sigsci
 make build

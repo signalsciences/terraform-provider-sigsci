@@ -2,7 +2,7 @@
 page_title: "sigsci Provider"
 subcategory: ""
 description: |-
-  
+
 ---
 
 ## Requirements
@@ -14,10 +14,8 @@ Build with make and the resulting binary will be terraform-provider-sigsci.
 
 First make the correct directory, cd to it, and checkout the repo.  make build will then build the provider and output it to terraform-provider-sigsci
 ```shell script
-mkdir -p $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
-cd $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
 git clone git@github.com:signalsciences/terraform-provider-sigsci.git
-make build
+cd terraform-provider-sigsci && make build
 ```
 
 # sigsci Provider
