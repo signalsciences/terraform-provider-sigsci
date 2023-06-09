@@ -1,3 +1,26 @@
+resource "sigsci_site" "my-site" {
+  short_name             = "manual_test"
+  display_name           = "manual terraform test"
+  block_duration_seconds = 86400
+  agent_anon_mode        = ""
+  agent_level            = "block"
+}
+
+resource "sigsci_site_signal_tag" "count-ratelimit-rule1" {
+  site_short_name = sigsci_site.my-site.short_name
+  name            = "count-ratelimit-rule1"
+}
+
+resource "sigsci_site_signal_tag" "count-ratelimit-rule2" {
+  site_short_name = sigsci_site.my-site.short_name
+  name            = "count-ratelimit-rule2"
+}
+
+resource "sigsci_site_signal_tag" "count-ratelimit-rule3" {
+  site_short_name = sigsci_site.my-site.short_name
+  name            = "count-ratelimit-rule3"
+}
+
 resource "sigsci_site_rule" "test-request-rule" {
   site_short_name = sigsci_site.my-site.short_name
   type            = "request"
@@ -46,7 +69,7 @@ resource "sigsci_site_rule" "test-ratelimit-rule-conditions" {
   group_operator  = "all"
   enabled         = true
   reason          = "Example rate limit rule that rate limits clients who match the rule conditions after exceeding threshold"
-  signal          = "site.count-ratelimit-rule1"
+  signal          = sigsci_site_signal_tag.count-ratelimit-rule1.id
   expiration      = ""
 
   conditions {
@@ -64,7 +87,7 @@ resource "sigsci_site_rule" "test-ratelimit-rule-conditions" {
 
   actions {
     type   = "logRequest"
-    signal = "site.count-ratelimit-rule1"
+    signal = sigsci_site_signal_tag.count-ratelimit-rule1.id
   }
 }
 
@@ -74,7 +97,7 @@ resource "sigsci_site_rule" "test-ratelimit-other-signal" {
   group_operator  = "all"
   enabled         = true
   reason          = "Example rate limit rule that rate limits clients who match a different signal after exceeding threshold"
-  signal          = "site.count-ratelimit-rule2"
+  signal          = sigsci_site_signal_tag.count-ratelimit-rule2.id
   expiration      = ""
 
   conditions {
@@ -92,7 +115,7 @@ resource "sigsci_site_rule" "test-ratelimit-other-signal" {
 
   actions {
     type   = "logRequest"
-    signal = "site.action-on-other-signal"
+    signal = sigsci_site_signal_tag.count-ratelimit-rule2.id
   }
 }
 
@@ -102,7 +125,7 @@ resource "sigsci_site_rule" "test-ratelimit-all-requests" {
   group_operator  = "all"
   enabled         = true
   reason          = "Example rule that rate limits all requests from clients after exceeding threshold"
-  signal          = "site.count-ratelimit-rule3"
+  signal          = sigsci_site_signal_tag.count-ratelimit-rule3.id
   expiration      = ""
 
   conditions {
