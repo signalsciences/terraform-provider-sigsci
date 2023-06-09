@@ -2,22 +2,20 @@
 page_title: "sigsci Provider"
 subcategory: ""
 description: |-
-  
+
 ---
 
 ## Requirements
 * [Terraform](https://www.terraform.io/downloads.html) 0.12.x, 0.13.x
-* [Go](https://golang.org/doc/install) 1.14
+* [Go](https://golang.org/doc/install) 1.18
 
 ## Building the provider
 Build with make and the resulting binary will be terraform-provider-sigsci.
 
 First make the correct directory, cd to it, and checkout the repo.  make build will then build the provider and output it to terraform-provider-sigsci
 ```shell script
-mkdir -p $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
-cd $GOPATH/src/github.com/signalsciences/terraform-provider-sigsci
 git clone git@github.com:signalsciences/terraform-provider-sigsci.git
-make build
+cd terraform-provider-sigsci && make build
 ```
 
 # sigsci Provider
