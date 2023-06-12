@@ -2,7 +2,6 @@ package provider
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -74,10 +73,9 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"response_code": {
 							Type:         schema.TypeInt,
-							Description:  "HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided",
+							Description:  "HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided. Only valid with the 'block' action type.",
 							Optional:     true,
 							ValidateFunc: validateActionResponseCode,
-							Default:      http.StatusNotAcceptable,
 						},
 						"redirect_url": {
 							Type:         schema.TypeString,
