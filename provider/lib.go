@@ -2,7 +2,6 @@ package provider
 
 import (
 	"fmt"
-	"net/http"
 	"sort"
 	"strconv"
 	"strings"
@@ -494,11 +493,6 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 		if customResponseCode {
 			// response code is set to 0 by sigsci api when action.type != "block"
 			// for types such as "allow" or "logRequest", response code is irrelevant and hence not provided in API response
-			// TF assigns default value of 0 which creates an issues when checking TF plan because we set default value of 406 (http.StatusNotAcceptable)
-			// This noop piece of code ensures tests pass as expected
-			if action.ResponseCode == 0 {
-				action.ResponseCode = http.StatusNotAcceptable
-			}
 			actionMap["response_code"] = action.ResponseCode
 		}
 		actionsMap[i] = actionMap
