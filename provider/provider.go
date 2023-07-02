@@ -38,10 +38,10 @@ func Provider() terraform.ResourceProvider {
 				Sensitive:    true,
 				AtLeastOneOf: []string{"password", "auth_token"},
 			},
-			"fastly_key": {
+			"fastly_api_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("FASTLY_KEY", nil),
+				DefaultFunc: schema.EnvDefaultFunc("FASTLY_API_KEY", nil),
 				Description: "The Fastly API key used for deploying Signal Sciences as a Fastly edge security service. For edge deployment service calls, the Fastly key must have write access to the given service.",
 				Sensitive:   true,
 			},
@@ -92,11 +92,11 @@ func Provider() terraform.ResourceProvider {
 func providerConfigure() schema.ConfigureFunc {
 	return func(d *schema.ResourceData) (interface{}, error) {
 		config := Config{
-			Email:     d.Get("email").(string),
-			Password:  d.Get("password").(string),
-			APIToken:  d.Get("auth_token").(string),
-			FastlyKey: d.Get("fastly_key").(string),
-			URL:       d.Get("api_url").(string),
+			Email:        d.Get("email").(string),
+			Password:     d.Get("password").(string),
+			APIToken:     d.Get("auth_token").(string),
+			FastlyAPIKey: d.Get("fastly_api_key").(string),
+			URL:          d.Get("api_url").(string),
 		}
 		client, err := config.Client()
 		if err != nil {
