@@ -3,7 +3,7 @@
 
 ## Requirements
 * [Terraform](https://www.terraform.io/downloads.html) > 0.12.x
-* [Go](https://golang.org/doc/install) 1.17
+* [Go](https://golang.org/doc/install) 1.18
 
 Check out the [Terraform Documentation](https://www.terraform.io/docs/configuration/index.html) and their [Introduction](https://www.terraform.io/intro/index.html) for more information on terraform
 
@@ -16,8 +16,6 @@ You may find prebuilt binaries in our [Releases](https://github.com/signalscienc
 
 If you wish to build from source, first make the correct directory, cd to it, and checkout the repo.  Running `make build` will then build the provider and output it to terraform-provider-sigsci
 ```shell script
-mkdir -p $GOPATH/src/github.com/signalsciences/
-cd $GOPATH/src/github.com/signalsciences/
 git clone git@github.com:signalsciences/terraform-provider-sigsci.git
 cd terraform-provider-sigsci
 make build
@@ -39,11 +37,11 @@ terraform {
 
 # Required configuration block (for all versions of terraform)
 provider "sigsci" {
-  //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
-  //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
-  //  auth_token = "" // May also provide via env variable SIGSCI_TOKEN
-  //  password = ""   // May also provide via env variable SIGSCI_PASSWORD
-  //  fastly_key = "" // May also provide via env variable FASTLY_KEY. Required for Edge Deployments functionality.
+  //  corp           = "" // Required. may also provide via env variable SIGSCI_CORP
+  //  email          = "" // Required. may also provide via env variable SIGSCI_EMAIL
+  //  auth_token     = "" // May also provide via env variable SIGSCI_TOKEN
+  //  password       = "" // May also provide via env variable SIGSCI_PASSWORD
+  //  fastly_api_key = "" // May also provide via env variable FASTLY_API_KEY. Required for Edge Deployments functionality.
 }
 ```
 

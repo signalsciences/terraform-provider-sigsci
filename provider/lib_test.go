@@ -133,6 +133,7 @@ func TestValidateConditionField(t *testing.T) {
 		{in: "scheme"},
 		{in: "queryParameter"},
 		{in: "value"},
+		{in: "responseHeader"},
 
 		{in: "unknownconditionfield", wantErr: true},
 	}

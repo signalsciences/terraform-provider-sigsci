@@ -2,7 +2,7 @@ package provider
 
 import (
 	"fmt"
-	"net/http"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
@@ -19,7 +19,7 @@ func resourceSiteRule() *schema.Resource {
 			},
 			"type": {
 				Type:        schema.TypeString,
-				Description: "Type of rule (request, signal exclusion, rateLimit)",
+				Description: "Type of rule (request, signal, rateLimit)",
 				Required:    true,
 			},
 			"group_operator": {
@@ -48,9 +48,10 @@ func resourceSiteRule() *schema.Resource {
 				Required:    true,
 			},
 			"requestlogging": {
-				Type:        schema.TypeString,
-				Description: "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for request rules that have a block or allow action.",
-				Optional:    true,
+				Type:             schema.TypeString,
+				Description:      "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal` or `rateLimit`.",
+				Optional:         true,
+				DiffSuppressFunc: suppressRequestLoggingDefaultDiffs,
 			},
 			"actions": {
 				Type:        schema.TypeSet,
@@ -72,10 +73,15 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"response_code": {
 							Type:         schema.TypeInt,
-							Description:  "HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided",
+							Description:  "HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided. Only valid with the 'block' action type.",
 							Optional:     true,
 							ValidateFunc: validateActionResponseCode,
-							Default:      http.StatusNotAcceptable,
+						},
+						"redirect_url": {
+							Type:         schema.TypeString,
+							Description:  "URL to redirect to when blocking response code is set to 301 or 302",
+							Optional:     true,
+							ValidateFunc: validateActionRedirectURL,
 						},
 					},
 				},
@@ -94,13 +100,13 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"field": {
 							Type:         schema.TypeString,
-							Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+							Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 							Optional:     true,
 							ValidateFunc: validateConditionField,
 						},
 						"operator": {
 							Type:        schema.TypeString,
-							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
 							Optional:    true,
 						},
 						"group_operator": {
@@ -110,7 +116,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"value": {
 							Type:        schema.TypeString,
-							Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+							Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 							Optional:    true,
 						},
 						"conditions": {
@@ -127,13 +133,13 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"field": {
 										Type:         schema.TypeString,
-										Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+										Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 										Optional:     true,
 										ValidateFunc: validateConditionField,
 									},
 									"operator": {
 										Type:        schema.TypeString,
-										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
 										Optional:    true,
 									},
 									"group_operator": {
@@ -143,7 +149,7 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"value": {
 										Type:        schema.TypeString,
-										Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+										Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 										Optional:    true,
 									},
 									"conditions": {
@@ -160,13 +166,13 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"field": {
 													Type:         schema.TypeString,
-													Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+													Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 													Optional:     true,
 													ValidateFunc: validateConditionField,
 												},
 												"operator": {
 													Type:        schema.TypeString,
-													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
 													Optional:    true,
 												},
 												"group_operator": {
@@ -176,7 +182,7 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"value": {
 													Type:        schema.TypeString,
-													Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+													Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 													Optional:    true,
 												},
 											},
@@ -255,7 +261,6 @@ func resourceSiteRuleCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
-
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
@@ -316,7 +321,6 @@ func resourceSiteRuleRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
-
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp

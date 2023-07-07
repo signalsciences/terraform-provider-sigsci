@@ -49,8 +49,8 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 
 	activateVersion := d.Get("activate_version").(bool)
 	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
-		ActivateVersion:         &activateVersion,
-		PercentEnabled:          d.Get("percent_enabled").(int),
+		ActivateVersion: &activateVersion,
+		PercentEnabled:  d.Get("percent_enabled").(int),
 	})
 }
 

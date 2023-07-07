@@ -1,16 +1,21 @@
+clean:
+	rm -rf ./bin
 
-build:
-	go build -o terraform-provider-sigsci
+build: clean
+	go build -o bin/terraform-provider-sigsci
+	@sh -c "'$(CURDIR)/scripts/generate-dev-overrides.sh'"
 
 check:
 	terraform init
 	terraform plan
 
+.PHONY: all
 all: build check
 
 lint:
 	go install honnef.co/go/tools/cmd/staticcheck
 	staticcheck ./...
+	./scripts/gofmt.sh
 
 testacc: ## Run acceptance tests
 	TF_ACC=1 go test -v ./... $(GOTESTFLAGS)
@@ -22,4 +27,4 @@ sweep:
 docs:
 	go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs && tfplugindocs generate
 
-.PHONY: docs
+.PHONY: clean docs test

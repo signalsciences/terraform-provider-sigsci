@@ -744,13 +744,13 @@ func testCheckSiteRulesAreEqual(name string) resource.TestCheckFunc {
 			Signal:        "SQLI",
 			Expiration:    "",
 			Conditions: []sigsci.Condition{
-				sigsci.Condition{
+				{
 					Type:     "single",
 					Field:    "ip",
 					Operator: "equals",
 					Value:    "1.2.3.5",
 				},
-				sigsci.Condition{
+				{
 					Type:     "single",
 					Field:    "ip",
 					Operator: "equals",
@@ -758,7 +758,7 @@ func testCheckSiteRulesAreEqual(name string) resource.TestCheckFunc {
 				},
 			},
 			Actions: []sigsci.Action{
-				sigsci.Action{
+				{
 					Type: "excludeSignal",
 				},
 			},
