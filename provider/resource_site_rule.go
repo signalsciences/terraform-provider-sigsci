@@ -21,6 +21,7 @@ func resourceSiteRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Type of rule (request, signal, rateLimit)",
 				Required:    true,
+				ForceNew:    true,
 			},
 			"group_operator": {
 				Type:        schema.TypeString,
@@ -64,7 +65,6 @@ func resourceSiteRule() *schema.Resource {
 							Type:        schema.TypeString,
 							Description: "(block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)",
 							Required:    true,
-							ForceNew:    true,
 						},
 						"signal": {
 							Type:        schema.TypeString,
