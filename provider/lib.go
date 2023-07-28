@@ -526,7 +526,7 @@ var siteImporter = schema.ResourceImporter{
 var KnownSingleConditionFields = []string{
 	"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
 	"paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType",
-	"value",
+	"value","ja3Fingerprint",
 }
 
 var KnownMultivalConditionFields = []string{
