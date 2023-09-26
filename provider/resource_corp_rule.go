@@ -90,7 +90,7 @@ func resourceCorpRule() *schema.Resource {
 						},
 						"operator": {
 							Type:        schema.TypeString,
-							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)",
 							Optional:    true,
 						},
 						"group_operator": {
@@ -124,7 +124,7 @@ func resourceCorpRule() *schema.Resource {
 									},
 									"operator": {
 										Type:        schema.TypeString,
-										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)",
 										Optional:    true,
 									},
 									"group_operator": {
@@ -157,7 +157,7 @@ func resourceCorpRule() *schema.Resource {
 												},
 												"operator": {
 													Type:        schema.TypeString,
-													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)",
 													Optional:    true,
 												},
 												"group_operator": {
