@@ -198,10 +198,10 @@ Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions))
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, value)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
-- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
+- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
 - `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 <a id="nestedblock--conditions--conditions"></a>
@@ -215,10 +215,10 @@ Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions--conditions))
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, value)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
-- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
+- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
 - `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 <a id="nestedblock--conditions--conditions--conditions"></a>
@@ -231,10 +231,10 @@ Required:
 Optional:
 
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, value)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
-- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
+- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
 - `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 
