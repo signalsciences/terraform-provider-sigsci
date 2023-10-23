@@ -494,6 +494,10 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 			// response code is set to 0 by sigsci api when action.type != "block"
 			// for types such as "allow" or "logRequest", response code is irrelevant and hence not provided in API response
 			actionMap["response_code"] = action.ResponseCode
+
+			if action.ResponseCode == 301 || action.ResponseCode == 302 {
+				actionMap["redirect_url"] = action.RedirectURL
+			}
 		}
 		actionsMap[i] = actionMap
 	}
