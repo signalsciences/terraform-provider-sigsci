@@ -51,3 +51,17 @@ provider "sigsci" {
 # Resources
 
 For examples of how to use each resource, see [docs/resources](./resources).
+
+## FAQ
+
+FAQ can be found in [docs/guides/FAQ.md](./docs/guides/FAQ.md).
+
+## Errors
+
+Errors occasionally occur when updating certain resources. If an error occurs       please try re-running with `-parallelism=1`:
+
+```
+$ terraform apply -parallelism=1
+```
+
+If running with `-parallelism=1` does not resolve the error, please open an issue.
