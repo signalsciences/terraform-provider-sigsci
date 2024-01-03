@@ -6,7 +6,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/hashicorp/terraform-plugin-docs v0.14.1
 	github.com/hashicorp/terraform-plugin-sdk v1.14.0
-	github.com/signalsciences/go-sigsci v0.1.18
+	github.com/signalsciences/go-sigsci v0.1.19
 	golang.org/x/lint v0.0.0-20190409202823-959b441ac422
 	honnef.co/go/tools v0.4.2
 )
@@ -89,3 +89,4 @@ require (
 	google.golang.org/genproto v0.0.0-20200310143817-43be25429f5a // indirect
 	google.golang.org/grpc v1.27.1 // indirect
 )
+
