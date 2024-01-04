@@ -38,6 +38,7 @@ Read-Only:
 - `block_duration_secs` (Number)
 - `block_http_code` (Number)
 - `block_redirect_url` (String)
+- `client_ip_rules` (Set of String)
 - `created` (String)
 - `display_name` (String)
 - `events_uri` (String)

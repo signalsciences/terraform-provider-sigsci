@@ -68,6 +68,14 @@ func dataSourceSites() *schema.Resource {
 							Computed:    true,
 							Description: "URL to redirect to when blockHTTPCode is 301 or 302",
 						},
+						"client_ip_rules": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "Headers used for assigning client IPs to requests",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
 						"created": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -177,6 +185,7 @@ func flattenSites(data []sigsci.Site, filter string) []map[string]any {
 			"block_duration_secs":  site.BlockDurationSeconds,
 			"block_http_code":      site.BlockHTTPCode,
 			"block_redirect_url":   site.BlockRedirectURL,
+			"client_ip_rules":      flattenClientIPRules(site.ClientIPRules),
 			"created":              site.Created.String(),
 			"display_name":         site.DisplayName,
 			"events_uri":           site.Events["uri"],

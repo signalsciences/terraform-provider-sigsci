@@ -469,6 +469,23 @@ func expandRuleRateLimit(rateLimitResource map[string]interface{}) *sigsci.RateL
 	}
 }
 
+func expandClientIPRules(headers *schema.Set) sigsci.ClientIPRules {
+	listOfHeaders := headers.List()
+	rulesArray := make(sigsci.ClientIPRules, len(listOfHeaders))
+	for i, e := range listOfHeaders {
+		rulesArray[i].Header = e.(string)
+	}
+	return rulesArray
+}
+
+func flattenClientIPRules(rules sigsci.ClientIPRules) []interface{} {
+	interfaceArray := make([]interface{}, len(rules))
+	for i, val := range rules {
+		interfaceArray[i] = val.Header
+	}
+	return interfaceArray
+}
+
 func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
 	if rateLimit == nil {
 		return nil
