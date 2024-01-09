@@ -27,16 +27,16 @@ resource "sigsci_site" "my-site" {
   agent_level            = "block"
   immediate_block        = false
   attack_threshold {
-    interval    = 1
-    threshold   = 25
+    interval  = 1
+    threshold = 25
   }
   attack_threshold {
-    interval    = 10
-    threshold   = 150
+    interval  = 10
+    threshold = 150
   }
   attack_threshold {
-    interval    = 60
-    threshold   = 900
+    interval  = 60
+    threshold = 900
   }
 }
 
