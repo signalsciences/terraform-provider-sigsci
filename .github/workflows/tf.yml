@@ -13,7 +13,7 @@ jobs:
     - uses: hashicorp/setup-terraform@v2
 
     - name: build application
-      run: make install 
+      run: make all 
 
     - name: Terraform fmt
       run: terraform fmt -check
