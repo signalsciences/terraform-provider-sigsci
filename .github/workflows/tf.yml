@@ -13,7 +13,7 @@ jobs:
     - uses: hashicorp/setup-terraform@v2
 
     - name: build application
-      run: make all 
+      run: make build 
 
     - name: Terraform fmt
       run: terraform fmt -check
@@ -23,3 +23,5 @@ jobs:
 
     - name: Terraform Validate
       run: terraform validate -no-color
+      env:
+        TF_CLI_CONFIG_FILE: bin/developer_overrides.tfrc
