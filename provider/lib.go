@@ -438,6 +438,34 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 	return actions
 }
 
+func expandAttackThresholds(attackThresholdsResource *schema.Set) []sigsci.AttackThreshold {
+	var err error
+	var threshold, interval int
+	var attackThresholds []sigsci.AttackThreshold
+	for _, value := range attackThresholdsResource.List() {
+		castV := value.(map[string]interface{})
+		if val, ok := castV["threshold"]; ok {
+			threshold = val.(int)
+			if err != nil {
+				return nil
+			}
+			if val, ok := castV["interval"]; ok {
+				interval = val.(int)
+				if err != nil {
+					return nil
+				}
+			}
+			a := sigsci.AttackThreshold{
+				Threshold: threshold,
+				Interval:  interval,
+			}
+			attackThresholds = append(attackThresholds, a)
+		}
+	}
+
+	return attackThresholds
+}
+
 func expandRuleRateLimit(rateLimitResource map[string]interface{}) *sigsci.RateLimit {
 	var threshold, interval, duration int
 	var err error
