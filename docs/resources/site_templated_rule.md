@@ -96,7 +96,7 @@ Required:
 
 Required:
 
-- `action` (String)
+- `action` (String) To block requests immediately use (blockImmediate), Threshold level blocking: For logging use (info), for blocking use (template)
 - `block_duration_seconds` (Number)
 - `enabled` (Boolean)
 - `long_name` (String)
