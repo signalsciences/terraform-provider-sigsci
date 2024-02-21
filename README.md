@@ -3,7 +3,7 @@
 
 ## Requirements
 * [Terraform](https://www.terraform.io/downloads.html) > 0.12.x
-* [Go](https://golang.org/doc/install) 1.18
+* [Go](https://golang.org/doc/install) 1.20
 
 Check out the [Terraform Documentation](https://www.terraform.io/docs/configuration/index.html) and their [Introduction](https://www.terraform.io/intro/index.html) for more information on terraform
 
@@ -48,6 +48,10 @@ provider "sigsci" {
 ## Resources
 
 Resource documentation and examples can be found in [docs/resources](./docs/resources).
+
+## FAQ
+
+FAQ can be found in [docs/guides/FAQ.md](./docs/guides/FAQ.md).
 
 ## Example
 [main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource.
@@ -123,3 +127,13 @@ resource "sigsci_corp_list" "test_list" {
 }
 
 ```
+
+## Errors
+
+Errors occasionally occur when updating certain resources. If an error occurs please try re-running with `-parallelism=1`:
+
+```
+$ terraform apply -parallelism=1
+```
+
+If running with `-parallelism=1` does not resolve the error, please open an issue.

@@ -25,6 +25,19 @@ resource "sigsci_site" "my-site" {
   block_duration_seconds = 86400
   agent_anon_mode        = ""
   agent_level            = "block"
+  immediate_block        = false
+  attack_threshold {
+    interval  = 1
+    threshold = 25
+  }
+  attack_threshold {
+    interval  = 10
+    threshold = 150
+  }
+  attack_threshold {
+    interval  = 60
+    threshold = 900
+  }
 }
 
 resource "sigsci_corp_list" "test" {
@@ -402,13 +415,13 @@ cX4iWLb38v7KEornZfofXEw=
 PRIVATEKEY
 }
 
-resource "sigsci_edge_deployment" "edge" {
-  site_short_name = sigsci_site.my-site.short_name
-}
+#resource "sigsci_edge_deployment" "edge" {
+#  site_short_name = sigsci_site.my-site.short_name
+#}
 
-resource "sigsci_edge_deployment_service" "edge" {
-  site_short_name  = sigsci_site.my-site.short_name
-  fastly_sid       = "[Fastly service id]"
-  activate_version = true
-  percent_enabled  = 100
-}
+#resource "sigsci_edge_deployment_service" "edge" {
+#  site_short_name  = sigsci_site.my-site.short_name
+#  fastly_sid       = "[Fastly service id]"
+#  activate_version = true
+#  percent_enabled  = 100
+#}

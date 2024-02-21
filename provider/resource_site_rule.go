@@ -106,7 +106,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"operator": {
 							Type:        schema.TypeString,
-							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
+							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
 							Optional:    true,
 						},
 						"group_operator": {
@@ -139,7 +139,7 @@ func resourceSiteRule() *schema.Resource {
 									},
 									"operator": {
 										Type:        schema.TypeString,
-										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
+										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
 										Optional:    true,
 									},
 									"group_operator": {
@@ -172,7 +172,7 @@ func resourceSiteRule() *schema.Resource {
 												},
 												"operator": {
 													Type:        schema.TypeString,
-													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
+													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)",
 													Optional:    true,
 												},
 												"group_operator": {

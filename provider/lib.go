@@ -438,6 +438,34 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 	return actions
 }
 
+func expandAttackThresholds(attackThresholdsResource *schema.Set) []sigsci.AttackThreshold {
+	var err error
+	var threshold, interval int
+	var attackThresholds []sigsci.AttackThreshold
+	for _, value := range attackThresholdsResource.List() {
+		castV := value.(map[string]interface{})
+		if val, ok := castV["threshold"]; ok {
+			threshold = val.(int)
+			if err != nil {
+				return nil
+			}
+			if val, ok := castV["interval"]; ok {
+				interval = val.(int)
+				if err != nil {
+					return nil
+				}
+			}
+			a := sigsci.AttackThreshold{
+				Threshold: threshold,
+				Interval:  interval,
+			}
+			attackThresholds = append(attackThresholds, a)
+		}
+	}
+
+	return attackThresholds
+}
+
 func expandRuleRateLimit(rateLimitResource map[string]interface{}) *sigsci.RateLimit {
 	var threshold, interval, duration int
 	var err error
@@ -494,6 +522,10 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 			// response code is set to 0 by sigsci api when action.type != "block"
 			// for types such as "allow" or "logRequest", response code is irrelevant and hence not provided in API response
 			actionMap["response_code"] = action.ResponseCode
+
+			if action.ResponseCode == 301 || action.ResponseCode == 302 {
+				actionMap["redirect_url"] = action.RedirectURL
+			}
 		}
 		actionsMap[i] = actionMap
 	}
@@ -525,7 +557,7 @@ var siteImporter = schema.ResourceImporter{
 
 var KnownSingleConditionFields = []string{
 	"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
-	"paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType",
+	"paramname", "paramvalue", "country", "name", "valueString", "valueInt", "valueIp", "signalType",
 	"value","ja3Fingerprint",
 }
 
