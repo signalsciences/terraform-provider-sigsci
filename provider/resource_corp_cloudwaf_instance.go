@@ -31,9 +31,10 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 				Required:    true,
 			},
 			"region": {
-				Type:        schema.TypeString,
-				Description: `Region the CloudWAF Instance is being deployed to. (Supported region: "us-east-1", "us-west-1", "af-south-1", "ap-northeast-1", "ap-northeast-2", "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "eu-west-3", "sa-east-1", "us-east-2", "us-west-2").`,
-				Required:    true,
+				Type:         schema.TypeString,
+				Description:  `Region the CloudWAF Instance is being deployed to. (Supported region: "us-east-1", "us-west-1", "af-south-1", "ap-northeast-1", "ap-northeast-2", "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "eu-central-1", "eu-north-1", "eu-west-1", "eu-west-2", "eu-west-3", "sa-east-1", "us-east-2", "us-west-2").`,
+				Required:     true,
+				ValidateFunc: validateRegion,
 			},
 			"tls_min_version": {
 				Type:        schema.TypeString,
@@ -69,6 +70,15 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Description: `Set instance location to "direct" or "advanced".`,
 							Required:    true,
+							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+								if val == nil {
+									return nil, nil
+								}
+								if existsInString(val.(string), "direct", "advanced") {
+									return nil, nil
+								}
+								return nil, []error{fmt.Errorf(`received instance_location %q is invalid. should be "direct" or "advanced"`, val.(string))}
+							},
 						},
 						"client_ip_header": {
 							Type:        schema.TypeString,
@@ -110,6 +120,7 @@ func resourceCorpCloudWAFInstance() *schema.Resource {
 										Description: "List of domain or request URIs, up to 100 entries.",
 										Required:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
+										MaxItems:    100,
 									},
 									"origin": {
 										Type:        schema.TypeString,

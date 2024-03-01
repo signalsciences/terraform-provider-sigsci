@@ -2,7 +2,6 @@ package provider
 
 import (
 	"fmt"
-	"net/http"
 	"sort"
 	"strconv"
 	"strings"
@@ -13,6 +12,13 @@ import (
 
 func suppressEquivalentTrimSpaceDiffs(k, old, new string, d *schema.ResourceData) bool {
 	return strings.TrimSpace(old) == strings.TrimSpace(new)
+}
+
+func suppressRequestLoggingDefaultDiffs(k, old, new string, d *schema.ResourceData) bool {
+	if new == "" && old == "sampled" {
+		return true
+	}
+	return false
 }
 
 type providerMetadata struct {
@@ -38,7 +44,7 @@ func expandStringArray(entries *schema.Set) []string {
 }
 
 func flattenDetections(detections []sigsci.Detection) []interface{} {
-	var detectionsSet = make([]interface{}, len(detections))
+	detectionsSet := make([]interface{}, len(detections))
 	for i, detection := range detections {
 		fieldSet := make([]interface{}, len(detection.Fields))
 		for j, field := range detection.Fields {
@@ -137,7 +143,7 @@ func expandAlerts(entries *schema.Set) []sigsci.Alert {
 }
 
 func flattenAlerts(alerts []sigsci.Alert) []interface{} {
-	var alertsSet = make([]interface{}, len(alerts))
+	alertsSet := make([]interface{}, len(alerts))
 	for i, alert := range alerts {
 		alertsSet[i] = map[string]interface{}{
 			"id":                     alert.ID,
@@ -343,6 +349,19 @@ func existsInString(needle string, haystack ...string) bool {
 	return false
 }
 
+func existsInRange(needle int, min, max int) bool {
+	if needle >= min && needle <= max {
+		return true
+	}
+	return false
+}
+
+func validStringLength(needle string, min, max int) bool {
+	length := len(needle)
+
+	return length >= min && length <= max
+}
+
 func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 	var conditions []sigsci.Condition
 	for _, genericElement := range conditionsResource.List() {
@@ -372,7 +391,7 @@ func expandRuleConditions(conditionsResource *schema.Set) []sigsci.Condition {
 }
 
 func flattenRuleConditions(conditions []sigsci.Condition) []interface{} {
-	var conditionsMap = make([]interface{}, len(conditions))
+	conditionsMap := make([]interface{}, len(conditions))
 	for i, condition := range conditions {
 		conditionMap := map[string]interface{}{
 			"type":           condition.Type,
@@ -403,14 +422,48 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 			responseCode = castElement["response_code"].(int)
 		}
 
+		var redirectURL string
+		if castElement["redirect_url"] != nil {
+			redirectURL = castElement["redirect_url"].(string)
+		}
+
 		a := sigsci.Action{
 			Type:         castElement["type"].(string),
 			Signal:       signal,
 			ResponseCode: responseCode,
+			RedirectURL:  redirectURL,
 		}
 		actions = append(actions, a)
 	}
 	return actions
+}
+
+func expandAttackThresholds(attackThresholdsResource *schema.Set) []sigsci.AttackThreshold {
+	var err error
+	var threshold, interval int
+	var attackThresholds []sigsci.AttackThreshold
+	for _, value := range attackThresholdsResource.List() {
+		castV := value.(map[string]interface{})
+		if val, ok := castV["threshold"]; ok {
+			threshold = val.(int)
+			if err != nil {
+				return nil
+			}
+			if val, ok := castV["interval"]; ok {
+				interval = val.(int)
+				if err != nil {
+					return nil
+				}
+			}
+			a := sigsci.AttackThreshold{
+				Threshold: threshold,
+				Interval:  interval,
+			}
+			attackThresholds = append(attackThresholds, a)
+		}
+	}
+
+	return attackThresholds
 }
 
 func expandRuleRateLimit(rateLimitResource *schema.Set) *sigsci.RateLimit {
@@ -476,7 +529,7 @@ func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) []interface{} {
 }
 
 func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []interface{} {
-	var actionsMap = make([]interface{}, len(actions))
+	actionsMap := make([]interface{}, len(actions))
 	for i, action := range actions {
 
 		actionMap := map[string]interface{}{
@@ -488,12 +541,11 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 		if customResponseCode {
 			// response code is set to 0 by sigsci api when action.type != "block"
 			// for types such as "allow" or "logRequest", response code is irrelevant and hence not provided in API response
-			// TF assigns default value of 0 which creates an issues when checking TF plan because we set default value of 406 (http.StatusNotAcceptable)
-			// This noop piece of code ensures tests pass as expected
-			if action.ResponseCode == 0 {
-				action.ResponseCode = http.StatusNotAcceptable
-			}
 			actionMap["response_code"] = action.ResponseCode
+
+			if action.ResponseCode == 301 || action.ResponseCode == 302 {
+				actionMap["redirect_url"] = action.RedirectURL
+			}
 		}
 		actionsMap[i] = actionMap
 	}
@@ -514,7 +566,6 @@ func resourceSiteImport(siteID string) (site string, id string, err error) {
 var siteImporter = schema.ResourceImporter{
 	State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
 		site, id, err := resourceSiteImport(d.Id())
-
 		if err != nil {
 			return nil, err
 		}
@@ -524,26 +575,69 @@ var siteImporter = schema.ResourceImporter{
 	},
 }
 
-func validateConditionField(val interface{}, key string) ([]string, []error) {
-	knownFields := []string{
-		"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
-		"paramname", "paramvalue", "country", "name", "valueString", "valueIp", "signalType",
-		"signal", "requestHeader", "queryParameter", "postParameter", "requestCookie", "value",
-	}
+var KnownSingleConditionFields = []string{
+	"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
+	"paramname", "paramvalue", "country", "name", "valueString", "valueInt", "valueIp", "signalType",
+	"value",
+}
 
-	if existsInString(val.(string), knownFields...) {
+var KnownMultivalConditionFields = []string{
+	"signal", "requestHeader", "queryParameter", "postParameter", "requestCookie",
+	"responseHeader",
+}
+
+func validateConditionField(val interface{}, key string) ([]string, []error) {
+	if existsInString(val.(string), KnownSingleConditionFields...) || existsInString(val.(string), KnownMultivalConditionFields...) {
 		return nil, nil
 	}
 
-	return []string{fmt.Sprintf("received %q for conditions.field. This is not necessarily an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(%s)", val.(string), strings.Join(knownFields, ", "))}, nil
+	return []string{fmt.Sprintf("received %q for conditions.field. This is not necessarily an error, but we only know about the following values. If this is a new value, please open a PR to get it added.\n(%s)", val.(string), strings.Join(append(KnownSingleConditionFields, KnownMultivalConditionFields...), ", "))}, nil
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
-	// response code needs to be within 400-499
+	// response code needs to be 301, 302, or 400-599
 	code := val.(int)
-	if 400 <= code && code < 500 {
+	if (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
 		return nil, nil
 	}
-	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 400-499 range", code)
+	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 301, 302, or 400-599", code)
 	return nil, []error{rangeError}
+}
+
+func validateActionRedirectURL(val interface{}, key string) ([]string, []error) {
+	url := val.(string)
+	if strings.HasPrefix(url, "http") || strings.HasPrefix(url, "/") {
+		return nil, nil
+	}
+	rangeError := fmt.Errorf("received redirect url '%s'. must start with either 'http' or '/'", url)
+	return nil, []error{rangeError}
+}
+
+func validateRegion(val interface{}, key string) ([]string, []error) {
+	// https://docs.fastly.com/signalsciences/api/#_corps__corpName__cloudwafInstances_post
+	regionList := []string{
+		"us-east-1",
+		"us-west-1",
+		"af-south-1",
+		"ap-northeast-1",
+		"ap-northeast-2",
+		"ap-south-1",
+		"ap-southeast-1",
+		"ap-southeast-2",
+		"ca-central-1",
+		"eu-central-1",
+		"eu-north-1",
+		"eu-west-1",
+		"eu-west-2",
+		"eu-west-3",
+		"sa-east-1",
+		"us-east-2",
+		"us-west-2",
+	}
+
+	if existsInString(val.(string), regionList...) {
+		return nil, nil
+	}
+
+	return nil, []error{fmt.Errorf("received region name %q is invalid. should be in (%s)", val.(string), strings.Join(regionList, ", "))}
 }

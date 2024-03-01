@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -22,6 +23,12 @@ func resourceCorpIntegration() *schema.Resource {
 				Description: "One of (mailingList, slack, microsoftTeams)",
 				Required:    true,
 				ForceNew:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if !existsInString(val.(string), "mailingList", "slack", "microsoftTeams") {
+						return nil, []error{fmt.Errorf(`received type %q is invalid. should be "mailingList", "slack", or "microsoftTeams"`, val.(string))}
+					}
+					return nil, nil
+				},
 			},
 			"url": {
 				Type:        schema.TypeString,
@@ -30,7 +37,7 @@ func resourceCorpIntegration() *schema.Resource {
 			},
 			"events": {
 				Type:        schema.TypeSet,
-				Description: "Array of event types. Visit https://docs.signalsciences.net/integrations to find out which events the service you are connecting allows.",
+				Description: "Array of event types. Visit https://docs.fastly.com/signalsciences/integrations to find out which events the service you are connecting allows.",
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},

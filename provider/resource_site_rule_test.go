@@ -477,14 +477,13 @@ func TestACCResourceSiteRuleActionsTypeSwitch(t *testing.T) {
 			                     }
 			                     actions {
 			                         type = "excludeSignal"
-			                         signal = "CMDEXE"
 			                     }
 
 			             }`, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "signal", "CMDEXE"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "actions.2492640549.type", "excludeSignal"),
-					resource.TestCheckResourceAttr(resourceName, "actions.2492640549.signal", "CMDEXE"),
+					resource.TestCheckResourceAttr(resourceName, "actions.2526394097.type", "excludeSignal"),
 				),
 			},
 			{
@@ -752,13 +751,13 @@ func testCheckSiteRulesAreEqual(name string) resource.TestCheckFunc {
 			Signal:        "SQLI",
 			Expiration:    "",
 			Conditions: []sigsci.Condition{
-				sigsci.Condition{
+				{
 					Type:     "single",
 					Field:    "ip",
 					Operator: "equals",
 					Value:    "1.2.3.5",
 				},
-				sigsci.Condition{
+				{
 					Type:     "single",
 					Field:    "ip",
 					Operator: "equals",
@@ -766,7 +765,7 @@ func testCheckSiteRulesAreEqual(name string) resource.TestCheckFunc {
 				},
 			},
 			Actions: []sigsci.Action{
-				sigsci.Action{
+				{
 					Type: "excludeSignal",
 				},
 			},

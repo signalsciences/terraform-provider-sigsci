@@ -12,13 +12,12 @@ description: |-
 ## Example Usage
 
 ```terraform
-resource "sigsci_site_rule" "test" {
+resource "sigsci_site_rule" "test-request-rule" {
   site_short_name = sigsci_site.my-site.short_name
-  type            = "signal"
-  group_operator  = "any"
+  type            = "request"
+  group_operator  = "all"
   enabled         = true
-  reason          = "Example site rule update"
-  signal          = "SQLI"
+  reason          = "Example request site rule"
   requestlogging  = "sampled"
   expiration      = ""
 
@@ -30,22 +29,133 @@ resource "sigsci_site_rule" "test" {
   }
 
   conditions {
-    type     = "single"
-    field    = "ip"
-    operator = "equals"
-    value    = "1.2.3.5"
+    type           = "multival"
+    field          = "requestHeader"
+    operator       = "exists"
+    group_operator = "all"
+
     conditions {
-      type           = "multival"
-      field          = "ip"
-      operator       = "equals"
-      group_operator = "all"
-      value          = "1.2.3.8"
+      type     = "single"
+      field    = "name"
+      operator = "equals"
+      value    = "Content-Type"
+    }
+
+    conditions {
+      type     = "single"
+      field    = "valueString"
+      operator = "equals"
+      value    = "application/json"
     }
   }
 
   actions {
-    type   = "excludeSignal"
-    signal = "corp.signal_id"
+    type = "block"
+  }
+}
+
+resource "sigsci_site_rule" "test-ratelimit-rule-conditions" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "rateLimit"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example rate limit rule that rate limits clients who match the rule conditions after exceeding threshold"
+  signal          = "site.count-ratelimit-rule1"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "path"
+    operator = "equals"
+    value    = "/login"
+  }
+
+  rate_limit = {
+    threshold = 6
+    interval  = 10
+    duration  = 300
+  }
+
+  actions {
+    type   = "logRequest"
+    signal = "site.count-ratelimit-rule1"
+  }
+}
+
+resource "sigsci_site_rule" "test-ratelimit-other-signal" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "rateLimit"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example rate limit rule that rate limits clients who match a different signal after exceeding threshold"
+  signal          = "site.count-ratelimit-rule2"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "path"
+    operator = "equals"
+    value    = "/reset_password"
+  }
+
+  rate_limit = {
+    threshold = 6
+    interval  = 10
+    duration  = 300
+  }
+
+  actions {
+    type   = "logRequest"
+    signal = "site.action-on-other-signal"
+  }
+}
+
+resource "sigsci_site_rule" "test-ratelimit-all-requests" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "rateLimit"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example rule that rate limits all requests from clients after exceeding threshold"
+  signal          = "site.count-ratelimit-rule3"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "path"
+    operator = "equals"
+    value    = "/signup"
+  }
+
+  rate_limit = {
+    threshold = 6
+    interval  = 10
+    duration  = 300
+  }
+
+  actions {
+    type   = "logRequest"
+    signal = "ALL-REQUESTS"
+  }
+}
+
+resource "sigsci_site_rule" "test-signal-exclusion" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "signal"
+  group_operator  = "all"
+  enabled         = true
+  reason          = "Example signal exclusion site rule"
+  signal          = "SQLI"
+  expiration      = ""
+
+  conditions {
+    type     = "single"
+    field    = "ip"
+    operator = "equals"
+    value    = "1.2.3.6"
+  }
+
+  actions {
+    type = "excludeSignal"
   }
 }
 ```
@@ -58,37 +168,24 @@ resource "sigsci_site_rule" "test" {
 
 ### Required
 
-- `actions` (Block Set, Min: 1, Max: 2) Actions (see [below for nested schema](#nestedblock--actions))
 - `conditions` (Block Set, Min: 1, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions))
 - `enabled` (Boolean) enable the rule
 - `expiration` (String) Date the rule will automatically be disabled. If rule is always enabled, will return empty string
 - `group_operator` (String) Conditions that must be matched when evaluating the request (all, any)
 - `reason` (String) Description of the rule
 - `site_short_name` (String) Site short name
-- `type` (String) Type of rule (request, signal exclusion, rateLimit)
+- `type` (String) Type of rule (request, signal, rateLimit)
 
 ### Optional
 
+- `actions` (Block Set, Max: 2) Actions (see [below for nested schema](#nestedblock--actions))
 - `rate_limit` (Map of String) Rate Limit
-- `requestlogging` (String) Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for request rules that have a block or allow action.
+- `requestlogging` (String) Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal` or `rateLimit`.
 - `signal` (String) The signal id of the signal being excluded
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-<a id="nestedblock--actions"></a>
-### Nested Schema for `actions`
-
-Required:
-
-- `type` (String) (block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)
-
-Optional:
-
-- `response_code` (Number) HTTP code agent for agent to respond with. range: 400-499, defaults to '406' if not provided
-- `signal` (String) signal id to tag
-
 
 <a id="nestedblock--conditions"></a>
 ### Nested Schema for `conditions`
@@ -100,10 +197,12 @@ Required:
 Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions))
-- `field` (String) type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
+- `field` (String) types:
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
+    - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
-- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
-- `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
+- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
+- `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 <a id="nestedblock--conditions--conditions"></a>
 ### Nested Schema for `conditions.conditions`
@@ -115,10 +214,12 @@ Required:
 Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions--conditions))
-- `field` (String) type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
+- `field` (String) types:
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
+    - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
-- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
-- `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
+- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
+- `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
 
 <a id="nestedblock--conditions--conditions--conditions"></a>
 ### Nested Schema for `conditions.conditions.conditions`
@@ -129,10 +230,28 @@ Required:
 
 Optional:
 
-- `field` (String) type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)
+- `field` (String) types:
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
+    - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
-- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)
-- `value` (String) type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)
+- `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
+- `value` (String) type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)
+
+
+
+
+<a id="nestedblock--actions"></a>
+### Nested Schema for `actions`
+
+Required:
+
+- `type` (String) (block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)
+
+Optional:
+
+- `redirect_url` (String) URL to redirect to when blocking response code is set to 301 or 302
+- `response_code` (Number) HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided. Only valid with the 'block' action type.
+- `signal` (String) signal id to tag
 
 ### Templated Signals
 We have curated a list of templates for common rules, the full list of available signals is available below.

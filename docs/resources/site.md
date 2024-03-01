@@ -34,13 +34,24 @@ resource "sigsci_site" "my-site" {
 
 - `agent_anon_mode` (String) Agent IP anonymization mode - "" (empty string) or 'EU'
 - `agent_level` (String) Agent action level - 'block', 'log' or 'off'
+- `attack_threshold` (Block Set) List entries (see [below for nested schema](#nestedblock--attack_threshold))
 - `block_duration_seconds` (Number) Duration to block an IP in seconds
+- `block_http_code` (Number) HTTP response code to send when traffic is being blocked
+- `block_redirect_url` (String) URL to redirect to when blocking with a '301' or '302' HTTP status code
+- `immediate_block` (Boolean) Immediately block requests that contain attack signals
 
 ### Read-Only
 
-- `block_http_code` (Number) HTTP response code to send when traffic is being blocked
 - `id` (String) The ID of this resource.
-- `primary_agent_key` (Map of String) The sites primary Agent key
+- `primary_agent_key` (Map of String, Sensitive) The sites primary Agent key
+
+<a id="nestedblock--attack_threshold"></a>
+### Nested Schema for `attack_threshold`
+
+Required:
+
+- `interval` (Number)
+- `threshold` (Number)
 
 ## Import
 

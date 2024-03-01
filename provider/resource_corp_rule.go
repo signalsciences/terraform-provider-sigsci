@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
@@ -26,9 +27,9 @@ func resourceCorpRule() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of rule (request, signal exclusion)",
+				Description: "Type of rule (request, signal)",
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if existsInString(val.(string), "request", "signal", "exclusion") {
+					if existsInString(val.(string), "request", "signal") {
 						return nil, nil
 					}
 					return nil, []error{}
@@ -58,7 +59,7 @@ func resourceCorpRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(block, allow, exclude)",
+							Description: "(block, allow, addSignal, excludeSignal)",
 							Required:    true,
 						},
 						"signal": {
@@ -83,13 +84,13 @@ func resourceCorpRule() *schema.Resource {
 						},
 						"field": {
 							Type:         schema.TypeString,
-							Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+							Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 							Optional:     true,
 							ValidateFunc: validateConditionField,
 						},
 						"operator": {
 							Type:        schema.TypeString,
-							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+							Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)",
 							Optional:    true,
 						},
 						"group_operator": {
@@ -117,13 +118,13 @@ func resourceCorpRule() *schema.Resource {
 									},
 									"field": {
 										Type:         schema.TypeString,
-										Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+										Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 										Optional:     true,
 										ValidateFunc: validateConditionField,
 									},
 									"operator": {
 										Type:        schema.TypeString,
-										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+										Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)",
 										Optional:    true,
 									},
 									"group_operator": {
@@ -133,7 +134,7 @@ func resourceCorpRule() *schema.Resource {
 									},
 									"value": {
 										Type:        schema.TypeString,
-										Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+										Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 										Optional:    true,
 									},
 									"conditions": {
@@ -150,13 +151,13 @@ func resourceCorpRule() *schema.Resource {
 												},
 												"field": {
 													Type:         schema.TypeString,
-													Description:  "type: single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueIp, signalType, signal, requestHeader, queryParameter, postParameter)",
+													Description:  fmt.Sprintf("types:\n    - single - (%s)\n    - multival - (%s)", strings.Join(KnownSingleConditionFields, ", "), strings.Join(KnownMultivalConditionFields, ", ")),
 													Optional:     true,
 													ValidateFunc: validateConditionField,
 												},
 												"operator": {
 													Type:        schema.TypeString,
-													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, like, notLike, exists, doesNotExist, inList, notInList)",
+													Description: "type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)",
 													Optional:    true,
 												},
 												"group_operator": {
@@ -166,7 +167,7 @@ func resourceCorpRule() *schema.Resource {
 												},
 												"value": {
 													Type:        schema.TypeString,
-													Description: "type: single - See request fields (https://docs.signalsciences.net/using-signal-sciences/features/rules/#request-fields)",
+													Description: "type: single - See request fields (https://docs.fastly.com/signalsciences/using-signal-sciences/rules/defining-rule-conditions/#fields)",
 													Optional:    true,
 												},
 											},
@@ -177,6 +178,12 @@ func resourceCorpRule() *schema.Resource {
 						},
 					},
 				},
+			},
+			"requestlogging": {
+				Type:             schema.TypeString,
+				Description:      "Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal`.",
+				Optional:         true,
+				DiffSuppressFunc: suppressRequestLoggingDefaultDiffs,
 			},
 			"signal": {
 				Type:        schema.TypeString,
@@ -196,18 +203,20 @@ func resourceCorpRule() *schema.Resource {
 		},
 	}
 }
+
 func resourceCorpRuleCreate(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
 	corp := pm.Corp
 	corpRuleBody := sigsci.CreateCorpRuleBody{
-		Type:          d.Get("type").(string),
-		CorpScope:     d.Get("corp_scope").(string),
-		Enabled:       d.Get("enabled").(bool),
-		GroupOperator: d.Get("group_operator").(string),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		CorpScope:      d.Get("corp_scope").(string),
+		Enabled:        d.Get("enabled").(bool),
+		GroupOperator:  d.Get("group_operator").(string),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	corpRuleBody.SiteNames = expandStringArray(d.Get("site_short_names").(*schema.Set))
@@ -228,13 +237,14 @@ func resourceCorpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	corp := pm.Corp
 
 	updateCorpRuleBody := sigsci.CreateCorpRuleBody{
-		Type:          d.Get("type").(string),
-		CorpScope:     d.Get("corp_scope").(string),
-		Enabled:       d.Get("enabled").(bool),
-		GroupOperator: d.Get("group_operator").(string),
-		Reason:        d.Get("reason").(string),
-		Signal:        d.Get("signal").(string),
-		Expiration:    d.Get("expiration").(string),
+		Type:           d.Get("type").(string),
+		CorpScope:      d.Get("corp_scope").(string),
+		Enabled:        d.Get("enabled").(bool),
+		GroupOperator:  d.Get("group_operator").(string),
+		Reason:         d.Get("reason").(string),
+		Signal:         d.Get("signal").(string),
+		Expiration:     d.Get("expiration").(string),
+		RequestLogging: d.Get("requestlogging").(string),
 	}
 
 	updateCorpRuleBody.SiteNames = expandStringArray(d.Get("site_short_names").(*schema.Set))
@@ -247,6 +257,7 @@ func resourceCorpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	}
 	return resourceCorpRuleRead(d, m)
 }
+
 func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client
@@ -286,6 +297,10 @@ func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("requestlogging", rule.RequestLogging)
+	if err != nil {
+		return err
+	}
 	err = d.Set("site_short_names", flattenStringArray(rule.SiteNames))
 	if err != nil {
 		return err
@@ -300,6 +315,7 @@ func resourceCorpRuleRead(d *schema.ResourceData, m interface{}) error {
 	}
 	return nil
 }
+
 func resourceCorpRuleDelete(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	sc := pm.Client

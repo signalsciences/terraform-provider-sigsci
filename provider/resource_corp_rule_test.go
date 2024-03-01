@@ -82,7 +82,6 @@ func TestResourceCorpRule_basic(t *testing.T) {
 
 // The api appears to sort site_short_names
 func TestResourceCorpRule_SortedSiteNames(t *testing.T) {
-	t.Parallel()
 	resourceName := "sigsci_corp_rule.test"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -225,4 +224,62 @@ func testACCCheckCorpRuleDestroy(s *terraform.State) error {
 		}
 	}
 	return nil
+}
+
+func TestResourceCorpRequestRule(t *testing.T) {
+	t.Parallel()
+	resourceName := "sigsci_corp_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckCorpRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: `
+				resource "sigsci_corp_rule" "test"{
+					type= "request"
+					corp_scope="global"
+					enabled=true
+					group_operator="any"
+					reason="Example corp rule"
+					requestlogging="none"
+					expiration= ""
+
+					conditions {
+						type="single"
+						field="ip"
+						operator="equals"
+						value="1.2.3.4"
+					}
+					actions {
+						type="block"
+					}
+			}`,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.1990726244.type", "block"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.conditions.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.field", "ip"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.group_operator", ""),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.operator", "equals"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.type", "single"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.2534374319.value", "1.2.3.4"),
+					resource.TestCheckResourceAttr(resourceName, "corp_scope", "global"),
+					resource.TestCheckResourceAttr(resourceName, "enabled", "true"),
+					resource.TestCheckResourceAttr(resourceName, "expiration", ""),
+					resource.TestCheckResourceAttr(resourceName, "group_operator", "any"),
+					resource.TestCheckResourceAttr(resourceName, "reason", "Example corp rule"),
+					resource.TestCheckResourceAttr(resourceName, "type", "request"),
+					resource.TestCheckResourceAttr(resourceName, "requestlogging", "none"),
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateCheck:  testAccImportStateCheckFunction(1),
+			},
+		},
+	})
 }

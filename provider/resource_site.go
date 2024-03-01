@@ -42,22 +42,52 @@ func resourceSite() *schema.Resource {
 				Optional:    true,
 				Default:     "",
 			},
+			"attack_threshold": {
+				Type:        schema.TypeSet,
+				Description: "List entries",
+				Required:    false,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"interval": {
+							Type:     schema.TypeInt,
+							Required: true,
+						},
+
+						"threshold": {
+							Type:     schema.TypeInt,
+							Required: true,
+						},
+					},
+				},
+			},
 			"block_duration_seconds": { // Has issues on create -- will always be default, will update just fine to the correct value
 				Type:        schema.TypeInt,
 				Description: "Duration to block an IP in seconds",
 				Optional:    true,
 				Default:     86400,
 			},
-			"block_http_code": { // CANNOT UPDATE THIS FIELD,
+			"block_http_code": {
 				Type:        schema.TypeInt,
 				Description: "HTTP response code to send when traffic is being blocked",
-				Computed:    true,
+				Optional:    true,
+				Default:     406,
+			},
+			"block_redirect_url": {
+				Type:        schema.TypeString,
+				Description: "URL to redirect to when blocking with a '301' or '302' HTTP status code",
+				Optional:    true,
+			},
+			"immediate_block": {
+				Type:        schema.TypeBool,
+				Description: "Immediately block requests that contain attack signals",
+				Optional:    true,
 			},
 			"primary_agent_key": {
 				Type:        schema.TypeMap,
 				Description: "The sites primary Agent key",
 				Computed:    true,
-				Sensitive: true,
+				Sensitive:   true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -65,12 +95,12 @@ func resourceSite() *schema.Resource {
 							Computed: true,
 						},
 						"secret_key": {
-							Type:      schema.TypeString,
-							Computed:  true,
+							Type:     schema.TypeString,
+							Computed: true,
 						},
 						"access_key": {
-							Type:      schema.TypeString,
-							Computed:  true,
+							Type:     schema.TypeString,
+							Computed: true,
 						},
 					},
 				},
@@ -87,10 +117,12 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
+		AttackThresholds:     expandAttackThresholds(d.Get("attack_threshold").(*schema.Set)),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
+		BlockRedirectURL:     d.Get("block_redirect_url").(string),
+		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
-
 	if err != nil {
 		return err
 	}
@@ -130,6 +162,10 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("block_redirect_url", site.BlockRedirectURL)
+	if err != nil {
+		return err
+	}
 	err = d.Set("agent_anon_mode", site.AgentAnonMode)
 	if err != nil {
 		return err
@@ -139,6 +175,11 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	err = d.Set("short_name", site.Name)
+	if err != nil {
+		return err
+	}
+
+	err = d.Set("immediate_block", site.ImmediateBlock)
 	if err != nil {
 		return err
 	}
@@ -163,9 +204,12 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 	_, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
+		AttackThresholds:     expandAttackThresholds(d.Get("attack_threshold").(*schema.Set)),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
+		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
+		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
 	if err != nil {
 		return err

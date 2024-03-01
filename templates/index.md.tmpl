@@ -1,8 +1,8 @@
 ---
-page_title: "sigsci Provider"
+page_title: "{{.ProviderShortName}} Provider"
 subcategory: ""
 description: |-
-  
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
 ---
 
 ## Requirements
@@ -18,21 +18,15 @@ git clone git@github.com:signalsciences/terraform-provider-sigsci.git
 cd terraform-provider-sigsci && make build
 ```
 
-# sigsci Provider
+# {{.ProviderShortName}} Provider
 
+{{ .Description | trimspace }}
 
-
+{{ if .HasExample -}}
 ## Example Usage
 
-```terraform
-provider "sigsci" {
-  corp  = "" // Required. may also provide via env variable SIGSCI_CORP
-  email = "" // Required. may also provide via env variable SIGSCI_EMAIL
-  //  auth_token = "" // May also provide via env variable SIGSCI_TOKEN
-  //  password = ""   // May also provide via env variable SIGSCI_PASSWORD
-  //  fastly_api_key = "" // May also provide via env variable FASTLY_API_KEY. Required for Edge Deployments functionality.
-}
-```
+{{ tffile "examples/provider/provider.tf" }}
+{{- end }}
 
 ## Schema
 

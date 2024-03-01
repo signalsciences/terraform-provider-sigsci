@@ -1,8 +1,7 @@
 terraform {
   required_providers {
     sigsci = {
-      source  = "signalsciences/sigsci"
-      version = "1.2.1"
+      source = "signalsciences/sigsci"
     }
   }
 }
@@ -15,6 +14,7 @@ provider "sigsci" {
   //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
   //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
   //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
+  //  fastly_api_key = ""  //may also provide via env variable FASTLY_API_KEY. Required for Edge Deployments functionality.
 }
 
 ############# Corp Level Resources #############
@@ -25,6 +25,19 @@ resource "sigsci_site" "my-site" {
   block_duration_seconds = 86400
   agent_anon_mode        = ""
   agent_level            = "block"
+  immediate_block        = false
+  attack_threshold {
+    interval  = 1
+    threshold = 25
+  }
+  attack_threshold {
+    interval  = 10
+    threshold = 150
+  }
+  attack_threshold {
+    interval  = 60
+    threshold = 900
+  }
 }
 
 resource "sigsci_corp_list" "test" {
@@ -61,8 +74,7 @@ resource "sigsci_corp_rule" "test" {
     value    = "1.2.3.5"
   }
   actions {
-    type   = "excludeSignal"
-    signal = sigsci_corp_signal_tag.test.id
+    type = "excludeSignal"
   }
 }
 
@@ -160,7 +172,6 @@ resource "sigsci_site_rule" "test" {
   reason          = "Example site rule update"
   signal          = "SQLI"
   expiration      = ""
-  requestlogging  = "sampled"
 
   conditions {
     type     = "single"
@@ -173,12 +184,25 @@ resource "sigsci_site_rule" "test" {
     field    = "ip"
     operator = "equals"
     value    = "1.2.3.5"
+  }
+  conditions {
+    type           = "multival"
+    field          = "queryParameter"
+    operator       = "exists"
+    group_operator = "all"
+
     conditions {
-      type           = "multival"
-      field          = "ip"
-      operator       = "equals"
-      group_operator = "all"
-      value          = "1.2.3.8"
+      type     = "single"
+      field    = "name"
+      operator = "equals"
+      value    = "hello"
+    }
+
+    conditions {
+      type     = "single"
+      field    = "value"
+      operator = "equals"
+      value    = "world"
     }
   }
 
@@ -293,7 +317,7 @@ resource "sigsci_site_rule" "testsignal" {
   type            = "templatedSignal"
   group_operator  = "all"
   enabled         = true
-  reason          = "Example site rule update"
+  reason          = ""
   signal          = "PW-RESET-ATTEMPT"
   expiration      = ""
 
@@ -313,12 +337,14 @@ resource "sigsci_site_rule" "testsignal" {
 
   conditions {
     type           = "multival"
+    field          = "postParameter"
+    operator       = "exists"
     group_operator = "all"
     conditions {
       field    = "name"
       operator = "equals"
       type     = "single"
-      value    = "foo"
+      value    = "submit"
     }
   }
 }
@@ -388,3 +414,14 @@ cX4iWLb38v7KEornZfofXEw=
 -----END PRIVATE KEY-----
 PRIVATEKEY
 }
+
+#resource "sigsci_edge_deployment" "edge" {
+#  site_short_name = sigsci_site.my-site.short_name
+#}
+
+#resource "sigsci_edge_deployment_service" "edge" {
+#  site_short_name  = sigsci_site.my-site.short_name
+#  fastly_sid       = "[Fastly service id]"
+#  activate_version = true
+#  percent_enabled  = 100
+#}

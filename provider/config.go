@@ -6,16 +6,16 @@ import (
 	"github.com/signalsciences/go-sigsci"
 )
 
-//Config struct for email and password
+// Config struct for email and password
 type Config struct {
-	URL       string
-	Email     string
-	Password  string
-	APIToken  string
-	FastlyKey string
+	URL          string
+	Email        string
+	Password     string
+	APIToken     string
+	FastlyAPIKey string
 }
 
-//Client returns a signal science client
+// Client returns a signal science client
 func (c *Config) Client() (interface{}, error) {
 	if c.URL != "" {
 		sigsci.SetAPIUrl(c.URL)
@@ -43,8 +43,8 @@ func (c *Config) Client() (interface{}, error) {
 		}
 	}
 
-	if c.FastlyKey != "" {
-		client.SetFastlyKey(c.FastlyKey)
+	if c.FastlyAPIKey != "" {
+		client.SetFastlyKey(c.FastlyAPIKey)
 	}
 
 	return client, nil

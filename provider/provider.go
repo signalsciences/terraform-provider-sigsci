@@ -38,10 +38,10 @@ func Provider() terraform.ResourceProvider {
 				Sensitive:    true,
 				AtLeastOneOf: []string{"password", "auth_token"},
 			},
-			"fastly_key": {
+			"fastly_api_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("FASTLY_KEY", nil),
+				DefaultFunc: schema.EnvDefaultFunc("FASTLY_API_KEY", nil),
 				Description: "The Fastly API key used for deploying Signal Sciences as a Fastly edge security service. For edge deployment service calls, the Fastly key must have write access to the given service.",
 				Sensitive:   true,
 			},
@@ -50,6 +50,12 @@ func Provider() terraform.ResourceProvider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("SIGSCI_URL", nil),
 				Description: "URL override for testing",
+			},
+			"validate": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Enable validation of API credentials during provider initialization. Default is true.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -63,16 +69,20 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_site_blocklist":      resourceSiteBlocklist(),
 			"sigsci_site_allowlist":      resourceSiteAllowlist(),
 			//"sigsci_site_monitor":        resourceSiteMonitor(),
-			"sigsci_site_header_link":          resourceSiteHeaderLink(),
-			"sigsci_site_integration":          resourceSiteIntegration(),
-			"sigsci_corp_list":                 resourceCorpList(),
-			"sigsci_corp_rule":                 resourceCorpRule(),
-			"sigsci_corp_signal_tag":           resourceCorpSignalTag(),
-			"sigsci_corp_integration":          resourceCorpIntegration(),
-			"sigsci_corp_cloudwaf_instance":    resourceCorpCloudWAFInstance(),
-			"sigsci_corp_cloudwaf_certificate": resourceCorpCloudWAFCertificate(),
-			"sigsci_edge_deployment":           resourceEdgeDeployment(),
-			"sigsci_edge_deployment_service":   resourceEdgeDeploymentService(),
+			"sigsci_site_header_link":                resourceSiteHeaderLink(),
+			"sigsci_site_integration":                resourceSiteIntegration(),
+			"sigsci_corp_list":                       resourceCorpList(),
+			"sigsci_corp_rule":                       resourceCorpRule(),
+			"sigsci_corp_signal_tag":                 resourceCorpSignalTag(),
+			"sigsci_corp_integration":                resourceCorpIntegration(),
+			"sigsci_corp_cloudwaf_instance":          resourceCorpCloudWAFInstance(),
+			"sigsci_corp_cloudwaf_certificate":       resourceCorpCloudWAFCertificate(),
+			"sigsci_edge_deployment":                 resourceEdgeDeployment(),
+			"sigsci_edge_deployment_service":         resourceEdgeDeploymentService(),
+			"sigsci_edge_deployment_service_backend": resourceEdgeDeploymentServiceBackend(),
+		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"sigsci_sites": dataSourceSites(),
 		},
 	}
 	provider.ConfigureFunc = providerConfigure()
@@ -82,11 +92,11 @@ func Provider() terraform.ResourceProvider {
 func providerConfigure() schema.ConfigureFunc {
 	return func(d *schema.ResourceData) (interface{}, error) {
 		config := Config{
-			Email:     d.Get("email").(string),
-			Password:  d.Get("password").(string),
-			APIToken:  d.Get("auth_token").(string),
-			FastlyKey: d.Get("fastly_key").(string),
-			URL:       d.Get("api_url").(string),
+			Email:        d.Get("email").(string),
+			Password:     d.Get("password").(string),
+			APIToken:     d.Get("auth_token").(string),
+			FastlyAPIKey: d.Get("fastly_api_key").(string),
+			URL:          d.Get("api_url").(string),
 		}
 		client, err := config.Client()
 		if err != nil {
@@ -97,11 +107,16 @@ func providerConfigure() schema.ConfigureFunc {
 			Corp:   d.Get("corp").(string),
 			Client: client.(sigsci.Client),
 		}
-		// Test before continuing
-		_, err = metadata.Client.GetCorp(metadata.Corp)
-		if err != nil {
-			return nil, err
+
+		validate := d.Get("validate").(bool)
+		if validate {
+			// Test before continuing
+			_, err = metadata.Client.GetCorp(metadata.Corp)
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		return metadata, nil
 	}
 }

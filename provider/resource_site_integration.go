@@ -34,7 +34,7 @@ func resourceSiteIntegration() *schema.Resource {
 			},
 			"events": {
 				Type:        schema.TypeSet,
-				Description: "Array of event types. Visit https://docs.signalsciences.net/integrations to find out which events the service you are connecting allows.",
+				Description: "Array of event types. Visit https://docs.fastly.com/signalsciences/integrations to find out which events the service you are connecting allows.",
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},

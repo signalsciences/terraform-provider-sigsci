@@ -3,13 +3,12 @@
 
 ## Requirements
 * [Terraform](https://www.terraform.io/downloads.html) > 0.12.x
-* [Go](https://golang.org/doc/install) 1.17
+* [Go](https://golang.org/doc/install) 1.20
 
 Check out the [Terraform Documentation](https://www.terraform.io/docs/configuration/index.html) and their [Introduction](https://www.terraform.io/intro/index.html) for more information on terraform
 
 ## Building the provider
 If you are using terraform >0.13.x, our release can be automatically downloaded from their registry using the block described in "Using the provider"
- 
 
 If you are using terraform 0.12.x, you must either build or copy the appropriate executable to your plugin directory. ex `terraform.d/plugins/darwin_amd64`
 
@@ -17,8 +16,6 @@ You may find prebuilt binaries in our [Releases](https://github.com/signalscienc
 
 If you wish to build from source, first make the correct directory, cd to it, and checkout the repo.  Running `make build` will then build the provider and output it to terraform-provider-sigsci
 ```shell script
-mkdir -p $GOPATH/src/github.com/signalsciences/
-cd $GOPATH/src/github.com/signalsciences/
 git clone git@github.com:signalsciences/terraform-provider-sigsci.git
 cd terraform-provider-sigsci
 make build
@@ -40,70 +37,24 @@ terraform {
 
 # Required configuration block (for all versions of terraform)
 provider "sigsci" {
-  //  corp = ""       // Required. may also provide via env variable SIGSCI_CORP
-  //  email = ""      // Required. may also provide via env variable SIGSCI_EMAIL
-  //  auth_token = "" //may also provide via env variable SIGSCI_TOKEN
-  //  password = ""   //may also provide via env variable SIGSCI_PASSWORD
+  //  corp           = "" // Required. may also provide via env variable SIGSCI_CORP
+  //  email          = "" // Required. may also provide via env variable SIGSCI_EMAIL
+  //  auth_token     = "" // May also provide via env variable SIGSCI_TOKEN
+  //  password       = "" // May also provide via env variable SIGSCI_PASSWORD
+  //  fastly_api_key = "" // May also provide via env variable FASTLY_API_KEY. Required for Edge Deployments functionality.
 }
 ```
-## Corp resources
-[Site](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site.md)
 
-[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_list.md)
+## Resources
 
-[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_signal_tag.md)
+Resource documentation and examples can be found in [docs/resources](./docs/resources).
 
-[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_rule.md)
+## FAQ
 
-[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_integration.md)
-
-[Cloud WAF Instance](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_instance.md)
-
-[Cloud WAF Certificate](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/corp_cloudwaf_certificate.md)
-
-## Site resources
-
-[Lists](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_list.md)
-
-[Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_rule.md)
-
-[Tags](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_signal_tag.md)
-
-[Redactions](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_redaction.md)
-
-[Alerts](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_alert.md)
-
-[Templated Rules](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_templated_rule.md)
-
-[Allowlist](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_allowlist.md)
-
-[Blocklist](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_blocklist.md)
-
-[Header Links](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_header_link.md)
-
-[Integrations](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/docs/resources/site_integration.md)
-
-More information on each resource and field can be found on the [Signal Sciences Api Docs](https://docs.signalsciences.net/api/).
-
-
-## Importing
-
-All resources are importable. Importing will vary depending on if you are importing a corp level resource, or a site level resource
-##### Corp Resources
-```hcl-terraform
-terraform import resource.name id // General form
-terraform import sigsci_site.my-site test_site // Example
-```
-
-##### Site Resources
-```hcl-terraform
-terraform import resource.name site_short_name:id //General form
-terraform import sigsci_site_list.manual-list test_site:site.manual-list //Example
-```
-
+FAQ can be found in [docs/guides/FAQ.md](./docs/guides/FAQ.md).
 
 ## Example
-[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource 
+[main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource.
 ```hcl-terraform
 resource "sigsci_site" "my-site" {
   short_name             = "manual_test"
@@ -176,3 +127,13 @@ resource "sigsci_corp_list" "test_list" {
 }
 
 ```
+
+## Errors
+
+Errors occasionally occur when updating certain resources. If an error occurs please try re-running with `-parallelism=1`:
+
+```
+$ terraform apply -parallelism=1
+```
+
+If running with `-parallelism=1` does not resolve the error, please open an issue.
