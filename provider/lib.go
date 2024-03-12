@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
@@ -24,6 +25,7 @@ func suppressRequestLoggingDefaultDiffs(k, old, new string, d *schema.ResourceDa
 type providerMetadata struct {
 	Corp   string
 	Client sigsci.Client
+	Mutex  *sync.Mutex
 }
 
 func flattenStringArray(entries []string) []interface{} {
