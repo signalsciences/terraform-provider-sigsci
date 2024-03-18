@@ -245,10 +245,11 @@ Optional:
 
 Required:
 
-- `type` (String) (block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)
+- `type` (String) (addSignal, allow, block, browserChallenge, excludeSignal) (rateLimit rule valid values: logRequest, blockSignal)
 
 Optional:
 
+- `allow_interactive` (Boolean) Allows toggling between a non-interactive and interactive browser challenge. Only valid with the 'browserChallenge' action type.
 - `redirect_url` (String) URL to redirect to when blocking response code is set to 301 or 302
 - `response_code` (Number) HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided. Only valid with the 'block' action type.
 - `signal` (String) signal id to tag
