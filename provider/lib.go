@@ -427,11 +427,17 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 			redirectURL = castElement["redirect_url"].(string)
 		}
 
+		var allowInteractive bool
+		if castElement["allow_interactive"] != nil {
+			allowInteractive = castElement["allow_interactive"].(bool)
+		}
+
 		a := sigsci.Action{
-			Type:         castElement["type"].(string),
-			Signal:       signal,
-			ResponseCode: responseCode,
-			RedirectURL:  redirectURL,
+			Type:             castElement["type"].(string),
+			Signal:           signal,
+			ResponseCode:     responseCode,
+			RedirectURL:      redirectURL,
+			AllowInteractive: allowInteractive,
 		}
 		actions = append(actions, a)
 	}
@@ -546,6 +552,10 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 			if action.ResponseCode == 301 || action.ResponseCode == 302 {
 				actionMap["redirect_url"] = action.RedirectURL
 			}
+
+			if action.AllowInteractive {
+				actionMap["allow_interactive"] = action.AllowInteractive
+			}
 		}
 		actionsMap[i] = actionMap
 	}
@@ -578,7 +588,7 @@ var siteImporter = schema.ResourceImporter{
 var KnownSingleConditionFields = []string{
 	"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
 	"paramname", "paramvalue", "country", "name", "valueString", "valueInt", "valueIp", "signalType",
-	"value",
+	"value", "ja3Fingerprint",
 }
 
 var KnownMultivalConditionFields = []string{

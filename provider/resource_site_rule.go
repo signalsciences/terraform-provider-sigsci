@@ -63,7 +63,7 @@ func resourceSiteRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)",
+							Description: "(addSignal, allow, block, browserChallenge, excludeSignal) (rateLimit rule valid values: logRequest, blockSignal)",
 							Required:    true,
 						},
 						"signal": {
@@ -82,6 +82,11 @@ func resourceSiteRule() *schema.Resource {
 							Description:  "URL to redirect to when blocking response code is set to 301 or 302",
 							Optional:     true,
 							ValidateFunc: validateActionRedirectURL,
+						},
+						"allow_interactive": {
+							Type:        schema.TypeBool,
+							Description: "Allows toggling between a non-interactive and interactive browser challenge. Only valid with the 'browserChallenge' action type.",
+							Optional:    true,
 						},
 					},
 				},
