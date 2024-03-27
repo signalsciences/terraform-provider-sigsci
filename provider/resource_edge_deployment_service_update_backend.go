@@ -37,6 +37,9 @@ func updateEdgeDeploymentServiceBackend(d *schema.ResourceData, m interface{}) e
 
 	d.SetId(d.Get("fastly_sid").(string))
 
+	ProviderMutex.Lock()
+	defer ProviderMutex.Unlock()
+
 	return pm.Client.UpdateEdgeDeploymentBackends(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string))
 
 }
