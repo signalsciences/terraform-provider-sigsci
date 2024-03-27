@@ -245,7 +245,7 @@ Optional:
 
 Required:
 
-- `type` (String) (addSignal, allow, block, browserChallenge, excludeSignal) (rateLimit rule valid values: logRequest, blockSignal)
+- `type` (String) (addSignal, allow, block, browserChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: logRequest, blockSignal)
 
 Optional:
 
