@@ -151,10 +151,13 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
                             signal=sigsci_site_signal_tag.test_tag.id
                             type="logRequest"
                         }
-                        rate_limit = {
+                        rate_limit {
                             threshold=10
                             interval=10
                             duration=600
+                            client_identifiers {
+                                type = "ip"
+                            }
                         }
                 }`, testSite, testSite),
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -167,9 +170,13 @@ func TestACCResourceSiteRuleRateLimit_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "actions.194535128.type", "logRequest"),
 					resource.TestCheckResourceAttr(resourceName, "actions.194535128.signal", "site.my-rate-limit-tag"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "10"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.duration", "600"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.3378795908.threshold", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.3378795908.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.3378795908.duration", "600"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.3378795908.client_identifiers.#", "1"),
+
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.3378795908.client_identifiers.2548995648.type", "ip"),
 				),
 			},
 			{
@@ -878,10 +885,13 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
                         signal=sigsci_site_signal_tag.test_tag.id
                         requestlogging=""
                         expiration= ""
-                        rate_limit = {
+                        rate_limit {
                             threshold = 5
                             interval  = 10
                             duration  = 300
+                            client_identifiers {
+                                type = "ip"
+                            }
                         }
                         conditions {
                             type="single"
@@ -899,10 +909,10 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "type", "rateLimit"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Site rule update with rate limit"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.%", "3"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "5"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.duration", "300"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2479056779.threshold", "5"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2479056779.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2479056779.duration", "300"),
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.type", "logRequest"),
 					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.signal", "WRONG-API-CLIENT"),
@@ -931,10 +941,15 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
                         signal= sigsci_site_signal_tag.test_tag.id
                         requestlogging=""
                         expiration= ""
-                        rate_limit = {
+                        rate_limit {
                             threshold = 6
                             interval  = 10
                             duration  = 300
+                            client_identifiers {
+                                type = "requestHeader"
+                                name = "X-Request-Info"
+                                key = "key1"
+                            }
                         }
                         conditions {
                             type="single"
@@ -951,10 +966,16 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "type", "rateLimit"),
 					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
 					resource.TestCheckResourceAttr(resourceName, "reason", "Site rule update with rate limit"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.%", "3"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.threshold", "6"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.interval", "10"),
-					resource.TestCheckResourceAttr(resourceName, "rate_limit.duration", "300"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.threshold", "6"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.duration", "300"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.client_identifiers.#", "1"),
+
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.client_identifiers.1349511376.type", "requestHeader"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.client_identifiers.1349511376.name", "X-Request-Info"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.2941527592.client_identifiers.1349511376.key", "key1"),
+
 					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.type", "logRequest"),
 					resource.TestCheckResourceAttr(resourceName, "actions.2210203034.signal", "WRONG-API-CLIENT"),
@@ -965,6 +986,87 @@ func TestACCResourceSiteRule_UpdateRateLimit(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.operator", "equals"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.type", "single"),
 					resource.TestCheckResourceAttr(resourceName, "conditions.580978146.value", "1.2.3.9"),
+				),
+			},
+			{
+				ResourceName:        resourceName,
+				ImportStateIdPrefix: fmt.Sprintf("%s:", testSite),
+				ImportState:         true,
+				ImportStateVerify:   true,
+				ImportStateCheck:    testAccImportStateCheckFunction(1),
+			},
+		},
+	})
+}
+
+func TestACCResourceSiteRuleRateLimit_client_identifiers(t *testing.T) {
+	resourceName := "sigsci_site_rule.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testACCCheckSiteRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+                    resource "sigsci_site_signal_tag" "test_tag" {
+                      site_short_name = "%s"
+                      name            = "My rate limit tag"
+                      description     = "test description"
+                    }
+                    resource "sigsci_site_rule" "test" {
+                        site_short_name="%s"
+                        type= "rateLimit"
+                        group_operator="any"
+                        enabled= true
+                        reason= "Example site rule update"
+                        signal= sigsci_site_signal_tag.test_tag.id
+                        expiration= ""
+                        requestlogging= ""
+                        conditions {
+                            type="single"
+                            field="ip"
+                            operator="equals"
+                            value="1.2.3.4"
+                        }
+                        actions {
+                            signal=sigsci_site_signal_tag.test_tag.id
+                            type="logRequest"
+                        }
+                        rate_limit {
+                            threshold=10
+                            interval=10
+                            duration=600
+                            client_identifiers {
+                                type = "ip"
+                            }
+                            client_identifiers {
+                                type = "requestHeader"
+                                name = "X-Request-Info"
+                                key = "key1"
+                            }
+                        }
+                }`, testSite, testSite),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					//testCheckSiteRuleExists(resourceName),
+					//testCheckSiteRulesAreEqual(resourceName),
+					resource.TestCheckResourceAttr(resourceName, "type", "rateLimit"),
+					resource.TestCheckResourceAttr(resourceName, "site_short_name", testSite),
+					resource.TestCheckResourceAttr(resourceName, "reason", "Example site rule update"),
+					resource.TestCheckResourceAttr(resourceName, "actions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "actions.194535128.type", "logRequest"),
+					resource.TestCheckResourceAttr(resourceName, "actions.194535128.signal", "site.my-rate-limit-tag"),
+					resource.TestCheckResourceAttr(resourceName, "conditions.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.client_identifiers.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.threshold", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.interval", "10"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.duration", "600"),
+
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.client_identifiers.1349511376.key", "key1"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.client_identifiers.1349511376.name", "X-Request-Info"),
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.client_identifiers.1349511376.type", "requestHeader"),
+
+					resource.TestCheckResourceAttr(resourceName, "rate_limit.115245974.client_identifiers.2548995648.type", "ip"),
 				),
 			},
 			{

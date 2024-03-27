@@ -474,45 +474,65 @@ func expandAttackThresholds(attackThresholdsResource *schema.Set) []sigsci.Attac
 	return attackThresholds
 }
 
-func expandRuleRateLimit(rateLimitResource map[string]interface{}) *sigsci.RateLimit {
-	var threshold, interval, duration int
-	var err error
-	if val, ok := rateLimitResource["threshold"]; ok {
-		threshold, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
-	} else {
+func expandRuleRateLimit(rateLimitResource *schema.Set) *sigsci.RateLimit {
+	if len(rateLimitResource.List()) == 0 {
 		return nil
 	}
-	if val, ok := rateLimitResource["interval"]; ok {
-		interval, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
+
+	genericElement := rateLimitResource.List()[0]
+	castElement := genericElement.(map[string]interface{})
+
+	var clientIdentifiers []sigsci.ClientIdentifier
+	for _, m := range castElement["client_identifiers"].(*schema.Set).List() {
+		key := m.(map[string]interface{})["key"].(string)
+		name := m.(map[string]interface{})["name"].(string)
+		t := m.(map[string]interface{})["type"].(string)
+
+		ci := sigsci.ClientIdentifier{
+			Key:  key,
+			Name: name,
+			Type: t,
 		}
-	}
-	if val, ok := rateLimitResource["duration"]; ok {
-		duration, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
+
+		clientIdentifiers = append(clientIdentifiers, ci)
 	}
 
 	return &sigsci.RateLimit{
-		Threshold: threshold,
-		Interval:  interval,
-		Duration:  duration,
+		Threshold:         castElement["threshold"].(int),
+		Interval:          castElement["interval"].(int),
+		Duration:          castElement["duration"].(int),
+		ClientIdentifiers: clientIdentifiers,
 	}
 }
 
-func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
+func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) []interface{} {
 	if rateLimit == nil {
 		return nil
 	}
-	return map[string]string{
-		"threshold": strconv.Itoa(rateLimit.Threshold),
-		"interval":  strconv.Itoa(rateLimit.Interval),
-		"duration":  strconv.Itoa(rateLimit.Duration),
+
+	clientIdentifiers := []map[string]string{}
+	for _, ci := range rateLimit.ClientIdentifiers {
+		m := map[string]string{}
+		m["type"] = ci.Type
+
+		if ci.Name != "" {
+			m["name"] = ci.Name
+		}
+
+		if ci.Key != "" {
+			m["key"] = ci.Key
+		}
+
+		clientIdentifiers = append(clientIdentifiers, m)
+	}
+
+	return []interface{}{
+		map[string]interface{}{
+			"threshold":          rateLimit.Threshold,
+			"interval":           rateLimit.Interval,
+			"duration":           rateLimit.Duration,
+			"client_identifiers": clientIdentifiers,
+		},
 	}
 }
 

@@ -179,7 +179,7 @@ resource "sigsci_site_rule" "test-signal-exclusion" {
 ### Optional
 
 - `actions` (Block Set, Max: 2) Actions (see [below for nested schema](#nestedblock--actions))
-- `rate_limit` (Map of String) Rate Limit
+- `rate_limit` (Block Set, Max: 1) Rate Limit (see [below for nested schema](#nestedblock--rate_limit))
 - `requestlogging` (String) Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal` or `rateLimit`.
 - `signal` (String) The signal id of the signal being excluded
 
@@ -253,6 +253,29 @@ Optional:
 - `redirect_url` (String) URL to redirect to when blocking response code is set to 301 or 302
 - `response_code` (Number) HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided. Only valid with the 'block' action type.
 - `signal` (String) signal id to tag
+
+
+<a id="nestedblock--rate_limit"></a>
+### Nested Schema for `rate_limit`
+
+Required:
+
+- `client_identifiers` (Block Set, Min: 1) Client Identifiers (see [below for nested schema](#nestedblock--rate_limit--client_identifiers))
+- `duration` (Number) duration in seconds (300 < x < 3600)
+- `interval` (Number) interval in minutes (1, 5, 10)
+- `threshold` (Number) threshold
+
+<a id="nestedblock--rate_limit--client_identifiers"></a>
+### Nested Schema for `rate_limit.client_identifiers`
+
+Required:
+
+- `type` (String) (ip, requestHeader, requestCookie, postParameter, signalPayload)
+
+Optional:
+
+- `key` (String)
+- `name` (String)
 
 ### Templated Signals
 We have curated a list of templates for common rules, the full list of available signals is available below.
