@@ -56,10 +56,14 @@ resource "sigsci_site_rule" "test-ratelimit-rule-conditions" {
     value    = "/login"
   }
 
-  rate_limit = {
-    threshold = 6
+  rate_limit {
+    threshold = 6 
     interval  = 10
     duration  = 300
+
+    client_identifiers {
+      type = "ip"
+    }
   }
 
   actions {
