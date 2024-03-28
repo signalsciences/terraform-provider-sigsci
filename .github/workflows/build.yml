@@ -6,20 +6,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v4.1.0
-      with:
-        go-version-file: 'go.mod'
+      - name: Set up Go
+        uses: actions/setup-go@v4.1.0
+        with:
+          go-version-file: "go.mod"
 
-    - name: Gofmt
-      run: ./scripts/gofmt.sh
+      - name: Gofmt
+        run: ./scripts/gofmt.sh
 
-    - name: Build
-      run: go build ./...
+      - name: Build
+        run: go build ./...
 
-    - name: Staticcheck
-      uses: dominikh/staticcheck-action@v1.3.0
-      with:
-        version: "2023.1"
+      - name: Staticcheck
+        uses: dominikh/staticcheck-action@v1.3.0
+        with:
+          version: "2023.1"
+
+      - name: Generate Docs
+        run: |
+          cd tools && go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs && cd ..
+          tfplugindocs generate
