@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
@@ -24,6 +25,7 @@ func suppressRequestLoggingDefaultDiffs(k, old, new string, d *schema.ResourceDa
 type providerMetadata struct {
 	Corp   string
 	Client sigsci.Client
+	Mutex  *sync.Mutex
 }
 
 func flattenStringArray(entries []string) []interface{} {
@@ -427,45 +429,79 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 			redirectURL = castElement["redirect_url"].(string)
 		}
 
+		var allowInteractive bool
+		if castElement["allow_interactive"] != nil {
+			allowInteractive = castElement["allow_interactive"].(bool)
+		}
+
 		a := sigsci.Action{
-			Type:         castElement["type"].(string),
-			Signal:       signal,
-			ResponseCode: responseCode,
-			RedirectURL:  redirectURL,
+			Type:             castElement["type"].(string),
+			Signal:           signal,
+			ResponseCode:     responseCode,
+			RedirectURL:      redirectURL,
+			AllowInteractive: allowInteractive,
 		}
 		actions = append(actions, a)
 	}
 	return actions
 }
 
-func expandRuleRateLimit(rateLimitResource map[string]interface{}) *sigsci.RateLimit {
-	var threshold, interval, duration int
+func expandAttackThresholds(attackThresholdsResource *schema.Set) []sigsci.AttackThreshold {
 	var err error
-	if val, ok := rateLimitResource["threshold"]; ok {
-		threshold, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
-	} else {
-		return nil
-	}
-	if val, ok := rateLimitResource["interval"]; ok {
-		interval, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
-		}
-	}
-	if val, ok := rateLimitResource["duration"]; ok {
-		duration, err = strconv.Atoi(val.(string))
-		if err != nil {
-			return nil
+	var threshold, interval int
+	var attackThresholds []sigsci.AttackThreshold
+	for _, value := range attackThresholdsResource.List() {
+		castV := value.(map[string]interface{})
+		if val, ok := castV["threshold"]; ok {
+			threshold = val.(int)
+			if err != nil {
+				return nil
+			}
+			if val, ok := castV["interval"]; ok {
+				interval = val.(int)
+				if err != nil {
+					return nil
+				}
+			}
+			a := sigsci.AttackThreshold{
+				Threshold: threshold,
+				Interval:  interval,
+			}
+			attackThresholds = append(attackThresholds, a)
 		}
 	}
 
+	return attackThresholds
+}
+
+func expandRuleRateLimit(rateLimitResource *schema.Set) *sigsci.RateLimit {
+	if len(rateLimitResource.List()) == 0 {
+		return nil
+	}
+
+	genericElement := rateLimitResource.List()[0]
+	castElement := genericElement.(map[string]interface{})
+
+	var clientIdentifiers []sigsci.ClientIdentifier
+	for _, m := range castElement["client_identifiers"].(*schema.Set).List() {
+		key := m.(map[string]interface{})["key"].(string)
+		name := m.(map[string]interface{})["name"].(string)
+		t := m.(map[string]interface{})["type"].(string)
+
+		ci := sigsci.ClientIdentifier{
+			Key:  key,
+			Name: name,
+			Type: t,
+		}
+
+		clientIdentifiers = append(clientIdentifiers, ci)
+	}
+
 	return &sigsci.RateLimit{
-		Threshold: threshold,
-		Interval:  interval,
-		Duration:  duration,
+		Threshold:         castElement["threshold"].(int),
+		Interval:          castElement["interval"].(int),
+		Duration:          castElement["duration"].(int),
+		ClientIdentifiers: clientIdentifiers,
 	}
 }
 
@@ -486,14 +522,34 @@ func flattenClientIPRules(rules sigsci.ClientIPRules) []interface{} {
 	return interfaceArray
 }
 
-func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) map[string]string {
+func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) []interface{} {
 	if rateLimit == nil {
 		return nil
 	}
-	return map[string]string{
-		"threshold": strconv.Itoa(rateLimit.Threshold),
-		"interval":  strconv.Itoa(rateLimit.Interval),
-		"duration":  strconv.Itoa(rateLimit.Duration),
+
+	clientIdentifiers := []map[string]string{}
+	for _, ci := range rateLimit.ClientIdentifiers {
+		m := map[string]string{}
+		m["type"] = ci.Type
+
+		if ci.Name != "" {
+			m["name"] = ci.Name
+		}
+
+		if ci.Key != "" {
+			m["key"] = ci.Key
+		}
+
+		clientIdentifiers = append(clientIdentifiers, m)
+	}
+
+	return []interface{}{
+		map[string]interface{}{
+			"threshold":          rateLimit.Threshold,
+			"interval":           rateLimit.Interval,
+			"duration":           rateLimit.Duration,
+			"client_identifiers": clientIdentifiers,
+		},
 	}
 }
 
@@ -514,6 +570,10 @@ func flattenRuleActions(actions []sigsci.Action, customResponseCode bool) []inte
 
 			if action.ResponseCode == 301 || action.ResponseCode == 302 {
 				actionMap["redirect_url"] = action.RedirectURL
+			}
+
+			if action.AllowInteractive {
+				actionMap["allow_interactive"] = action.AllowInteractive
 			}
 		}
 		actionsMap[i] = actionMap
@@ -547,7 +607,7 @@ var siteImporter = schema.ResourceImporter{
 var KnownSingleConditionFields = []string{
 	"scheme", "method", "path", "useragent", "domain", "ip", "responseCode", "agentname",
 	"paramname", "paramvalue", "country", "name", "valueString", "valueInt", "valueIp", "signalType",
-	"value",
+	"value", "ja3Fingerprint",
 }
 
 var KnownMultivalConditionFields = []string{
@@ -564,9 +624,9 @@ func validateConditionField(val interface{}, key string) ([]string, []error) {
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
-	// response code needs to be 301, 302, or 400-599
+	// response code needs to be 0, 301, 302, or 400-599
 	code := val.(int)
-	if (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
+	if (code == 0) || (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
 		return nil, nil
 	}
 	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 301, 302, or 400-599", code)

@@ -63,7 +63,7 @@ func resourceSiteRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)",
+							Description: "(addSignal, allow, block, browserChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: logRequest, blockSignal)",
 							Required:    true,
 						},
 						"signal": {
@@ -82,6 +82,11 @@ func resourceSiteRule() *schema.Resource {
 							Description:  "URL to redirect to when blocking response code is set to 301 or 302",
 							Optional:     true,
 							ValidateFunc: validateActionRedirectURL,
+						},
+						"allow_interactive": {
+							Type:        schema.TypeBool,
+							Description: "Allows toggling between a non-interactive and interactive browser challenge. Only valid with the 'browserChallenge' action type.",
+							Optional:    true,
 						},
 					},
 				},
@@ -195,8 +200,9 @@ func resourceSiteRule() *schema.Resource {
 				},
 			},
 			"rate_limit": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeSet,
 				Description: "Rate Limit",
+				MaxItems:    1,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -213,8 +219,31 @@ func resourceSiteRule() *schema.Resource {
 						"duration": {
 							Type:        schema.TypeInt,
 							Description: "duration in seconds (300 < x < 3600)",
-							Default:     600,
 							Required:    true,
+						},
+						"client_identifiers": {
+							Type:        schema.TypeSet,
+							Description: "Client Identifiers",
+							Required:    true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"type": {
+										Type:        schema.TypeString,
+										Description: "(ip, requestHeader, requestCookie, postParameter, signalPayload)",
+										Required:    true,
+									},
+									"name": {
+										Type:        schema.TypeString,
+										Description: "",
+										Optional:    true,
+									},
+									"key": {
+										Type:        schema.TypeString,
+										Description: "",
+										Optional:    true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -246,7 +275,7 @@ func resourceSiteRuleCreate(d *schema.ResourceData, m interface{}) error {
 
 	siteRulesBody.Conditions = expandRuleConditions(d.Get("conditions").(*schema.Set))
 	siteRulesBody.Actions = expandRuleActions(d.Get("actions").(*schema.Set))
-	siteRulesBody.RateLimit = expandRuleRateLimit(d.Get("rate_limit").(map[string]interface{}))
+	siteRulesBody.RateLimit = expandRuleRateLimit(d.Get("rate_limit").(*schema.Set))
 
 	rule, err := sc.CreateSiteRule(corp, site, siteRulesBody)
 	if err != nil {
@@ -338,7 +367,7 @@ func resourceSiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
 
 	updateSiteRuleBody.Conditions = expandRuleConditions(d.Get("conditions").(*schema.Set))
 	updateSiteRuleBody.Actions = expandRuleActions(d.Get("actions").(*schema.Set))
-	updateSiteRuleBody.RateLimit = expandRuleRateLimit(d.Get("rate_limit").(map[string]interface{}))
+	updateSiteRuleBody.RateLimit = expandRuleRateLimit(d.Get("rate_limit").(*schema.Set))
 
 	_, err := sc.UpdateSiteRuleByID(corp, site, d.Id(), updateSiteRuleBody)
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/signalsciences/go-sigsci"
+	"sync"
 )
 
 // Provider is the Signalsciences terraform provider, returns a terraform.ResourceProvider
@@ -89,6 +90,8 @@ func Provider() terraform.ResourceProvider {
 	return provider
 }
 
+var ProviderMutex sync.Mutex
+
 func providerConfigure() schema.ConfigureFunc {
 	return func(d *schema.ResourceData) (interface{}, error) {
 		config := Config{
@@ -106,6 +109,7 @@ func providerConfigure() schema.ConfigureFunc {
 		metadata := providerMetadata{
 			Corp:   d.Get("corp").(string),
 			Client: client.(sigsci.Client),
+			Mutex:  &ProviderMutex,
 		}
 
 		validate := d.Get("validate").(bool)

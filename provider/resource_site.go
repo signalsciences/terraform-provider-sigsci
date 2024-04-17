@@ -42,6 +42,25 @@ func resourceSite() *schema.Resource {
 				Optional:    true,
 				Default:     "",
 			},
+			"attack_threshold": {
+				Type:        schema.TypeSet,
+				Description: "List entries",
+				Required:    false,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"interval": {
+							Type:     schema.TypeInt,
+							Required: true,
+						},
+
+						"threshold": {
+							Type:     schema.TypeInt,
+							Required: true,
+						},
+					},
+				},
+			},
 			"block_duration_seconds": { // Has issues on create -- will always be default, will update just fine to the correct value
 				Type:        schema.TypeInt,
 				Description: "Duration to block an IP in seconds",
@@ -66,6 +85,10 @@ func resourceSite() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+			"immediate_block": {
+				Type:        schema.TypeBool,
+				Description: "Immediately block requests that contain attack signals",
+				Optional:    true,
 			},
 			"primary_agent_key": {
 				Type:        schema.TypeMap,
@@ -101,12 +124,13 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
+		AttackThresholds:     expandAttackThresholds(d.Get("attack_threshold").(*schema.Set)),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").(*schema.Set)),
+		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
-
 	if err != nil {
 		return err
 	}
@@ -167,6 +191,11 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
+	err = d.Set("immediate_block", site.ImmediateBlock)
+	if err != nil {
+		return err
+	}
+
 	primaryAgentKey, err := sc.GetSitePrimaryAgentKey(corp, sitename)
 	if err != nil {
 		return err
@@ -187,11 +216,13 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 	_, err := sc.UpdateSite(corp, site, sigsci.UpdateSiteBody{
 		DisplayName:          d.Get("display_name").(string),
 		AgentLevel:           d.Get("agent_level").(string),
+		AttackThresholds:     expandAttackThresholds(d.Get("attack_threshold").(*schema.Set)),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
 		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").(*schema.Set)),
+		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
 	if err != nil {
 		return err

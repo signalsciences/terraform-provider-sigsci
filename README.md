@@ -49,6 +49,10 @@ provider "sigsci" {
 
 Resource documentation and examples can be found in [docs/resources](./docs/resources).
 
+## FAQ
+
+FAQ can be found in [docs/guides/FAQ.md](./docs/guides/FAQ.md).
+
 ## Example
 [main.tf](https://github.com/signalsciences/terraform-provider-sigsci/blob/main/main.tf) has an example of every resource.
 ```hcl-terraform
@@ -123,3 +127,13 @@ resource "sigsci_corp_list" "test_list" {
 }
 
 ```
+
+## Errors
+
+Errors occasionally occur when updating certain resources. If an error occurs please try re-running with `-parallelism=1`:
+
+```
+$ terraform apply -parallelism=1
+```
+
+If running with `-parallelism=1` does not resolve the error, please open an issue.

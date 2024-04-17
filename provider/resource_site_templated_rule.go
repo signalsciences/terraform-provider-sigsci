@@ -104,8 +104,9 @@ func resourceSiteTemplatedRule() *schema.Resource {
 							Required: true,
 						},
 						"action": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Description: "To block requests immediately use (blockImmediate), Threshold level blocking: For logging use (info), for blocking use (template)",
+							Required:    true,
 						},
 						"block_duration_seconds": {
 							Type:     schema.TypeInt,

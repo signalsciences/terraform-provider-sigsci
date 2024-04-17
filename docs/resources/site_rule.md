@@ -70,10 +70,14 @@ resource "sigsci_site_rule" "test-ratelimit-rule-conditions" {
     value    = "/login"
   }
 
-  rate_limit = {
-    threshold = 6
+  rate_limit {
+    threshold = 6 
     interval  = 10
     duration  = 300
+
+    client_identifiers {
+      type = "ip"
+    }
   }
 
   actions {
@@ -98,11 +102,16 @@ resource "sigsci_site_rule" "test-ratelimit-other-signal" {
     value    = "/reset_password"
   }
 
-  rate_limit = {
-    threshold = 6
+  rate_limit {
+    threshold = 6 
     interval  = 10
     duration  = 300
+
+    client_identifiers {
+      type = "ip"
+    }
   }
+
 
   actions {
     type   = "logRequest"
@@ -126,11 +135,16 @@ resource "sigsci_site_rule" "test-ratelimit-all-requests" {
     value    = "/signup"
   }
 
-  rate_limit = {
-    threshold = 6
+  rate_limit {
+    threshold = 6 
     interval  = 10
     duration  = 300
+
+    client_identifiers {
+      type = "ip"
+    }
   }
+
 
   actions {
     type   = "logRequest"
@@ -179,7 +193,7 @@ resource "sigsci_site_rule" "test-signal-exclusion" {
 ### Optional
 
 - `actions` (Block Set, Max: 2) Actions (see [below for nested schema](#nestedblock--actions))
-- `rate_limit` (Map of String) Rate Limit
+- `rate_limit` (Block Set, Max: 1) Rate Limit (see [below for nested schema](#nestedblock--rate_limit))
 - `requestlogging` (String) Indicates whether to store the logs for requests that match the rule's conditions (sampled) or not store them (none). This field is only available for rules of type `request`. Not valid for `signal` or `rateLimit`.
 - `signal` (String) The signal id of the signal being excluded
 
@@ -198,7 +212,7 @@ Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions))
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
@@ -215,7 +229,7 @@ Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions--conditions))
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
@@ -231,7 +245,7 @@ Required:
 Optional:
 
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, matches, doesNotMatch, inList, notInList)
@@ -245,13 +259,37 @@ Optional:
 
 Required:
 
-- `type` (String) (block, allow, excludeSignal, addSignal) (rateLimit rule valid values: logRequest, blockSignal)
+- `type` (String) (addSignal, allow, block, browserChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: logRequest, blockSignal)
 
 Optional:
 
+- `allow_interactive` (Boolean) Allows toggling between a non-interactive and interactive browser challenge. Only valid with the 'browserChallenge' action type.
 - `redirect_url` (String) URL to redirect to when blocking response code is set to 301 or 302
 - `response_code` (Number) HTTP code agent for agent to respond with. range: 301, 302, or 400-599, defaults to '406' if not provided. Only valid with the 'block' action type.
 - `signal` (String) signal id to tag
+
+
+<a id="nestedblock--rate_limit"></a>
+### Nested Schema for `rate_limit`
+
+Required:
+
+- `client_identifiers` (Block Set, Min: 1) Client Identifiers (see [below for nested schema](#nestedblock--rate_limit--client_identifiers))
+- `duration` (Number) duration in seconds (300 < x < 3600)
+- `interval` (Number) interval in minutes (1, 5, 10)
+- `threshold` (Number) threshold
+
+<a id="nestedblock--rate_limit--client_identifiers"></a>
+### Nested Schema for `rate_limit.client_identifiers`
+
+Required:
+
+- `type` (String) (ip, requestHeader, requestCookie, postParameter, signalPayload)
+
+Optional:
+
+- `key` (String)
+- `name` (String)
 
 ### Templated Signals
 We have curated a list of templates for common rules, the full list of available signals is available below.

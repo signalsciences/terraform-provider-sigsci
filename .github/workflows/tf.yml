@@ -2,12 +2,18 @@ name: Terraform init and validate
 
 on: [push, pull_request]
 
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+
 jobs:
   tf:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: hashicorp/setup-terraform@v2
+
+    - name: Terraform build 
+      run: make build 
 
     - name: Terraform fmt
       run: terraform fmt -check
@@ -17,3 +23,5 @@ jobs:
 
     - name: Terraform Validate
       run: terraform validate -no-color
+      env:
+        TF_CLI_CONFIG_FILE: bin/developer_overrides.tfrc
