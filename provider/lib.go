@@ -612,7 +612,7 @@ func validateActionResponseCode(val interface{}, key string) ([]string, []error)
 	if (code == 0) || (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
 		return nil, nil
 	}
-	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 0, 301, 302, or 400-599", code)
+	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 301, 302, or 400-599", code)
 	return nil, []error{rangeError}
 }
 
