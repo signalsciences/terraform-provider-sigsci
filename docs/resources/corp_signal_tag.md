@@ -24,8 +24,11 @@ resource "sigsci_corp_signal_tag" "test" {
 
 ### Required
 
-- `description` (String) Optional signal tag description
 - `short_name` (String) The display name of the signal tag
+
+### Optional
+
+- `description` (String) Optional signal tag description
 
 ### Read-Only
 
