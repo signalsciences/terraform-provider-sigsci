@@ -85,6 +85,7 @@ func resourceSite() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+			},
 			"immediate_block": {
 				Type:        schema.TypeBool,
 				Description: "Immediately block requests that contain attack signals",
