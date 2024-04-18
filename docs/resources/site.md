@@ -19,6 +19,7 @@ resource "sigsci_site" "my-site" {
   block_duration_seconds = 86400
   agent_anon_mode        = ""
   agent_level            = "block"
+  client_ip_rules        = ["X-Client-IP"]
 }
 ```
 
@@ -38,7 +39,7 @@ resource "sigsci_site" "my-site" {
 - `block_duration_seconds` (Number) Duration to block an IP in seconds
 - `block_http_code` (Number) HTTP response code to send when traffic is being blocked
 - `block_redirect_url` (String) URL to redirect to when blocking with a '301' or '302' HTTP status code
-- `client_ip_rules` (Set of String) Headers used for assigning client IPs to requests
+- `client_ip_rules` (List of String) Headers used for assigning client IPs to requests
 - `immediate_block` (Boolean) Immediately block requests that contain attack signals
 
 ### Read-Only
