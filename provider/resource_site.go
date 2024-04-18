@@ -79,7 +79,7 @@ func resourceSite() *schema.Resource {
 				Optional:    true,
 			},
 			"client_ip_rules": {
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Description: "Headers used for assigning client IPs to requests",
 				Optional:    true,
 				Elem: &schema.Schema{
@@ -129,7 +129,7 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockRedirectURL:     d.Get("block_redirect_url").(string),
-		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").(*schema.Set)),
+		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").([]interface{})),
 		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
 	if err != nil {
@@ -222,7 +222,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
-		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").(*schema.Set)),
+		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").([]interface{})),
 		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
 	if err != nil {

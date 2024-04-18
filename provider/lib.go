@@ -505,10 +505,9 @@ func expandRuleRateLimit(rateLimitResource *schema.Set) *sigsci.RateLimit {
 	}
 }
 
-func expandClientIPRules(headers *schema.Set) sigsci.ClientIPRules {
-	listOfHeaders := headers.List()
-	rulesArray := make(sigsci.ClientIPRules, len(listOfHeaders))
-	for i, e := range listOfHeaders {
+func expandClientIPRules(headers []interface{}) sigsci.ClientIPRules {
+	rulesArray := make(sigsci.ClientIPRules, len(headers))
+	for i, e := range headers {
 		rulesArray[i].Header = e.(string)
 	}
 	return rulesArray
