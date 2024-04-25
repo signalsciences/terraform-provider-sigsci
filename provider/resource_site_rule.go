@@ -63,7 +63,7 @@ func resourceSiteRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(addSignal, allow, block, browserChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: logRequest, blockSignal)",
+							Description: "(addSignal, allow, block, browserChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: logRequest, blockSignal, browserChallenge, verifyToken)",
 							Required:    true,
 						},
 						"signal": {
