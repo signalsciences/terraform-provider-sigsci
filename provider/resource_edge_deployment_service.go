@@ -45,13 +45,19 @@ func resourceEdgeDeploymentService() *schema.Resource {
 func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
-	d.SetId(d.Get("fastly_sid").(string))
-
 	activateVersion := d.Get("activate_version").(bool)
-	return pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
+	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
 		ActivateVersion: &activateVersion,
 		PercentEnabled:  d.Get("percent_enabled").(int),
 	})
+
+	if err != nil {
+		return err
+	}
+
+	d.SetId(d.Get("fastly_sid").(string))
+
+	return nil
 }
 
 func readEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
