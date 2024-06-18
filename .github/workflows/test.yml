@@ -1,0 +1,81 @@
+name: PR check
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        with:
+          go-version-file: "go.mod"
+
+      - run: go build ./...
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: aquaproj/aqua-installer@6ce1f8848ec8e61f14d57bd5d7597057a6dd187c # v3.0.1
+        with:
+          aqua_version: v2.28.0
+
+      - name: Run golangci-lint
+        run: github-comment exec -- golangci-lint run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: aquaproj/aqua-installer@6ce1f8848ec8e61f14d57bd5d7597057a6dd187c # v3.0.1
+        with:
+          aqua_version: v2.28.0
+
+      - name: Run gofmt
+        run: github-comment exec -k gofmt -- gofmt -s -l .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: aquaproj/aqua-installer@6ce1f8848ec8e61f14d57bd5d7597057a6dd187c # v3.0.1
+        with:
+          aqua_version: v2.28.0
+
+      - name: Build
+        run: make build
+
+      - name: Run terraform fmt
+        run: github-comment exec -k tf-fmt -- terraform fmt -check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run terraform init
+        run: terraform init
+
+      - name: Run terraform validate
+        run: terraform validate -no-color
+        env:
+          TF_CLI_CONFIG_FILE: bin/developer_overrides.tfrc
+
+  # This Job is for setting up with GitHub's Branch Protection, and will only run if one of the Jobs specified in needs fails.
+  # https://github.com/orgs/community/discussions/26822
+  status-check:
+    runs-on: ubuntu-latest
+    if: failure()
+    needs:
+      - build
+      - lint
+      - fmt
+      - terraform
+    steps:
+      - run: exit 1
