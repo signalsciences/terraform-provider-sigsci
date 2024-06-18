@@ -597,7 +597,10 @@ var siteImporter = schema.ResourceImporter{
 		if err != nil {
 			return nil, err
 		}
-		d.Set("site_short_name", site)
+		err = d.Set("site_short_name", site)
+		if err != nil {
+			return nil, err
+		}
 		d.SetId(id)
 		return []*schema.ResourceData{d}, nil
 	},
