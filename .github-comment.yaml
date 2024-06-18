@@ -1,0 +1,19 @@
+exec:
+  gofmt:
+    - when: ExitCode != 0
+      template: |
+        ## :x: `gofmt -s` failed
+        The following files are not formatted. Please run `gofmt -s -w .` and commit.
+
+        ```
+        {{.CombinedOutput}}
+        ```
+  tf-fmt:
+    - when: ExitCode != 0
+      template: |
+        ## :x: `terraform fmt -check` failed
+        The following files are not formatted. Please run `terraform fmt -recursive` and commit.
+
+        ```
+        {{.CombinedOutput}}
+        ```
