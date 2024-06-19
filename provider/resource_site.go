@@ -13,7 +13,10 @@ func resourceSite() *schema.Resource {
 		Delete: deleteSite,
 		Importer: &schema.ResourceImporter{
 			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				d.Set("short_name", d.Id())
+				err := d.Set("short_name", d.Id())
+				if err != nil {
+					return nil, err
+				}
 				d.SetId(d.Id())
 				return []*schema.ResourceData{d}, nil
 			},
