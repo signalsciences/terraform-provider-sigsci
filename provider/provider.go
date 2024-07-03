@@ -1,10 +1,11 @@
 package provider
 
 import (
+	"sync"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/signalsciences/go-sigsci"
-	"sync"
 )
 
 // Provider is the Signalsciences terraform provider, returns a terraform.ResourceProvider
@@ -65,6 +66,7 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_site_signal_tag":     resourceSiteSignalTag(),
 			"sigsci_site_redaction":      resourceSiteRedaction(),
 			"sigsci_site_alert":          resourceSiteAlert(),
+			"sigsci_site_agent_alert":    resourceSiteAgentAlert(),
 			"sigsci_site_templated_rule": resourceSiteTemplatedRule(),
 			"sigsci_site_rule":           resourceSiteRule(),
 			"sigsci_site_blocklist":      resourceSiteBlocklist(),
