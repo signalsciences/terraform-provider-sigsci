@@ -13,7 +13,10 @@ func resourceSite() *schema.Resource {
 		Delete: deleteSite,
 		Importer: &schema.ResourceImporter{
 			State: func(d *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				d.Set("short_name", d.Id())
+				err := d.Set("short_name", d.Id())
+				if err != nil {
+					return nil, err
+				}
 				d.SetId(d.Id())
 				return []*schema.ResourceData{d}, nil
 			},
@@ -78,6 +81,14 @@ func resourceSite() *schema.Resource {
 				Description: "URL to redirect to when blocking with a '301' or '302' HTTP status code",
 				Optional:    true,
 			},
+			"client_ip_rules": {
+				Type:        schema.TypeList,
+				Description: "Headers used for assigning client IPs to requests",
+				Optional:    true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"immediate_block": {
 				Type:        schema.TypeBool,
 				Description: "Immediately block requests that contain attack signals",
@@ -121,6 +132,7 @@ func createSite(d *schema.ResourceData, m interface{}) error {
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
 		BlockRedirectURL:     d.Get("block_redirect_url").(string),
+		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").([]interface{})),
 		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
 	if err != nil {
@@ -163,6 +175,10 @@ func readSite(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	err = d.Set("block_redirect_url", site.BlockRedirectURL)
+	if err != nil {
+		return err
+	}
+	err = d.Set("client_ip_rules", flattenClientIPRules(site.ClientIPRules))
 	if err != nil {
 		return err
 	}
@@ -209,6 +225,7 @@ func updateSite(d *schema.ResourceData, m interface{}) error {
 		BlockHTTPCode:        d.Get("block_http_code").(int),
 		BlockRedirectURL:     d.Get("block_redirect_url").(string),
 		AgentAnonMode:        d.Get("agent_anon_mode").(string),
+		ClientIPRules:        expandClientIPRules(d.Get("client_ip_rules").([]interface{})),
 		ImmediateBlock:       d.Get("immediate_block").(bool),
 	})
 	if err != nil {

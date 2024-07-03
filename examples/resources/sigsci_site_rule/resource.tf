@@ -88,11 +88,16 @@ resource "sigsci_site_rule" "test-ratelimit-other-signal" {
     value    = "/reset_password"
   }
 
-  rate_limit = {
-    threshold = 6
+  rate_limit {
+    threshold = 6 
     interval  = 10
     duration  = 300
+
+    client_identifiers {
+      type = "ip"
+    }
   }
+
 
   actions {
     type   = "logRequest"
@@ -116,11 +121,16 @@ resource "sigsci_site_rule" "test-ratelimit-all-requests" {
     value    = "/signup"
   }
 
-  rate_limit = {
-    threshold = 6
+  rate_limit {
+    threshold = 6 
     interval  = 10
     duration  = 300
+
+    client_identifiers {
+      type = "ip"
+    }
   }
+
 
   actions {
     type   = "logRequest"

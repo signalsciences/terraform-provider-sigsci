@@ -24,9 +24,15 @@ func resourceEdgeDeployment() *schema.Resource {
 func createOrUpdateEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
+	err := pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
+
+	if err != nil {
+		return err
+	}
+
 	d.SetId(d.Get("site_short_name").(string))
 
-	return pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
+	return nil
 }
 
 func readEdgeDeployment(d *schema.ResourceData, m interface{}) error {

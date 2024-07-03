@@ -27,7 +27,7 @@ func resourceCorpSignalTag() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Description: "Optional signal tag description",
-				Required:    true,
+				Optional:    true,
 			},
 			"configurable": {
 				Type:        schema.TypeBool,

@@ -505,6 +505,22 @@ func expandRuleRateLimit(rateLimitResource *schema.Set) *sigsci.RateLimit {
 	}
 }
 
+func expandClientIPRules(headers []interface{}) sigsci.ClientIPRules {
+	rulesArray := make(sigsci.ClientIPRules, len(headers))
+	for i, e := range headers {
+		rulesArray[i].Header = e.(string)
+	}
+	return rulesArray
+}
+
+func flattenClientIPRules(rules sigsci.ClientIPRules) []interface{} {
+	interfaceArray := make([]interface{}, len(rules))
+	for i, val := range rules {
+		interfaceArray[i] = val.Header
+	}
+	return interfaceArray
+}
+
 func flattenRuleRateLimit(rateLimit *sigsci.RateLimit) []interface{} {
 	if rateLimit == nil {
 		return nil
@@ -581,7 +597,10 @@ var siteImporter = schema.ResourceImporter{
 		if err != nil {
 			return nil, err
 		}
-		d.Set("site_short_name", site)
+		err = d.Set("site_short_name", site)
+		if err != nil {
+			return nil, err
+		}
 		d.SetId(id)
 		return []*schema.ResourceData{d}, nil
 	},
@@ -607,9 +626,9 @@ func validateConditionField(val interface{}, key string) ([]string, []error) {
 }
 
 func validateActionResponseCode(val interface{}, key string) ([]string, []error) {
-	// response code needs to be 301, 302, or 400-599
+	// response code needs to be 0, 301, 302, or 400-599
 	code := val.(int)
-	if (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
+	if (code == 0) || (code >= 301 && code <= 302) || (code >= 400 && code <= 599) {
 		return nil, nil
 	}
 	rangeError := fmt.Errorf("received action responseCode '%d'. should be in 301, 302, or 400-599", code)
