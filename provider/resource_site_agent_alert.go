@@ -38,7 +38,7 @@ func resourceSiteAgentAlert() *schema.Resource {
 					if existsInInt(val.(int), 5, 10, 60) {
 						return nil, nil
 					}
-					return nil, []error{errors.New("interval must be 5, 10, or 60.")}
+					return nil, []error{errors.New("interval must be 5, 10, or 60")}
 				},
 			},
 			"threshold": {
