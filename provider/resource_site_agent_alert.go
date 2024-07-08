@@ -49,7 +49,7 @@ func resourceSiteAgentAlert() *schema.Resource {
 					if existsInRange(val.(int), 0, 10000) {
 						return nil, nil
 					}
-					return nil, []error{errors.New("threshold must be between 1 and 10000")}
+					return nil, []error{errors.New("threshold must be between 0 and 10000")}
 				},
 			},
 			"enabled": {
