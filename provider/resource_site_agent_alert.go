@@ -44,13 +44,13 @@ func resourceSiteAgentAlert() *schema.Resource {
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
-				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 0, Max 10000",
+				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 0, Max 3600000",
 				Required:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if existsInRange(val.(int), 0, 10000) {
+					if existsInRange(val.(int), 0, 3600000) {
 						return nil, nil
 					}
-					return nil, []error{errors.New("threshold must be between 0 and 10000")}
+					return nil, []error{errors.New("threshold must be between 0 and 3600000")}
 				},
 			},
 			"enabled": {
@@ -79,6 +79,28 @@ func resourceSiteAgentAlert() *schema.Resource {
 				Description: "The number of seconds this alert is active.",
 				Optional:    true,
 			},
+			"field_name": {
+				Type:        schema.TypeString,
+				Description: "Field_name for agent alert.",
+				Required:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if existsInString(val.(string), "siteMetric") {
+						return nil, nil
+					}
+					return nil, []error{errors.New("action must be 'siteMetric'")}
+				},
+			},
+			"operator": {
+				Type:        schema.TypeString,
+				Description: "Operator for agent alert.",
+				Required:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if existsInString(val.(string), "notEqualTo", "equalTo", "lessThan", "greaterThan") {
+						return nil, nil
+					}
+					return nil, []error{errors.New("action must be 'notEqualTo', 'equalTo', 'lessThan', 'greaterThan'")}
+				},
+			},
 		},
 	}
 }
@@ -96,6 +118,8 @@ func resourceSiteAgentAlertCreate(d *schema.ResourceData, m interface{}) error {
 		Action:               d.Get("action").(string),
 		SkipNotifications:    d.Get("skip_notifications").(bool),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
+		FieldName:            d.Get("field_name").(string),
+		Operator:             d.Get("operator").(string),
 	})
 
 	if err != nil {
@@ -152,6 +176,14 @@ func resourceSiteAgentAlertRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	err = d.Set("field_name", alert.FieldName)
+	if err != nil {
+		return err
+	}
+	err = d.Set("operator", alert.Operator)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -169,6 +201,8 @@ func resourceSiteAgentAlertUpdate(d *schema.ResourceData, m interface{}) error {
 		Action:               d.Get("action").(string),
 		SkipNotifications:    d.Get("skip_notifications").(bool),
 		BlockDurationSeconds: d.Get("block_duration_seconds").(int),
+		FieldName:            d.Get("field_name").(string),
+		Operator:             d.Get("operator").(string),
 	})
 	if err != nil {
 		d.SetId("")
