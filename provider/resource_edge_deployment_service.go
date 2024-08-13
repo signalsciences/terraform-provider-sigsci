@@ -31,7 +31,12 @@ func resourceEdgeDeploymentService() *schema.Resource {
 				Optional:    true,
 				Default:     true,
 			},
-
+			"custom_client_ip": {
+				Type:        schema.TypeBool,
+				Description: "enable to prevent Fastly-Client-IP from being overwritten by the NGWAF. Intended for advanced use cases. Defaults to false.",
+				Optional:    true,
+				Default:     false,
+			},
 			"percent_enabled": {
 				Type:        schema.TypeInt,
 				Description: "percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100. Defaults to 0.",
@@ -46,8 +51,10 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 	pm := m.(providerMetadata)
 
 	activateVersion := d.Get("activate_version").(bool)
+	custom_client_ip := d.Get("custom_client_ip").(bool)
 	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
 		ActivateVersion: &activateVersion,
+		CustomClientIP:  &custom_client_ip,
 		PercentEnabled:  d.Get("percent_enabled").(int),
 	})
 

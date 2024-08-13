@@ -32,6 +32,7 @@ resource "sigsci_edge_deployment_service" "my-service" {
 ### Optional
 
 - `activate_version` (Boolean) activate Fastly service version after clone. Possible values are true or false. Defaults to true.
+- `custom_client_ip` (Boolean) enable to prevent Fastly-Client-IP from being overwritten by the NGWAF. Intended for advanced use cases. Defaults to false.
 - `percent_enabled` (Number) percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100. Defaults to 0.
 
 ### Read-Only
