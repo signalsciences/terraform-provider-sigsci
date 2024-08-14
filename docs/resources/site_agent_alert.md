@@ -18,10 +18,12 @@ description: |-
 ### Required
 
 - `action` (String) Action for agent alert.
-- `interval` (Number) Integer value for interval. Must be 5, 10 or 60.
+- `field_name` (String) Field_name for agent alert.
+- `interval` (Number) Integer value for interval. Must be 5, 10, or 60.
+- `operator` (String) Operator for agent alert.
 - `site_short_name` (String) Site short name
 - `tag_name` (String) The name of the tag whose occurrences the alert is watching. Must match an existing tag
-- `threshold` (Number) The number of occurrences of the tag in the interval needed to trigger the alert. Min 0, Max 10000
+- `threshold` (Number) The number of occurrences of the tag in the interval needed to trigger the alert. Min 0, Max 3600000
 
 ### Optional
 
