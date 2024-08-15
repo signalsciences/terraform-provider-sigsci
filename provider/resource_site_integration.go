@@ -27,6 +27,22 @@ func resourceSiteIntegration() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
+			"fields": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"value": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
 			"url": {
 				Type:        schema.TypeString,
 				Description: "Integration URL",
@@ -51,10 +67,19 @@ func resourceSiteIntegrationCreate(d *schema.ResourceData, m interface{}) error 
 	pm := m.(providerMetadata)
 	sc := pm.Client
 
+	fields := make(map[string]string)
+	if v, ok := d.GetOk("fields"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			field := item.(map[string]interface{})
+			fields[field["name"].(string)] = field["value"].(string)
+		}
+	}
+
 	integrations, err := sc.AddIntegration(pm.Corp, d.Get("site_short_name").(string), sigsci.IntegrationBody{
 		Type:   d.Get("type").(string),
 		URL:    d.Get("url").(string),
 		Events: expandStringArray(d.Get("events").(*schema.Set)),
+		Fields: fields,
 	})
 	if err != nil {
 		return err
@@ -104,9 +129,18 @@ func resourceSiteIntegrationUpdate(d *schema.ResourceData, m interface{}) error 
 	sc := pm.Client
 	site := d.Get("site_short_name").(string)
 
+	fields := make(map[string]string)
+	if v, ok := d.GetOk("fields"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			field := item.(map[string]interface{})
+			fields[field["name"].(string)] = field["value"].(string)
+		}
+	}
+
 	err := sc.UpdateIntegration(pm.Corp, site, d.Id(), sigsci.UpdateIntegrationBody{
 		URL:    d.Get("url").(string),
 		Events: expandStringArray(d.Get("events").(*schema.Set)),
+		Fields: fields,
 	})
 	if err != nil {
 		log.Printf("[ERROR] %s. Could not update integration with ID %s in corp %s site %s", err.Error(), d.Id(), pm.Corp, site)

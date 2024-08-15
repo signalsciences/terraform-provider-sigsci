@@ -356,6 +356,23 @@ resource "sigsci_site_integration" "test_integration" {
   events          = ["listCreated"]
 }
 
+resource "sigsci_site_integration" "test_integration_datadog" {
+  site_short_name = sigsci_site.my-site.short_name
+  type            = "datadog"
+  url             = ""
+  events          = ["flag", "agentAlert"]
+
+  fields{
+      name  = "site"
+      value = "us1"
+  }
+
+  fields{
+      name  = "apiKey"
+      value = "your_api_key"
+  }
+}
+
 resource "sigsci_corp_cloudwaf_certificate" "test_cloudwaf_certificate" {
   name             = "Certificate Name"
   certificate_body = <<CERT
