@@ -35,11 +35,20 @@ resource "sigsci_site_integration" "test_integration" {
 ### Optional
 
 - `events` (Set of String) Array of event types. Visit https://docs.fastly.com/signalsciences/integrations to find out which events the service you are connecting allows.
+- `fields` (Block Set) (see [below for nested schema](#nestedblock--fields))
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
 - `name` (String) name
+
+<a id="nestedblock--fields"></a>
+### Nested Schema for `fields`
+
+Required:
+
+- `name` (String)
+- `value` (String)
 
 ## Import
 
