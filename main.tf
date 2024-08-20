@@ -362,14 +362,14 @@ resource "sigsci_site_integration" "test_integration_datadog" {
   url             = ""
   events          = ["flag", "agentAlert"]
 
-  fields{
-      name  = "site"
-      value = "us1"
+  fields {
+    name  = "site"
+    value = "us1"
   }
 
-  fields{
-      name  = "apiKey"
-      value = "your_api_key"
+  fields {
+    name  = "apiKey"
+    value = "your_api_key"
   }
 }
 
