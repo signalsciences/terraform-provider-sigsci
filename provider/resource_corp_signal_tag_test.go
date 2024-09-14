@@ -57,3 +57,29 @@ func testACCCheckCorpSignalTagDestroy(s *terraform.State) error {
 	}
 	return nil
 }
+
+func TestResourceCorpSignalTagShortNameValidation(t *testing.T) {
+	cases := []struct {
+		value    string
+		expected bool
+	}{
+		{"s", true},
+		{"valid-name", false},
+		{"this-name-is-way-too-long-for-the-validation-rules", true},
+	}
+
+	resource := resourceCorpSignalTag()
+	nameSchema := resource.Schema["short_name"]
+
+	for _, tc := range cases {
+		_, errors := nameSchema.ValidateFunc(tc.value, "short_name")
+
+		if tc.expected && len(errors) == 0 {
+			t.Errorf("Expected an error for value '%s', but got none", tc.value)
+		}
+
+		if !tc.expected && len(errors) > 0 {
+			t.Errorf("Did not expect an error for value '%s', but got: %v", tc.value, errors)
+		}
+	}
+}

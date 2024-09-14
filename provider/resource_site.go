@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -27,17 +29,35 @@ func resourceSite() *schema.Resource {
 				Description: "Identifying name of the site",
 				Required:    true,
 				ForceNew:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if !validStringLength(val.(string), 3, 100) {
+						return nil, []error{fmt.Errorf(`received short_name "%q" is invalid. should be min len 3, max len 100`, val.(string))}
+					}
+					return nil, nil
+				},
 			},
 			"display_name": {
 				Type:        schema.TypeString,
 				Description: "Display name of the site",
 				Required:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if !validStringLength(val.(string), 3, 100) {
+						return nil, []error{fmt.Errorf(`received display_name "%q" is invalid. should be min len 3, max len 100`, val.(string))}
+					}
+					return nil, nil
+				},
 			},
 			"agent_level": {
 				Type:        schema.TypeString,
 				Description: "Agent action level - 'block', 'log' or 'off'",
 				Optional:    true,
 				Default:     "log",
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if !existsInString(val.(string), "block", "log", "off") {
+						return nil, []error{fmt.Errorf(`received agent_level "%q" is invalid. should be "block", "log" or "off"`, val.(string))}
+					}
+					return nil, nil
+				},
 			},
 			"agent_anon_mode": { // Has issues on create -- will always be default, will update just fine to the correct value
 				Type:        schema.TypeString,

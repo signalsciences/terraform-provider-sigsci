@@ -55,3 +55,55 @@ func TestAccResourceSiteSignalTagCRUD(t *testing.T) {
 		},
 	})
 }
+
+func TestResourceSiteSignalTagNameValidation(t *testing.T) {
+	cases := []struct {
+		value    string
+		expected bool
+	}{
+		{"s", true},
+		{"valid-name", false},
+		{"this-name-is-way-too-long-for-the-validation-rules", true},
+	}
+
+	resource := resourceSiteSignalTag()
+	nameSchema := resource.Schema["name"]
+
+	for _, tc := range cases {
+		_, errors := nameSchema.ValidateFunc(tc.value, "name")
+
+		if tc.expected && len(errors) == 0 {
+			t.Errorf("Expected an error for value '%s', but got none", tc.value)
+		}
+
+		if !tc.expected && len(errors) > 0 {
+			t.Errorf("Did not expect an error for value '%s', but got: %v", tc.value, errors)
+		}
+	}
+}
+
+func TestResourceSiteSignalTagDescriptionValidation(t *testing.T) {
+	cases := []struct {
+		value    string
+		expected bool
+	}{
+		{"", false},
+		{"valid-description", false},
+		{"this-is-way-too-long-for-the-validation-rules-and-this-is-way-too-long-for-the-validation-rules-and-this-is-way-too-long-for-the-validation-rules", true},
+	}
+
+	resource := resourceSiteSignalTag()
+	nameSchema := resource.Schema["description"]
+
+	for _, tc := range cases {
+		_, errors := nameSchema.ValidateFunc(tc.value, "description")
+
+		if tc.expected && len(errors) == 0 {
+			t.Errorf("Expected an error for value '%s', but got none", tc.value)
+		}
+
+		if !tc.expected && len(errors) > 0 {
+			t.Errorf("Did not expect an error for value '%s', but got: %v", tc.value, errors)
+		}
+	}
+}

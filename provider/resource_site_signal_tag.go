@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/signalsciences/go-sigsci"
 )
@@ -22,14 +24,26 @@ func resourceSiteSignalTag() *schema.Resource {
 			},
 			"name": {
 				Type:        schema.TypeString,
-				Description: "The display name of the signal tag",
+				Description: "The display name of the signal tag. Must be 3-25 char.",
 				Required:    true,
 				ForceNew:    true, // TODO Hopefully this can be changed in the api later
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if !validStringLength(val.(string), 3, 25) {
+						return nil, []error{fmt.Errorf(`received name %q is invalid. should be min len 3, max len 25`, val.(string))}
+					}
+					return nil, nil
+				},
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Description: "description",
 				Optional:    true,
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					if !validStringLength(val.(string), 0, 140) {
+						return nil, []error{fmt.Errorf(`received description is invalid. should be max len 140`)}
+					}
+					return nil, nil
+				},
 			},
 			"configurable": {
 				Type:        schema.TypeBool,
