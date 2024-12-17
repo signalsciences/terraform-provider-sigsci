@@ -52,10 +52,11 @@ func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) 
 
 	activateVersion := d.Get("activate_version").(bool)
 	custom_client_ip := d.Get("custom_client_ip").(bool)
+	percent_enabled := d.Get("percent_enabled").(int)
 	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
 		ActivateVersion: &activateVersion,
 		CustomClientIP:  &custom_client_ip,
-		PercentEnabled:  func(i int) *int { return &i }(d.Get("percent_enabled").(int)),
+		PercentEnabled:  &percent_enabled,
 	})
 
 	if err != nil {
