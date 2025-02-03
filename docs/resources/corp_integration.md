@@ -27,7 +27,7 @@ resource "sigsci_corp_integration" "test_corp_integration" {
 
 ### Required
 
-- `type` (String) One of (mailingList, slack, microsoftTeams)
+- `type` (String) One of (mailingList, slack, microsoftTeams, microsoftTeamsWorkflow)
 - `url` (String) Integration URL
 
 ### Optional

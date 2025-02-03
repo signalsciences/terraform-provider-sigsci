@@ -29,7 +29,7 @@ resource "sigsci_site_integration" "test_integration" {
 ### Required
 
 - `site_short_name` (String) Site short name
-- `type` (String) One of (mailingList, slack, datadog, generic, pagerduty, microsoftTeams, jira, opsgenie, victorops, pivotaltracker)
+- `type` (String) One of (mailingList, slack, datadog, generic, pagerduty, microsoftTeams, microsoftTeamsWorkflow, jira, opsgenie, victorops, pivotaltracker)
 - `url` (String) Integration URL
 
 ### Optional

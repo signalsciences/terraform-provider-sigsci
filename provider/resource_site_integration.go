@@ -23,7 +23,7 @@ func resourceSiteIntegration() *schema.Resource {
 			},
 			"type": {
 				Type:        schema.TypeString,
-				Description: "One of (mailingList, slack, datadog, generic, pagerduty, microsoftTeams, jira, opsgenie, victorops, pivotaltracker)",
+				Description: "One of (mailingList, slack, datadog, generic, pagerduty, microsoftTeams, microsoftTeamsWorkflow, jira, opsgenie, victorops, pivotaltracker)",
 				Required:    true,
 				ForceNew:    true,
 			},
