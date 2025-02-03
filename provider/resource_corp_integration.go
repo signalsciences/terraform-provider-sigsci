@@ -20,11 +20,11 @@ func resourceCorpIntegration() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:        schema.TypeString,
-				Description: "One of (mailingList, slack, microsoftTeams)",
+				Description: "One of (mailingList, slack, microsoftTeams, microsoftTeamsWorkflow)",
 				Required:    true,
 				ForceNew:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if !existsInString(val.(string), "mailingList", "slack", "microsoftTeams") {
+					if !existsInString(val.(string), "mailingList", "slack", "microsoftTeams", "microsoftTeamsWorkflow") {
 						return nil, []error{fmt.Errorf(`received type %q is invalid. should be "mailingList", "slack", or "microsoftTeams"`, val.(string))}
 					}
 					return nil, nil
