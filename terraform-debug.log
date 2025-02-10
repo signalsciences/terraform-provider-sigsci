@@ -1,0 +1,169 @@
+2025-02-07T16:18:27.412+0100 [INFO]  Terraform version: 1.7.5
+2025-02-07T16:18:27.413+0100 [DEBUG] using github.com/hashicorp/go-tfe v1.41.0
+2025-02-07T16:18:27.413+0100 [DEBUG] using github.com/hashicorp/hcl/v2 v2.19.1
+2025-02-07T16:18:27.413+0100 [DEBUG] using github.com/hashicorp/terraform-svchost v0.1.1
+2025-02-07T16:18:27.413+0100 [DEBUG] using github.com/zclconf/go-cty v1.14.1
+2025-02-07T16:18:27.413+0100 [INFO]  Go runtime version: go1.21.8
+2025-02-07T16:18:27.413+0100 [INFO]  CLI args: []string{"terraform", "apply"}
+2025-02-07T16:18:27.413+0100 [DEBUG] Attempting to open CLI config file: /Users/franciscobazan/.terraformrc
+2025-02-07T16:18:27.413+0100 [DEBUG] File doesn't exist, but doesn't need to. Ignoring.
+2025-02-07T16:18:27.413+0100 [DEBUG] checking for credentials in "/Users/franciscobazan/.terraform.d/plugins"
+2025-02-07T16:18:27.414+0100 [DEBUG] ignoring non-existing provider search directory terraform.d/plugins
+2025-02-07T16:18:27.414+0100 [DEBUG] will search for provider plugins in /Users/franciscobazan/.terraform.d/plugins
+2025-02-07T16:18:27.414+0100 [DEBUG] ignoring non-existing provider search directory /Users/franciscobazan/Library/Application Support/io.terraform/plugins
+2025-02-07T16:18:27.414+0100 [DEBUG] ignoring non-existing provider search directory /Library/Application Support/io.terraform/plugins
+2025-02-07T16:18:27.415+0100 [INFO]  CLI command args: []string{"apply"}
+2025-02-07T16:18:27.417+0100 [DEBUG] New state was assigned lineage "754e6ca4-d80d-368f-9cb9-57879db481f7"
+2025-02-07T16:18:27.438+0100 [DEBUG] checking for provisioner in "."
+2025-02-07T16:18:27.443+0100 [DEBUG] checking for provisioner in "/usr/local/bin"
+2025-02-07T16:18:27.443+0100 [DEBUG] checking for provisioner in "/Users/franciscobazan/.terraform.d/plugins"
+2025-02-07T16:18:27.445+0100 [INFO]  backend/local: starting Apply operation
+2025-02-07T16:18:27.452+0100 [DEBUG] created provider logger: level=debug
+2025-02-07T16:18:27.453+0100 [INFO]  provider: configuring client automatic mTLS
+2025-02-07T16:18:27.465+0100 [DEBUG] provider: starting plugin: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 args=[".terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0"]
+2025-02-07T16:18:27.469+0100 [DEBUG] provider: plugin started: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 pid=47659
+2025-02-07T16:18:27.469+0100 [DEBUG] provider: waiting for RPC address: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0
+2025-02-07T16:18:27.483+0100 [INFO]  provider.terraform-provider-sigsci_v3.5.0: configuring server automatic mTLS: timestamp="2025-02-07T16:18:27.483+0100"
+2025-02-07T16:18:27.502+0100 [DEBUG] provider: using plugin: version=5
+2025-02-07T16:18:27.503+0100 [DEBUG] provider.terraform-provider-sigsci_v3.5.0: plugin address: network=unix address=/var/folders/8b/y4yq_nnx3nn9bbqrjv8cftdw0000gn/T/plugin4160154914 timestamp="2025-02-07T16:18:27.502+0100"
+2025-02-07T16:18:27.516+0100 [DEBUG] No provider meta schema returned
+2025-02-07T16:18:27.518+0100 [DEBUG] provider.stdio: received EOF, stopping recv loop: err="rpc error: code = Unavailable desc = error reading from server: EOF"
+2025-02-07T16:18:27.519+0100 [DEBUG] provider: plugin process exited: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 pid=47659
+2025-02-07T16:18:27.538+0100 [DEBUG] provider: plugin exited
+2025-02-07T16:18:27.540+0100 [DEBUG] command: asking for input: "provider.sigsci.corp"
+[0m[1mprovider.sigsci.corp[0m
+  Corp short name (id)
+
+  [1mEnter a value:[0m [0m
+
+Interrupt received.
+Please wait for Terraform to exit or data loss may occur.
+Gracefully shutting down...
+
+2025-02-07T16:21:09.908+0100 [DEBUG] Building and walking validate graph
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_signal_tag.test_tag" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_redaction.test_redaction" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_corp_signal_tag.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_corp_integration.test_corp_integration" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_signal_tag.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_rule.testt" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_rule.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_blocklist.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_allowlist.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_integration.test_integration" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_corp_list.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_alert.test_site_alert" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_corp_rule.test" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_rule.testsignal" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_integration.test_integration_datadog" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_list.test_list" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_header_link.test_header_link" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site_templated_rule.test_template_rule" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_site.my-site" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.920+0100 [DEBUG] ProviderTransformer: "sigsci_corp_cloudwaf_certificate.test_cloudwaf_certificate" (*terraform.NodeValidatableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:09.926+0100 [DEBUG] ReferenceTransformer: "sigsci_site_rule.testsignal" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.926+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_signal_tag.test" references: []
+2025-02-07T16:21:09.926+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_integration.test_corp_integration" references: []
+2025-02-07T16:21:09.926+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_list.test" references: []
+2025-02-07T16:21:09.926+0100 [DEBUG] ReferenceTransformer: "sigsci_site_alert.test_site_alert" references: [sigsci_site.my-site sigsci_site_signal_tag.test_tag]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_rule.test" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_rule.testt" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_integration.test_integration_datadog" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_signal_tag.test" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_list.test_list" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site.my-site" references: []
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_cloudwaf_certificate.test_cloudwaf_certificate" references: []
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_signal_tag.test_tag" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_rule.test" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_header_link.test_header_link" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_redaction.test_redaction" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_templated_rule.test_template_rule" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "provider[\"registry.terraform.io/signalsciences/sigsci\"]" references: []
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_blocklist.test" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_allowlist.test" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.927+0100 [DEBUG] ReferenceTransformer: "sigsci_site_integration.test_integration" references: [sigsci_site.my-site]
+2025-02-07T16:21:09.931+0100 [DEBUG] Starting graph walk: walkValidate
+2025-02-07T16:21:09.937+0100 [DEBUG] created provider logger: level=debug
+2025-02-07T16:21:09.937+0100 [INFO]  provider: configuring client automatic mTLS
+2025-02-07T16:21:09.945+0100 [DEBUG] provider: starting plugin: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 args=[".terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0"]
+2025-02-07T16:21:09.949+0100 [DEBUG] provider: plugin started: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 pid=47779
+2025-02-07T16:21:09.950+0100 [DEBUG] provider: waiting for RPC address: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0
+2025-02-07T16:21:10.019+0100 [INFO]  provider.terraform-provider-sigsci_v3.5.0: configuring server automatic mTLS: timestamp="2025-02-07T16:21:10.018+0100"
+2025-02-07T16:21:10.041+0100 [DEBUG] provider: using plugin: version=5
+2025-02-07T16:21:10.041+0100 [DEBUG] provider.terraform-provider-sigsci_v3.5.0: plugin address: address=/var/folders/8b/y4yq_nnx3nn9bbqrjv8cftdw0000gn/T/plugin490293280 network=unix timestamp="2025-02-07T16:21:10.041+0100"
+2025-02-07T16:21:10.062+0100 [DEBUG] No provider meta schema returned
+2025-02-07T16:21:10.079+0100 [DEBUG] provider.stdio: received EOF, stopping recv loop: err="rpc error: code = Unavailable desc = error reading from server: EOF"
+2025-02-07T16:21:10.080+0100 [DEBUG] provider: plugin process exited: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 pid=47779
+2025-02-07T16:21:10.101+0100 [DEBUG] provider: plugin exited
+2025-02-07T16:21:10.102+0100 [INFO]  backend/local: apply calling Plan
+2025-02-07T16:21:10.103+0100 [DEBUG] Building and walking plan graph for NormalMode
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_corp_list.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_integration.test_integration_datadog (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site.my-site (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_allowlist.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_rule.testt (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_signal_tag.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_alert.test_site_alert (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_corp_signal_tag.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_integration.test_integration (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_blocklist.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_templated_rule.test_template_rule (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_corp_integration.test_corp_integration (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_rule.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_rule.testsignal (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_signal_tag.test_tag (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_redaction.test_redaction (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_header_link.test_header_link (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_site_list.test_list (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_corp_rule.test (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.108+0100 [DEBUG] ProviderTransformer: "sigsci_corp_cloudwaf_certificate.test_cloudwaf_certificate (expand)" (*terraform.nodeExpandPlannableResource) needs provider["registry.terraform.io/signalsciences/sigsci"]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_rule.testsignal (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_signal_tag.test_tag (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_integration.test_integration_datadog (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_list.test (expand)" references: []
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_alert.test_site_alert (expand)" references: [sigsci_site_signal_tag.test_tag (expand) sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_blocklist.test (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_signal_tag.test (expand)" references: []
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_templated_rule.test_template_rule (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_integration.test_integration (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site.my-site (expand)" references: []
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_allowlist.test (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_rule.testt (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_list.test_list (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_signal_tag.test (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_redaction.test_redaction (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_header_link.test_header_link (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "provider[\"registry.terraform.io/signalsciences/sigsci\"]" references: []
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_cloudwaf_certificate.test_cloudwaf_certificate (expand)" references: []
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_integration.test_corp_integration (expand)" references: []
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_site_rule.test (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.109+0100 [DEBUG] ReferenceTransformer: "sigsci_corp_rule.test (expand)" references: [sigsci_site.my-site (expand)]
+2025-02-07T16:21:10.111+0100 [DEBUG] Starting graph walk: walkPlan
+2025-02-07T16:21:10.111+0100 [DEBUG] created provider logger: level=debug
+2025-02-07T16:21:10.111+0100 [INFO]  provider: configuring client automatic mTLS
+2025-02-07T16:21:10.116+0100 [DEBUG] provider: starting plugin: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 args=[".terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0"]
+2025-02-07T16:21:10.121+0100 [DEBUG] provider: plugin started: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 pid=47780
+
+Two interrupts received. Exiting immediately. Note that data loss may have
+occurred.
+
+2025-02-07T16:21:10.121+0100 [DEBUG] provider: waiting for RPC address: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0
+2025-02-07T16:21:10.121+0100 [ERROR] vertex "provider[\"registry.terraform.io/signalsciences/sigsci\"]" error: Unrecognized remote plugin message: 
+
+This usually means that the plugin is either invalid or simply
+needs to be recompiled to support the latest protocol.
+2025-02-07T16:21:10.121+0100 [DEBUG] provider: plugin process exited: path=.terraform/providers/registry.terraform.io/signalsciences/sigsci/3.5.0/darwin_amd64/terraform-provider-sigsci_v3.5.0 pid=47780 error="signal: interrupt"
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mUnrecognized remote plugin message: 
+[31m│[0m [0m
+[31m│[0m [0mThis usually means that the plugin is either invalid or simply
+[31m│[0m [0mneeds to be recompiled to support the latest protocol.[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m
+[31m╵[0m[0m
+[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1moperation canceled[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m
+[31m╵[0m[0m
+2025-02-07T16:21:10.145+0100 [WARN]  provider: plugin failed to exit gracefully

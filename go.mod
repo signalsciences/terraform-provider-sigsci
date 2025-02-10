@@ -10,6 +10,7 @@ require (
 	golang.org/x/lint v0.0.0-20190409202823-959b441ac422
 	honnef.co/go/tools v0.4.2
 )
+replace github.com/signalsciences/go-sigsci v0.1.25 => /Users/franciscobazan/compute_waf/go-sigsci
 
 require (
 	cloud.google.com/go v0.45.1 // indirect
