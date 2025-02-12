@@ -1,8 +1,6 @@
 package provider
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -44,16 +42,13 @@ func createOrUpdateEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 			authorizedServices = append(authorizedServices, v.(string))
 		}
 	}
-	log.Printf("[DEBUG] Creating/Updating Edge Deployment for site: %s, authorized_services: %+v", siteName, authorizedServices)
 
 	// Call the updated client function, passing an empty slice if "authorized_services" wasn't set
 	err := pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string), authorizedServices)
 
 	if err != nil {
-		log.Printf("[ERROR] Failed to create/update Edge Deployment: %v", err)
 		return err
 	}
-	log.Printf("[DEBUG] Successfully updated Edge Deployment for site: %s", siteName)
 	d.SetId(d.Get("site_short_name").(string))
 
 	return nil
