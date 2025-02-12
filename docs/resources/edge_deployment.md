@@ -25,6 +25,10 @@ resource "sigsci_edge_deployment" "test" {
 
 - `site_short_name` (String) Site short name
 
+### Optional
+
+- `authorized_services` (List of String) List of Compute services. This field is only required if you are linking Compute services to the Next-Gen WAF.
+
 ### Read-Only
 
 - `id` (String) The ID of this resource.
