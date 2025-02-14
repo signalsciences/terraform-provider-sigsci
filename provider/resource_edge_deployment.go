@@ -32,7 +32,6 @@ func createOrUpdateEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 
 	// Initialize an empty authorizedServices slice
 	var authorizedServices []string
-	siteName := d.Get("site_short_name").(string)
 	// Check if "authorized_services" exists before accessing it
 	if v, ok := d.GetOk("authorized_services"); ok {
 		authorizedServicesInterface := v.([]interface{})
