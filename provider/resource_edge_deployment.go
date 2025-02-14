@@ -18,6 +18,12 @@ func resourceEdgeDeployment() *schema.Resource {
 				Description: "Site short name",
 				Required:    true,
 			},
+			"authorized_services": {
+				Type:        schema.TypeList,
+				Description: "List of Compute services. This field is only required if you are linking Compute services to the Next-Gen WAF.",
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 		},
 	}
 }
