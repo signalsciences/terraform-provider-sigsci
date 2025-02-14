@@ -89,7 +89,7 @@ Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions))
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint, protocolVersion)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint, ja4Fingerprint, protocolVersion)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)
@@ -106,7 +106,7 @@ Optional:
 
 - `conditions` (Block Set, Max: 10) Conditions (see [below for nested schema](#nestedblock--conditions--conditions--conditions))
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint, protocolVersion)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint, ja4Fingerprint, protocolVersion)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)
@@ -122,7 +122,7 @@ Required:
 Optional:
 
 - `field` (String) types:
-    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint, protocolVersion)
+    - single - (scheme, method, path, useragent, domain, ip, responseCode, agentname, paramname, paramvalue, country, name, valueString, valueInt, valueIp, signalType, value, ja3Fingerprint, ja4Fingerprint, protocolVersion)
     - multival - (signal, requestHeader, queryParameter, postParameter, requestCookie, responseHeader)
 - `group_operator` (String) type: group, multival - Conditions that must be matched when evaluating the request (all, any)
 - `operator` (String) type: single - (equals, doesNotEqual, contains, doesNotContain, greaterEqual, lesserEqual, like, notLike, exists, doesNotExist, inList, notInList)
