@@ -2,6 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/signalsciences/go-sigsci"
 )
 
 func resourceEdgeDeployment() *schema.Resource {
@@ -30,26 +31,21 @@ func resourceEdgeDeployment() *schema.Resource {
 func createOrUpdateEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
-	// Initialize an empty authorizedServices slice
-	var authorizedServices []string
-	// Check if "authorized_services" exists before accessing it
+	authorizedServices := []string{}
 	if v, ok := d.GetOk("authorized_services"); ok {
-		authorizedServicesInterface := v.([]interface{})
-
-		// Convert []interface{} to []string
-		for _, v := range authorizedServicesInterface {
-			authorizedServices = append(authorizedServices, v.(string))
+		for _, serviceID := range v.([]interface{}) {
+			authorizedServices = append(authorizedServices, serviceID.(string))
 		}
 	}
 
-	// Call the updated client function, passing an empty slice if "authorized_services" wasn't set
-	err := pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string), authorizedServices)
-
+	err := pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string), sigsci.CreateOrUpdateEdgeDeploymentBody{
+		AuthorizedServices: &authorizedServices,
+	})
 	if err != nil {
 		return err
 	}
-	d.SetId(d.Get("site_short_name").(string))
 
+	d.SetId(d.Get("site_short_name").(string))
 	return nil
 }
 
