@@ -2,6 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/signalsciences/go-sigsci"
 )
 
 func resourceEdgeDeployment() *schema.Resource {
@@ -24,14 +25,21 @@ func resourceEdgeDeployment() *schema.Resource {
 func createOrUpdateEdgeDeployment(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
-	err := pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string))
+	authorizedServices := []string{}
+	if v, ok := d.GetOk("authorized_services"); ok {
+		for _, serviceID := range v.([]interface{}) {
+			authorizedServices = append(authorizedServices, serviceID.(string))
+		}
+	}
 
+	err := pm.Client.CreateOrUpdateEdgeDeployment(pm.Corp, d.Get("site_short_name").(string), sigsci.CreateOrUpdateEdgeDeploymentBody{
+		AuthorizedServices: &authorizedServices,
+	})
 	if err != nil {
 		return err
 	}
 
 	d.SetId(d.Get("site_short_name").(string))
-
 	return nil
 }
 
