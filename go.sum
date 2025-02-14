@@ -401,8 +401,8 @@ github.com/sergi/go-diff v1.3.2-0.20230802210424-5b0b94c5c0d3 h1:n661drycOFuPLCN
 github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 github.com/shopspring/decimal v1.3.1 h1:2Usl1nmF/WZucqkFZhnfFYxxxu8LG21F6nPQBE5gKV8=
 github.com/shopspring/decimal v1.3.1/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
-github.com/signalsciences/go-sigsci v0.1.27 h1:BBBhfxUheWs2zSQ11qdAL0WaT8/+eBtQ/VAhrXMXC0Y=
-github.com/signalsciences/go-sigsci v0.1.27/go.mod h1:CXwoXk81ZwFdne6o8cnAYwxvke5kcLg7zE6Bl/e1KUo=
+github.com/signalsciences/go-sigsci v0.1.28 h1:qA4EZ8Iifd6Kk5HIVJ+sMAcp6boN2oT5E37CpFVpSyM=
+github.com/signalsciences/go-sigsci v0.1.28/go.mod h1:CXwoXk81ZwFdne6o8cnAYwxvke5kcLg7zE6Bl/e1KUo=
 github.com/sirupsen/logrus v1.4.1/go.mod h1:ni0Sbl8bgC9z8RoU9G6nDWqqs/fq4eDPysMBDgk/93Q=
 github.com/spf13/afero v1.2.2 h1:5jhuqJyZCZf2JRofRvN/nIFgIWNzPa3/Vz8mYylgbWc=
 github.com/spf13/afero v1.2.2/go.mod h1:9ZxEEn6pIJ8Rxe320qSDBk6AsU0r9pR7Q4OcevTdifk=
