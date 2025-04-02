@@ -80,6 +80,7 @@ func Provider() terraform.ResourceProvider {
 			"sigsci_corp_integration":                resourceCorpIntegration(),
 			"sigsci_corp_cloudwaf_instance":          resourceCorpCloudWAFInstance(),
 			"sigsci_corp_cloudwaf_certificate":       resourceCorpCloudWAFCertificate(),
+			"sigsci_corp_user":                       resourceCorpUser(),
 			"sigsci_edge_deployment":                 resourceEdgeDeployment(),
 			"sigsci_edge_deployment_service":         resourceEdgeDeploymentService(),
 			"sigsci_edge_deployment_service_backend": resourceEdgeDeploymentServiceBackend(),
