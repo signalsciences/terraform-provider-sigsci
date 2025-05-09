@@ -7,9 +7,9 @@ import (
 
 func resourceEdgeDeploymentService() *schema.Resource {
 	return &schema.Resource{
-		Create:   createOrUpdateEdgeDeploymentService,
+		Create:   createEdgeDeploymentService,
 		Read:     readEdgeDeploymentService,
-		Update:   createOrUpdateEdgeDeploymentService,
+		Update:   updateEdgeDeploymentService,
 		Delete:   detachEdgeDeploymentService,
 		Importer: &schema.ResourceImporter{},
 		Schema: map[string]*schema.Schema{
@@ -47,7 +47,40 @@ func resourceEdgeDeploymentService() *schema.Resource {
 	}
 }
 
-func createOrUpdateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
+func updateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
+	pm := m.(providerMetadata)
+	fastlySID := d.Get("fastly_sid").(string)
+	siteName := d.Get("site_short_name").(string)
+	activateVersion := d.Get("activate_version").(bool)
+	custom_client_ip := d.Get("custom_client_ip").(bool)
+	percent_enabled := d.Get("percent_enabled").(int)
+
+	if d.HasChange("site_short_name") {
+		oldSite, newSite := d.GetChange("site_short_name")
+		siteName = newSite.(string)
+
+		// First detach site from service
+		if err := pm.Client.DetachEdgeDeploymentService(pm.Corp, oldSite.(string), fastlySID); err != nil {
+			return err
+		}
+	}
+
+	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, siteName, fastlySID, sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
+		ActivateVersion: &activateVersion,
+		CustomClientIP:  &custom_client_ip,
+		PercentEnabled:  &percent_enabled,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	d.SetId(fastlySID)
+
+	return nil
+}
+
+func createEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 
 	activateVersion := d.Get("activate_version").(bool)
