@@ -47,6 +47,27 @@ func resourceEdgeDeploymentService() *schema.Resource {
 	}
 }
 
+func createEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
+	pm := m.(providerMetadata)
+
+	activateVersion := d.Get("activate_version").(bool)
+	custom_client_ip := d.Get("custom_client_ip").(bool)
+	percent_enabled := d.Get("percent_enabled").(int)
+	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
+		ActivateVersion: &activateVersion,
+		CustomClientIP:  &custom_client_ip,
+		PercentEnabled:  &percent_enabled,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	d.SetId(d.Get("fastly_sid").(string))
+
+	return nil
+}
+
 func updateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	pm := m.(providerMetadata)
 	fastlySID := d.Get("fastly_sid").(string)
@@ -76,27 +97,6 @@ func updateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.SetId(fastlySID)
-
-	return nil
-}
-
-func createEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
-	pm := m.(providerMetadata)
-
-	activateVersion := d.Get("activate_version").(bool)
-	custom_client_ip := d.Get("custom_client_ip").(bool)
-	percent_enabled := d.Get("percent_enabled").(int)
-	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
-		ActivateVersion: &activateVersion,
-		CustomClientIP:  &custom_client_ip,
-		PercentEnabled:  &percent_enabled,
-	})
-
-	if err != nil {
-		return err
-	}
-
-	d.SetId(d.Get("fastly_sid").(string))
 
 	return nil
 }
