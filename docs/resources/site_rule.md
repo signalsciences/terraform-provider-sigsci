@@ -276,7 +276,7 @@ Required:
 
 - `client_identifiers` (Block Set, Min: 1) Client Identifiers (see [below for nested schema](#nestedblock--rate_limit--client_identifiers))
 - `duration` (Number) duration in seconds (300 < x < 3600)
-- `interval` (Number) interval in minutes (1, 5, 10)
+- `interval` (Number) interval in minutes (1, 10)
 - `threshold` (Number) threshold
 
 <a id="nestedblock--rate_limit--client_identifiers"></a>

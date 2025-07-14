@@ -213,7 +213,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"interval": {
 							Type:        schema.TypeInt,
-							Description: "interval in minutes (1, 5, 10)",
+							Description: "interval in minutes (1, 10)",
 							Required:    true,
 						},
 						"duration": {
