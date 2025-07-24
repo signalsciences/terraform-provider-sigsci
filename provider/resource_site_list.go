@@ -72,6 +72,7 @@ func resourceSiteListRead(d *schema.ResourceData, m interface{}) error {
 
 	list, err := sc.GetSiteListByID(pm.Corp, site, d.Id())
 	if err != nil {
+		log.Printf("[DEBUG] %s. Could not find list with ID %s in corp %s site %s", err.Error(), pm.Corp, site, d.Id())
 		d.SetId("")
 		return nil
 	}
