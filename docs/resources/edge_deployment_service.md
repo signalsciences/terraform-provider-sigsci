@@ -6,7 +6,7 @@ description: |-
   
 ---
 
-# sigsci_edge_deployment_service (Resource)
+# sigsci_edge_deployment_service (Resource) [Incubator]
 
 
 
