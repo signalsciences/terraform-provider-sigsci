@@ -218,7 +218,7 @@ func resourceSiteRule() *schema.Resource {
 						},
 						"duration": {
 							Type:        schema.TypeInt,
-							Description: "duration in seconds (300 < x < 3600)",
+							Description: "duration in seconds (300 <= x <= 86400)",
 							Required:    true,
 						},
 						"client_identifiers": {
