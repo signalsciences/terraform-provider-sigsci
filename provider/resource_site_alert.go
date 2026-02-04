@@ -44,13 +44,13 @@ func resourceSiteAlert() *schema.Resource {
 			},
 			"threshold": {
 				Type:        schema.TypeInt,
-				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000",
+				Description: "The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 100000",
 				Required:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if existsInRange(val.(int), 1, 10000) {
+					if existsInRange(val.(int), 1, 100000) {
 						return nil, nil
 					}
-					return nil, []error{errors.New("threshold must be between 1 and 10000")}
+					return nil, []error{errors.New("threshold must be between 1 and 100000")}
 				},
 			},
 			"enabled": {
