@@ -3,17 +3,17 @@ name: Terraform init and validate
 on: [push, pull_request]
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 jobs:
   tf:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - uses: hashicorp/setup-terraform@v2
 
-    - name: Terraform build 
-      run: make build 
+    - name: Terraform build
+      run: make build
 
     - name: Terraform fmt
       run: terraform fmt -check
