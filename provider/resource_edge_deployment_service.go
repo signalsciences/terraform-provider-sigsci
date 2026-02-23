@@ -43,6 +43,12 @@ func resourceEdgeDeploymentService() *schema.Resource {
 				Optional:    true,
 				Default:     0,
 			},
+			"sync_id": {
+				Type:        schema.TypeInt,
+				Description: "A numeric identifier used to trigger a synchronization of the NGWAF VCL module. Incrementing this value forces a non-destructive update of the Edge WAF VCL version on the Fastly service without requiring a resource replacement. Set to 0 to disable this trigger; any value greater than 0 will initiate a sync when the value is changed. Defaults to 0.",
+				Optional:    true,
+				Default:     0,
+			},
 		},
 	}
 }
@@ -53,17 +59,19 @@ func createEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	activateVersion := d.Get("activate_version").(bool)
 	custom_client_ip := d.Get("custom_client_ip").(bool)
 	percent_enabled := d.Get("percent_enabled").(int)
+	sync_id := d.Get("sync_id").(int)
+
 	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, d.Get("site_short_name").(string), d.Get("fastly_sid").(string), sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
 		ActivateVersion: &activateVersion,
 		CustomClientIP:  &custom_client_ip,
 		PercentEnabled:  &percent_enabled,
 	})
-
 	if err != nil {
 		return err
 	}
 
 	d.SetId(d.Get("fastly_sid").(string))
+	d.Set("sync_id", sync_id)
 
 	return nil
 }
@@ -75,7 +83,9 @@ func updateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 	activateVersion := d.Get("activate_version").(bool)
 	custom_client_ip := d.Get("custom_client_ip").(bool)
 	percent_enabled := d.Get("percent_enabled").(int)
+	sync_id := d.Get("sync_id").(int)
 
+	// Handle site remapping (existing logic)
 	if d.HasChange("site_short_name") {
 		oldSite, newSite := d.GetChange("site_short_name")
 		siteName = newSite.(string)
@@ -86,17 +96,25 @@ func updateEdgeDeploymentService(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, siteName, fastlySID, sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
-		ActivateVersion: &activateVersion,
-		CustomClientIP:  &custom_client_ip,
-		PercentEnabled:  &percent_enabled,
-	})
+	// Only call CreateOrUpdateEdgeDeploymentService when:
+	// 1. sync_id > 0 (user wants to trigger sync), OR
+	// 2. Functional fields have changed (activate_version, custom_client_ip, percent_enabled)
+	syncTriggerActive := sync_id > 0
+	functionalFieldsChanged := d.HasChange("activate_version") || d.HasChange("custom_client_ip") || d.HasChange("percent_enabled")
 
-	if err != nil {
-		return err
+	if syncTriggerActive || functionalFieldsChanged || d.HasChange("site_short_name") {
+		err := pm.Client.CreateOrUpdateEdgeDeploymentService(pm.Corp, siteName, fastlySID, sigsci.CreateOrUpdateEdgeDeploymentServiceBody{
+			ActivateVersion: &activateVersion,
+			CustomClientIP:  &custom_client_ip,
+			PercentEnabled:  &percent_enabled,
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	d.SetId(fastlySID)
+	d.Set("sync_id", sync_id)
 
 	return nil
 }

@@ -35,7 +35,7 @@ resource "sigsci_site_alert" "test" {
 - `interval` (Number) The number of minutes of past traffic to examine. Must be 1, 10 or 60.
 - `site_short_name` (String) Site short name
 - `tag_name` (String) The name of the tag whose occurrences the alert is watching. Must match an existing tag
-- `threshold` (Number) The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 10000
+- `threshold` (Number) The number of occurrences of the tag in the interval needed to trigger the alert. Min 1, Max 100000
 
 ### Optional
 
