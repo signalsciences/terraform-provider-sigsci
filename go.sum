@@ -263,6 +263,8 @@ github.com/signalsciences/go-sigsci v0.1.30 h1:Xk6g7czCk/KSH0fOjarVtfI3LWgcNnZXl
 github.com/signalsciences/go-sigsci v0.1.30/go.mod h1:CXwoXk81ZwFdne6o8cnAYwxvke5kcLg7zE6Bl/e1KUo=
 github.com/signalsciences/go-sigsci v0.1.31 h1:xvLaw1fVasNWD2FJFlyksmPB5c8HMljU4FiW3AeLj0A=
 github.com/signalsciences/go-sigsci v0.1.31/go.mod h1:CXwoXk81ZwFdne6o8cnAYwxvke5kcLg7zE6Bl/e1KUo=
+github.com/signalsciences/go-sigsci v0.1.32 h1:aeIwiV+GDb8cD9sCE6uh2daeybyDh4A/6AfCx+YrvFw=
+github.com/signalsciences/go-sigsci v0.1.32/go.mod h1:CXwoXk81ZwFdne6o8cnAYwxvke5kcLg7zE6Bl/e1KUo=
 github.com/sirupsen/logrus v1.4.1/go.mod h1:ni0Sbl8bgC9z8RoU9G6nDWqqs/fq4eDPysMBDgk/93Q=
 github.com/spf13/afero v1.2.2 h1:5jhuqJyZCZf2JRofRvN/nIFgIWNzPa3/Vz8mYylgbWc=
 github.com/spf13/afero v1.2.2/go.mod h1:9ZxEEn6pIJ8Rxe320qSDBk6AsU0r9pR7Q4OcevTdifk=

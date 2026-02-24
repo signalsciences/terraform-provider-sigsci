@@ -63,7 +63,7 @@ func resourceSiteRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
-							Description: "(addSignal, allow, block, browserChallenge, dynamicChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: logRequest, blockSignal, browserChallenge, verifyToken)",
+							Description: "(addSignal, allow, block, browserChallenge, deception, dynamicChallenge, excludeSignal, verifyToken) (rateLimit rule valid values: blockSignal, browserChallenge, deception, verifyToken, logRequest)",
 							Required:    true,
 						},
 						"signal": {
@@ -86,6 +86,11 @@ func resourceSiteRule() *schema.Resource {
 						"allow_interactive": {
 							Type:        schema.TypeBool,
 							Description: "Allows toggling between a non-interactive and interactive browser challenge. Only valid with the 'browserChallenge' action type.",
+							Optional:    true,
+						},
+						"deception_type": {
+							Type:        schema.TypeString,
+							Description: "Deception action to invoke. Supported option is: invalid_login_response",
 							Optional:    true,
 						},
 					},
