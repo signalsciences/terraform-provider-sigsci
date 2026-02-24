@@ -34,6 +34,7 @@ resource "sigsci_edge_deployment_service" "my-service" {
 - `activate_version` (Boolean) activate Fastly service version after clone. Possible values are true or false. Defaults to true.
 - `custom_client_ip` (Boolean) enable to prevent Fastly-Client-IP from being overwritten by the NGWAF. Intended for advanced use cases. Defaults to false.
 - `percent_enabled` (Number) percentage of traffic to send to NGWAF@Edge. Possible values are integers values 0 to 100. Defaults to 0.
+- `sync_id` (Number) A numeric identifier used to trigger a synchronization of the NGWAF VCL module. Incrementing this value forces a non-destructive update of the Edge WAF VCL version on the Fastly service without requiring a resource replacement. Set to 0 to disable this trigger; any value greater than 0 will initiate a sync when the value is changed. Defaults to 0.
 
 ### Read-Only
 
