@@ -434,12 +434,18 @@ func expandRuleActions(actionsResource *schema.Set) []sigsci.Action {
 			allowInteractive = castElement["allow_interactive"].(bool)
 		}
 
+		var deceptionType string
+		if castElement["deception_type"] != nil {
+			deceptionType = castElement["deception_type"].(string)
+		}
+
 		a := sigsci.Action{
 			Type:             castElement["type"].(string),
 			Signal:           signal,
 			ResponseCode:     responseCode,
 			RedirectURL:      redirectURL,
 			AllowInteractive: allowInteractive,
+			DeceptionType:    deceptionType,
 		}
 		actions = append(actions, a)
 	}
