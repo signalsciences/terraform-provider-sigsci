@@ -20,12 +20,12 @@ func resourceCorpSignalTag() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"short_name": {
 				Type:        schema.TypeString,
-				Description: "The display name of the signal tag. Must be 3-25 char.",
+				Description: "The display name of the signal tag. Must be 3-128 char.",
 				Required:    true,
 				ForceNew:    true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					if !validStringLength(val.(string), 3, 25) {
-						return nil, []error{fmt.Errorf(`received short_name "%q" is invalid. should be min len 3, max len 25`, val.(string))}
+					if !validStringLength(val.(string), 3, 128) {
+						return nil, []error{fmt.Errorf(`received short_name "%q" is invalid. should be min len 3, max len 128`, val.(string))}
 					}
 					return nil, nil
 				},
