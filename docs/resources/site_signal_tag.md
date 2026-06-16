@@ -25,7 +25,7 @@ resource "sigsci_site_signal_tag" "test" {
 
 ### Required
 
-- `name` (String) The display name of the signal tag. Must be 3-25 char.
+- `name` (String) The display name of the signal tag.
 - `site_short_name` (String) Site short name
 
 ### Optional
