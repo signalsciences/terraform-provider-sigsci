@@ -86,6 +86,7 @@ func Provider() terraform.ResourceProvider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"sigsci_sites": dataSourceSites(),
+			"sigsci_site":  dataSourceSite(),
 		},
 	}
 	provider.ConfigureFunc = providerConfigure()
